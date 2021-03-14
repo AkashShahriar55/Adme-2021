@@ -7,4 +7,55 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="default_background">#F1F2F6</color>
+    <color name="android_default_layout_color">#FAFAFA</color>
+    <color name="android_default_layout_color2">#F1F2F6</color>
+    <color name="android_default_layout_color3">#FAFBFF</color>
+
+    <color name="client_primary">#FA6D01</color>
+
+    <color name="rating_bar_golden">#FFCC00</color>
+
+    <color name="transparent_black">#99000000</color>
+    <color name="transparent_blue">#40BACAFF</color>
+
+
+    // invoice
+    <color name="text_color_grey">#757575</color>
+    <color name="text_color_deep_gray">#212121</color>
+    <color name="txt_dark">#454545</color>
+
+    <color name="colorPrimary">#3F5AA6</color>
+
+    <color name="colorPrimaryDark">#50000000</color>
+    <color name="colorAccent">#4CAF50</color>
+    <color name="color_active">#4CAF50</color>
+    <color name="color_negative">#F44336</color>
+    <color name="color_not_active">#575757</color>
+    <color name="login_btn_color">#FFCC00</color>
+    <color name="continue_with_google">#B3FF3D00</color>
+    <color name="continue_with_facebook">#B3039BE5</color>
+    <color name="login_edit_box">#FF6600</color>
+    <color name="skip_btn_border">#707070</color>
+    <color name="skip_now_txt">#006DFF</color>
+    <color name="privacy_policy_text">#C6BB24</color>
+    <color name="input_hint">#8B4501</color>
+    <color name="light_blue">#848CA6</color>
+    <color name="dark_blue">#0C1639</color>
+    <color name="blue">#042693</color>
+    <color name="txt_light">#575757</color>
+    <color name="txt_Dark">#131313</color>
+    <color name="red">#FF0000</color>
+    <color name="green">#00FF00</color>
+    <color name="txt_highlight">#3f5aa6</color>
+    <color name="material_green">#3db24b</color>
+    <color name="border_ash">#cdcdcd</color>
+    <color name="leader_board_profile_name">#3F5AA6</color>
+
+    <color name="add_service_step_txt_gray">#d2d2d2</color>
+
+    <!--    service provider primary color-->
+    <color name="sv_primary">#3F5AA6</color>
+    <color name="barChartUnfill">#F2F5F7</color>
 </resources>
