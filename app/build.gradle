@@ -37,6 +37,7 @@ android {
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
+def lottieVersion = '3.4.0'
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -45,23 +46,18 @@ dependencies {
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
 
-    implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    testImplementation 'junit:junit:4.13.1'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    testImplementation 'junit:junit:4.13.2'
     implementation 'com.alphamovie.library:alpha-movie:1.2.1'
     //noinspection GradleCompatible
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation "androidx.cardview:cardview:1.0.0"
-    implementation 'com.google.firebase:firebase-analytics:18.0.2'
 
-    def lifecycle_version = "2.2.0"
+    def lifecycle_version = "2.3.0"
     def arch_version = "2.1.0"
 
     // ViewModel
@@ -76,7 +72,6 @@ dependencies {
 
     //multidex
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation "androidx.core:core-ktx:1.3.2"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // for different density screen
@@ -147,6 +142,61 @@ dependencies {
     //coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2'
+
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    //noinspection GradleCompatible
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'androidx.navigation:navigation-fragment:2.3.0'
+    implementation 'androidx.navigation:navigation-ui:2.3.0'
+
+
+
+
+    // for circle image view
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+
+
+    //For google
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+
+    //For picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    //RecyclerView
+    implementation 'androidx.recyclerview:recyclerview'
+
+    //Bar Chart
+    implementation 'com.github.hadiidbouk:ChartProgressBar-Android:2.0.6'
+
+    //for country code picker
+    implementation 'com.hbb20:ccp:2.3.9'
+
+    //Google Maps
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.android.libraries.places:places:2.4.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.maps.android:android-maps-utils:0.5+'
+
+    //image slider
+    implementation 'com.github.smarteist:autoimageslider:1.3.7'
+
+
+
+
+    // Add the SDK for Firebase Cloud Messaging
+    implementation 'com.google.firebase:firebase-messaging'
+
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.guava:guava:27.0.1-android'
+
+    //for loading animation
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+
+
+    //For Country Code Picker
+    implementation 'com.hbb20:ccp:2.3.9'
+    implementation 'androidx.work:work-runtime:2.5.0'
 }
 
 repositories {
