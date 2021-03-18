@@ -126,7 +126,7 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/login_skip_btn"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline7"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/guideline6"
@@ -134,25 +134,25 @@
 
         </Button>
 
-        <Button
-            android:id="@+id/login_skip_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/skip_now_btn"
-            android:drawableEnd="@drawable/ic_arrow_forward_blue_24_dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:text="@string/skip_now"
-            android:textColor="@color/skip_now_txt"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline7"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/guideline6"
-            app:layout_constraintTop_toBottomOf="@+id/login_facebook_btn">
+<!--        <Button-->
+<!--            android:id="@+id/login_skip_btn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:background="@drawable/skip_now_btn"-->
+<!--            android:drawableEnd="@drawable/ic_arrow_forward_blue_24_dp"-->
+<!--            android:paddingStart="16dp"-->
+<!--            android:paddingEnd="16dp"-->
+<!--            android:text="@string/skip_now"-->
+<!--            android:textColor="@color/skip_now_txt"-->
+<!--            android:textSize="12sp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/guideline7"-->
+<!--            app:layout_constraintHorizontal_bias="0.5"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/guideline6"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/login_facebook_btn">-->
 
-        </Button>
+<!--        </Button>-->
 
         <TextView
             android:id="@+id/textView7"

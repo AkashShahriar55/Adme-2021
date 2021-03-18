@@ -10,7 +10,7 @@
         android:name="com.cookietech.namibia.adme.ui.loginRegistration.SplashFragment"
         android:label="SplashFragment" >
         <action
-            android:id="@+id/action_splashFragment_to_loginFragment"
+            android:id="@+id/splash_to_login"
             app:destination="@id/loginFragment"
             app:popUpTo="@id/login_registration_navigation" />
     </fragment>
@@ -20,12 +20,23 @@
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
-            android:id="@+id/action_loginFragment_to_registrationFragment"
+            android:id="@+id/login_to_registration"
             app:destination="@id/registrationFragment" />
+        <action
+            android:id="@+id/login_to_user_info"
+            app:destination="@id/userInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
         android:name="com.cookietech.namibia.adme.ui.loginRegistration.RegistrationFragment"
         android:label="fragment_registration"
-        tools:layout="@layout/fragment_registration" />
+        tools:layout="@layout/fragment_registration" >
+        <action
+            android:id="@+id/registration_to_user_info"
+            app:destination="@id/userInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userInfoFragment"
+        android:name="com.cookietech.namibia.adme.ui.loginRegistration.UserInfoFragment"
+        android:label="UserInfoFragment" />
 </navigation>
