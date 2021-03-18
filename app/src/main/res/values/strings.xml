@@ -115,4 +115,8 @@
     <string name="write_your_phone_number">Write your phone number</string>
     <string name="write_a_username">Write a username</string>
     <string name="update_your_info">update your info</string>
+    <string name="facebook_app_id">1789310167918363</string>
+    <string name="fb_login_protocol_scheme">fb1789310167918363</string>
+
+
 </resources>

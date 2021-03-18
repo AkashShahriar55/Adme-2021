@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "559137624340-iildbq5npvq0nadcjrhuhg93jgb3eo8e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cookietech.namibia.adme",
+            "certificate_hash": "650a87a6c0454da3b210f6a2821452bbbde7485e"
+          }
+        },
+        {
           "client_id": "559137624340-5sdlvt9o0tbcl4lknp4ldbb9bheqs5pu.apps.googleusercontent.com",
           "client_type": 3
         }
