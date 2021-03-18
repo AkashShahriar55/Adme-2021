@@ -1,18 +1,27 @@
 package com.cookietech.namibia.adme.ui.loginRegistration
-
 import android.os.Bundle
+import android.util.Log
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import com.cookietech.namibia.adme.R
+import com.cookietech.namibia.adme.architecture.loginRegistration.LoginViewModel
+import kotlinx.android.synthetic.main.fragment_login.*
+import java.util.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
-import com.cookietech.namibia.adme.R
-import kotlinx.android.synthetic.main.fragment_login.*
 
 
 class LoginFragment : Fragment() {
+
+    val loginViewModel : LoginViewModel by viewModels()
+
+    init {
+
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,15 +43,54 @@ class LoginFragment : Fragment() {
     }
 
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initializeVariables()
+        initializeClicks()
+    }
 
+    private fun initializeVariables() {
+        /**Get Google client**/
+        //For Google SignUp
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         val hyperspaceJumpAnimation = AnimationUtils.loadAnimation(context, R.anim.login_slide_animation)
         login_container.startAnimation(hyperspaceJumpAnimation)
         login_phone_btn.setOnClickListener {
             findNavController().navigate(R.id.login_to_registration)
         }
     }
+
+    private fun initializeClicks() {
+        /**Google Login**/
+        login_google_btn.setOnClickListener{
+            //Toast.makeText(requireContext(),"Clicked",Toast.LENGTH_SHORT).show()
+            signInWithGoogle()
+        }
+
+        /**Facebook Login**/
+        login_facebook_btn.setOnClickListener{
+            signInWithFacebook()
+        }
+
+
+    }
+
+    private fun signInWithFacebook() {
+
+        Log.d("fb_login_debug", "signInWithFacebook: Called")
+
+        loginViewModel.signInWithFacebook(requireActivity())
+    }
+
+
+
+    private fun signInWithGoogle() {
+        loginViewModel.signInWithGoogle(requireActivity())
+
+    }
+
 
     companion object {
         /**
