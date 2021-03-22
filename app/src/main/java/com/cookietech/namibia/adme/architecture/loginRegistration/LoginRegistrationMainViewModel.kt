@@ -13,11 +13,24 @@ class LoginRegistrationMainViewModel: ViewModel() {
         loginAndRegistrationManager = LoginAndRegistrationManager(firebaseManager)
     }
 
+    var activityCallbacks:ActivityCallbacks? = null
+
+    fun addActivityCallback(activityCallbacks: ActivityCallbacks){
+        this.activityCallbacks = activityCallbacks
+    }
+
     fun checkIfAlreadyLoggedIn(): Boolean {
         return loginAndRegistrationManager.checkIfAlreadyLoggedIn()
     }
 
     fun processActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        loginAndRegistrationManager.processActivityResult(requestCode,resultCode,data)
+        activityCallbacks?.processActivityResult(requestCode,resultCode,data)
     }
+
+
+    interface ActivityCallbacks{
+        fun processActivityResult(requestCode: Int,resultCode: Int,data: Intent?)
+    }
+
+
 }

@@ -1,4 +1,5 @@
 package com.cookietech.namibia.adme.ui.loginRegistration
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,13 +12,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
+import com.cookietech.namibia.adme.architecture.loginRegistration.LoginRegistrationMainViewModel
 
 
 class LoginFragment : Fragment() {
 
     val loginViewModel : LoginViewModel by viewModels()
+    val mainViewModel : LoginRegistrationMainViewModel by activityViewModels()
 
     init {
 
@@ -60,6 +64,13 @@ class LoginFragment : Fragment() {
         login_phone_btn.setOnClickListener {
             findNavController().navigate(R.id.login_to_registration)
         }
+
+        mainViewModel.addActivityCallback(object : LoginRegistrationMainViewModel.ActivityCallbacks{
+            override fun processActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+                loginViewModel.processActivityResult(requestCode,resultCode,data)
+            }
+
+        })
     }
 
     private fun initializeClicks() {
