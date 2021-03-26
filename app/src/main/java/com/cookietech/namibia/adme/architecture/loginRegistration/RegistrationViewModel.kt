@@ -20,12 +20,17 @@ import java.util.*
 class RegistrationViewModel(application: Application) : AndroidViewModel(application) {
     private var mResendToken: ForceResendingToken? = null
     private var mVerificationId: String? = null
-    private val loginAndRegistrationManager = LoginAndRegistrationManager(FirebaseManager())
+    private val loginAndRegistrationManager = LoginAndRegistrationManager()
     public var registrationCallbacks:RegistrationCallbacks? = null
-
+    private var isLinkWithUser = false
     val mCallbacks = object : OnVerificationStateChangedCallbacks() {
         override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {
-            signInWithPhoneAuthCredential(phoneAuthCredential)
+            if(isLinkWithUser){
+                linkWithUser(phoneAuthCredential)
+            }else{
+                signInWithPhoneAuthCredential(phoneAuthCredential)
+            }
+
             Log.d("akash_debug", "onVerificationCompleted: ")
         }
 
@@ -80,12 +85,49 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
+    private fun linkWithUser(phoneAuthCredential: PhoneAuthCredential) {
+        loginAndRegistrationManager.linkWithUser(phoneAuthCredential
+        ) { task ->
+            if (task.isSuccessful) {
+
+                task.result.user?.let {
+                    Log.d("akash_debug", "linkWithUser: " + it.phoneNumber)
+                    FirebaseManager.mFirebaseUser = it
+                    registrationCallbacks?.onLoginSuccessful()
+                }
+
+            } else {
+                // Sign in failed, display a message and update the UI
+                registrationCallbacks?.onLoginFailed()
+                // Snackbar.make(contextView,"Error: " + Objects.requireNonNull(task.getException()).getMessage(),Snackbar.LENGTH_SHORT).show();
+                if (task.exception is FirebaseAuthInvalidCredentialsException) {
+                    // The verification code entered was invalid
+                    CustomToast.makeErrorToast(
+                            getApplication(),
+                            "Verification code is invalid",
+                            Toast.LENGTH_LONG
+                    ).show()
+//                        resetCodeFields()
+                } else {
+                    CustomToast.makeErrorToast(
+                            getApplication(),
+                            "Error: " + Objects.requireNonNull(task.exception)?.message,
+                            Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
     private fun signInWithPhoneAuthCredential(phoneAuthCredential: PhoneAuthCredential) {
         loginAndRegistrationManager.signInWithPhoneAuthCredential(phoneAuthCredential
         ) { task ->
             if (task.isSuccessful) {
-                Log.d("akash_debug", "signInWithPhoneAuthCredential: ")
-                registrationCallbacks?.onLoginSuccessful()
+                task.result.user?.let {
+                    Log.d("akash_debug", "signInWithPhoneAuthCredential: " + it.phoneNumber)
+                    FirebaseManager.mFirebaseUser = it
+                    registrationCallbacks?.onLoginSuccessful()
+                }
             } else {
                 // Sign in failed, display a message and update the UI
 
@@ -116,7 +158,15 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
             }
     }
 
-    fun sendVerificationCode(phoneNo: String, activity: Activity){
+    public fun linkWithPhoneAuthCredentialForCode(verificationCodeString:String){
+        mVerificationId?.let {
+            val credential =PhoneAuthProvider.getCredential(it, verificationCodeString.toString())
+            linkWithUser(credential)
+        }
+    }
+
+    fun sendVerificationCode(phoneNo: String, activity: Activity,isLinkWithUser: Boolean){
+        this.isLinkWithUser = isLinkWithUser
         loginAndRegistrationManager.verifyPhoneNo(phoneNo, mCallbacks, activity)
     }
 
@@ -124,5 +174,6 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
     interface RegistrationCallbacks {
         fun onCodeSend()
         fun onLoginSuccessful()
+        fun onLoginFailed()
     }
 }

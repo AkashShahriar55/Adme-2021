@@ -7,11 +7,7 @@ import com.cookietech.namibia.adme.managers.LoginAndRegistrationManager
 import com.google.firebase.auth.FirebaseUser
 
 class LoginRegistrationMainViewModel: ViewModel() {
-    val firebaseManager = FirebaseManager()
-    var loginAndRegistrationManager: LoginAndRegistrationManager
-    init {
-        loginAndRegistrationManager = LoginAndRegistrationManager(firebaseManager)
-    }
+    var loginAndRegistrationManager: LoginAndRegistrationManager = LoginAndRegistrationManager()
 
     var activityCallbacks:ActivityCallbacks? = null
 
@@ -19,8 +15,8 @@ class LoginRegistrationMainViewModel: ViewModel() {
         this.activityCallbacks = activityCallbacks
     }
 
-    fun checkIfAlreadyLoggedIn(): Boolean {
-        return loginAndRegistrationManager.checkIfAlreadyLoggedIn()
+    fun tryToLogin(callback: LoginAndRegistrationManager.UserCreationCallback): Boolean {
+        return loginAndRegistrationManager.checkIfAlreadyLoggedIn(callback)
     }
 
     fun processActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

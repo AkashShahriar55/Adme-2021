@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.custom_progress_dialog.*
 class LoadingDialog(context: Context, private val title: String, private val message: String) :
     Dialog(context) {
 
-    override fun onCreate(savedInstanceState: Bundle) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.custom_progress_dialog)
         setCancelable(false)

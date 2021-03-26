@@ -11,12 +11,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.cookietech.namibia.adme.Application.AppComponent
 import com.cookietech.namibia.adme.R
+import com.cookietech.namibia.adme.architecture.loginRegistration.LoginRegistrationMainViewModel
 import com.cookietech.namibia.adme.architecture.loginRegistration.RegistrationViewModel
+import com.cookietech.namibia.adme.managers.LoginAndRegistrationManager
+import com.cookietech.namibia.adme.managers.SharedPreferenceManager
 import com.cookietech.namibia.adme.views.LoadingDialog
 import kotlinx.android.synthetic.main.fragment_registration.*
+import java.lang.Exception
 
 
 class RegistrationFragment : Fragment(),RegistrationViewModel.RegistrationCallbacks {
@@ -38,6 +44,7 @@ class RegistrationFragment : Fragment(),RegistrationViewModel.RegistrationCallba
     val PHONE_NO = "phone_no"
     val CURRENT_TIMER = "current_timer"
     val IS_CODE_SENT = "is_countdown_started"
+    val mainViewModel : LoginRegistrationMainViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +94,7 @@ class RegistrationFragment : Fragment(),RegistrationViewModel.RegistrationCallba
 
     private fun setUpViews() {
 
-        dialog = LoadingDialog(requireContext(), "Logging in", "Please wait...")
+        dialog = context?.let { LoadingDialog(it, "Logging in", "Please wait...") }!!
         ccp.registerCarrierNumberEditText(phoneText)
         ccp.detectSIMCountry(true)
         ccp.setCustomMasterCountries("NA,BD")
@@ -102,6 +109,7 @@ class RegistrationFragment : Fragment(),RegistrationViewModel.RegistrationCallba
 
         reg_join_btn.setOnClickListener { v: View? ->
            sendVerificationCode()
+            dialog.show()
         }
 
         resend_code_btn.setOnClickListener { v: View? ->
@@ -121,7 +129,8 @@ class RegistrationFragment : Fragment(),RegistrationViewModel.RegistrationCallba
             activity?.let { activity->
                 registrationViewModel.sendVerificationCode(
                     ccp.fullNumberWithPlus,
-                    activity
+                    activity,
+                        false
                 )
             }
         }
@@ -223,6 +232,8 @@ class RegistrationFragment : Fragment(),RegistrationViewModel.RegistrationCallba
             }
 
             if(verificationCodeString.isNotEmpty()){
+                dialog.show()
+                closeKeyboard()
                 registrationViewModel.signInWithPhoneAuthCredentialForCode(verificationCodeString.toString())
             }
         }
@@ -259,6 +270,7 @@ class RegistrationFragment : Fragment(),RegistrationViewModel.RegistrationCallba
     }
 
     override fun onCodeSend() {
+        dialog.dismiss()
         codeSent = true
         phoneText.isEnabled = false
         ccp.isEnabled = false
@@ -272,7 +284,37 @@ class RegistrationFragment : Fragment(),RegistrationViewModel.RegistrationCallba
     }
 
     override fun onLoginSuccessful() {
-        findNavController().navigate(R.id.registration_to_user_info)
+        val login = mainViewModel.tryToLogin(object : LoginAndRegistrationManager.UserCreationCallback {
+            override fun onUserCreationSuccessful() {
+                Log.d("login_debug", "onUserCreationSuccessful: ")
+                findNavController().navigate(R.id.registration_to_user_info)
+                dialog.dismiss()
+            }
+
+            override fun onUserFetchSuccessful() {
+                dialog.dismiss()
+
+                Log.d("login_debug", "onUserFetchSuccessful: ")
+                when (SharedPreferenceManager.user_mode) {
+                    AppComponent.MODE_CLIENT -> findNavController().navigate(R.id.registration_to_client_activity)
+                    AppComponent.MODE_SERVICE_PROVIDER -> findNavController().navigate(R.id.registration_to_service_activity)
+                }
+            }
+
+            override fun onUserCreationFailed(exception: Exception) {
+                dialog.dismiss()
+                Log.d("login_debug", "onUserCreationFailed: ")
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        Log.d("login_debug", "onLoginSuccessful:$login ")
+
+    }
+
+    override fun onLoginFailed() {
+        dialog.dismiss()
     }
 
 
@@ -316,5 +358,13 @@ class RegistrationFragment : Fragment(),RegistrationViewModel.RegistrationCallba
         editText.setEnabled(true)
         editText.requestFocus()
     }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        countDownTimer?.cancel()
+    }
+
+
 
 }

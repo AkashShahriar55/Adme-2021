@@ -15,14 +15,19 @@ import android.view.animation.AnimationUtils
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
+import com.cookietech.namibia.adme.Application.AppComponent
 import com.cookietech.namibia.adme.architecture.loginRegistration.LoginRegistrationMainViewModel
+import com.cookietech.namibia.adme.managers.LoginAndRegistrationManager
+import com.cookietech.namibia.adme.managers.SharedPreferenceManager
+import com.cookietech.namibia.adme.views.LoadingDialog
+import java.lang.Exception
 
 
 class LoginFragment : Fragment() {
 
     val loginViewModel : LoginViewModel by viewModels()
     val mainViewModel : LoginRegistrationMainViewModel by activityViewModels()
-
+    private lateinit var dialog: LoadingDialog
     init {
 
     }
@@ -59,6 +64,7 @@ class LoginFragment : Fragment() {
         //For Google SignUp
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        dialog = context?.let { LoadingDialog(it, "Logging in", "Please wait...") }!!
         val hyperspaceJumpAnimation = AnimationUtils.loadAnimation(context, R.anim.login_slide_animation)
         login_container.startAnimation(hyperspaceJumpAnimation)
         login_phone_btn.setOnClickListener {
@@ -67,10 +73,48 @@ class LoginFragment : Fragment() {
 
         mainViewModel.addActivityCallback(object : LoginRegistrationMainViewModel.ActivityCallbacks{
             override fun processActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+                dialog.dismiss()
                 loginViewModel.processActivityResult(requestCode,resultCode,data)
             }
 
         })
+
+        loginViewModel.loginCallback = object :LoginViewModel.LoginCallback{
+            override fun onLoginSuccessful() {
+                dialog.show()
+                val login = mainViewModel.tryToLogin(object : LoginAndRegistrationManager.UserCreationCallback {
+                    override fun onUserCreationSuccessful() {
+                        Log.d("login_debug", "onUserCreationSuccessful: ")
+                        dialog.dismiss()
+                        findNavController().navigate(R.id.login_to_user_info)
+                    }
+
+                    override fun onUserFetchSuccessful() {
+                        Log.d("login_debug", "onUserFetchSuccessful: ")
+                        dialog.dismiss()
+                        when (SharedPreferenceManager.user_mode) {
+                            AppComponent.MODE_CLIENT -> findNavController().navigate(R.id.login_to_client_activity)
+                            AppComponent.MODE_SERVICE_PROVIDER -> findNavController().navigate(R.id.login_to_service_activity)
+                        }
+                    }
+
+                    override fun onUserCreationFailed(exception: Exception) {
+                        dialog.dismiss()
+                        Log.d("login_debug", "onUserCreationFailed: ")
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
+                Log.d("login_debug", "onLoginSuccessful:$login ")
+            }
+
+            override fun onLoginFailed() {
+                dialog.dismiss()
+                TODO("Not yet implemented")
+            }
+
+        }
     }
 
     private fun initializeClicks() {
@@ -91,13 +135,14 @@ class LoginFragment : Fragment() {
     private fun signInWithFacebook() {
 
         Log.d("fb_login_debug", "signInWithFacebook: Called")
-
+        dialog.show()
         loginViewModel.signInWithFacebook(requireActivity())
     }
 
 
 
     private fun signInWithGoogle() {
+        dialog.show()
         loginViewModel.signInWithGoogle(requireActivity())
 
     }
