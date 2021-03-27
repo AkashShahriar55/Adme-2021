@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/todayFragment"
+        android:title="@string/title_today"
+        android:icon="@drawable/ic_today_gray"/>
+
+    <item
+        android:id="@+id/leaderBoardFragment"
+        android:title="@string/leaderboard"
+        android:icon="@drawable/ic_leaderboard"/>
+
+    <item
+        android:id="@+id/incomeFragment"
+        android:title="@string/title_income"
+        android:icon="@drawable/ic_income"/>
+
+    <item
+        android:id="@+id/service_provider_profileFragment"
+        android:title="@string/profile"
+        android:icon="@drawable/ic_profile"/>
+
+</menu>

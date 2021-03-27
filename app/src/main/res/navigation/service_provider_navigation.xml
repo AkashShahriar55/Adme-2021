@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/service_provider_navigation"
+    app:startDestination="@id/todayFragment">
+
+    <fragment
+        android:id="@+id/todayFragment"
+        android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.TodayFragment"
+        android:label="HomeFragment" />
+    <fragment
+        android:id="@+id/leaderBoardFragment"
+        android:name="com.cookietech.namibia.adme.ui.serviceProvider.leaderboard.LeaderBoardFragment"
+        android:label="LeaderBoardFragment" />
+    <fragment
+        android:id="@+id/incomeFragment"
+        android:name="com.cookietech.namibia.adme.ui.serviceProvider.income.IncomeFragment"
+        android:label="IncomeFragment" />
+    <fragment
+        android:id="@+id/service_provider_profileFragment"
+        android:name="com.cookietech.namibia.adme.ui.common.profile.ProfileFragment"
+        android:label="ProfileFragment" />
+</navigation>

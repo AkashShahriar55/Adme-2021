@@ -64,7 +64,7 @@ object SharedPreferenceManager {
     var user_mode:String
     get() {
         val myPreference = PreferenceManager.getDefaultSharedPreferences(APP_CONTEXT)
-        return myPreference.getString(USER_MODE, MODE_CLIENT) ?: MODE_CLIENT
+        return myPreference.getString(USER_MODE, MODE_SERVICE_PROVIDER) ?: MODE_SERVICE_PROVIDER
     }
     set(value) {
         val myPreference = PreferenceManager.getDefaultSharedPreferences(APP_CONTEXT)
