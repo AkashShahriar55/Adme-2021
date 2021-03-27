@@ -19,10 +19,12 @@
             app:popUpTo="@id/login_registration_navigation" />
         <action
             android:id="@+id/splash_to_service_activity"
-            app:destination="@id/serviceProviderActivity" />
+            app:destination="@id/serviceProviderActivity"
+            app:popUpTo="@id/login_registration_navigation" />
         <action
             android:id="@+id/splash_to_client_activity"
-            app:destination="@id/clientActivity2" />
+            app:destination="@id/clientActivity2"
+            app:popUpTo="@id/login_registration_navigation" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -42,7 +44,8 @@
             app:popUpTo="@id/login_registration_navigation" />
         <action
             android:id="@+id/login_to_client_activity"
-            app:destination="@id/clientActivity2" />
+            app:destination="@id/clientActivity2"
+            app:popUpTo="@id/login_registration_navigation" />
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
@@ -55,10 +58,12 @@
             app:popUpTo="@id/login_registration_navigation" />
         <action
             android:id="@+id/registration_to_service_activity"
-            app:destination="@id/serviceProviderActivity" />
+            app:destination="@id/serviceProviderActivity"
+            app:popUpTo="@id/login_registration_navigation" />
         <action
             android:id="@+id/registration_to_client_activity"
-            app:destination="@id/clientActivity2" />
+            app:destination="@id/clientActivity2"
+            app:popUpTo="@id/login_registration_navigation" />
     </fragment>
     <fragment
         android:id="@+id/userInfoFragment"
