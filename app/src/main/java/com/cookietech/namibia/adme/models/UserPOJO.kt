@@ -7,18 +7,19 @@ import com.google.firebase.firestore.Exclude
 
 class UserPOJO(@Exclude var user_id: String,
                var user_name:String,
-               var email: String?,
+               var email: String? = "null",
                var phone: String,
                var privacy_phone_is_public: Boolean = true,
                var privacy_email_is_public: Boolean = true,
-               var registration_date: Timestamp?,
+               var registration_date: Timestamp? = null,
                var status_is_online: Boolean = true,
-               var lattitude: String?,
-               var longitude: String?,
-               var profile_image_url: String?,
+               var lattitude: String? = "null",
+               var longitude: String? = "null",
+               var profile_image_url: String? = "null",
                var isServiceProvider: Boolean = false,
                var isActive: Boolean = true,
-               var user_permission: String = "user") : Parcelable {
+               var user_permission: String = "user",
+                var user_info_updated:Boolean = false) : Parcelable {
 
     constructor() : this(
         "null",
@@ -29,12 +30,13 @@ class UserPOJO(@Exclude var user_id: String,
         true,
         null,
         true,
-        null,
-        null,
-        null,
+        "null",
+        "null",
+        "null",
         false,
         true,
-        "user")
+        "user",
+        false)
 
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "null",
@@ -50,9 +52,9 @@ class UserPOJO(@Exclude var user_id: String,
         parcel.readString(),
         parcel.readByte() != 0.toByte(),
         parcel.readByte() != 0.toByte(),
-        parcel.readString() ?: "user"
-    ) {
-    }
+        parcel.readString() ?: "user",
+            parcel.readByte() != 0.toByte()
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(user_id)
@@ -69,6 +71,7 @@ class UserPOJO(@Exclude var user_id: String,
         parcel.writeByte(if (isServiceProvider) 1 else 0)
         parcel.writeByte(if (isActive) 1 else 0)
         parcel.writeString(user_permission)
+        parcel.writeByte(if(user_info_updated) 1 else 0)
     }
 
     override fun describeContents(): Int {

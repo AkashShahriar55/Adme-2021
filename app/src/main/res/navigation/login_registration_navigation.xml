@@ -13,6 +13,16 @@
             android:id="@+id/splash_to_login"
             app:destination="@id/loginFragment"
             app:popUpTo="@id/login_registration_navigation" />
+        <action
+            android:id="@+id/splash_to_user_info"
+            app:destination="@id/userInfoFragment"
+            app:popUpTo="@id/login_registration_navigation" />
+        <action
+            android:id="@+id/splash_to_service_activity"
+            app:destination="@id/serviceProviderActivity" />
+        <action
+            android:id="@+id/splash_to_client_activity"
+            app:destination="@id/clientActivity2" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -25,6 +35,14 @@
         <action
             android:id="@+id/login_to_user_info"
             app:destination="@id/userInfoFragment" />
+        <action
+            android:id="@+id/login_to_service_activity"
+            app:destination="@id/serviceProviderActivity"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/login_registration_navigation" />
+        <action
+            android:id="@+id/login_to_client_activity"
+            app:destination="@id/clientActivity2" />
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
@@ -33,10 +51,34 @@
         tools:layout="@layout/fragment_registration" >
         <action
             android:id="@+id/registration_to_user_info"
-            app:destination="@id/userInfoFragment" />
+            app:destination="@id/userInfoFragment"
+            app:popUpTo="@id/login_registration_navigation" />
+        <action
+            android:id="@+id/registration_to_service_activity"
+            app:destination="@id/serviceProviderActivity" />
+        <action
+            android:id="@+id/registration_to_client_activity"
+            app:destination="@id/clientActivity2" />
     </fragment>
     <fragment
         android:id="@+id/userInfoFragment"
         android:name="com.cookietech.namibia.adme.ui.loginRegistration.UserInfoFragment"
-        android:label="UserInfoFragment" />
+        android:label="UserInfoFragment" >
+        <action
+            android:id="@+id/user_info_to_service_activity"
+            app:destination="@id/serviceProviderActivity" />
+        <action
+            android:id="@+id/user_info_to_client_activity"
+            app:destination="@id/clientActivity2" />
+    </fragment>
+    <activity
+        android:id="@+id/serviceProviderActivity"
+        android:name="com.cookietech.namibia.adme.ui.serviceProvider.ServiceProviderActivity"
+        android:label="activity_service_provider"
+        tools:layout="@layout/activity_service_provider" />
+    <activity
+        android:id="@+id/clientActivity2"
+        android:name="com.cookietech.namibia.adme.ui.client.ClientActivity"
+        android:label="activity_client"
+        tools:layout="@layout/activity_client" />
 </navigation>

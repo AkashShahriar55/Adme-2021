@@ -16,16 +16,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseUser
+import java.lang.Exception
 
 class LoginViewModel : ViewModel() {
     private var mCallbackManager: CallbackManager? = null
     private val WEB_CLIENT_ID = "559137624340-5sdlvt9o0tbcl4lknp4ldbb9bheqs5pu.apps.googleusercontent.com"
     private val RC_SIGN_IN = 1
-    val firebaseManager = FirebaseManager()
     var loginAndRegistrationManager: LoginAndRegistrationManager
-
+    var loginCallback:LoginCallback? = null
     init {
-        loginAndRegistrationManager = LoginAndRegistrationManager(firebaseManager)
+        loginAndRegistrationManager = LoginAndRegistrationManager()
     }
 
 
@@ -33,7 +34,12 @@ class LoginViewModel : ViewModel() {
         loginAndRegistrationManager.firebaseAuthWithGoogle(idToken).addOnCompleteListener {task->
             if (task.isSuccessful) {
                 // Sign in success, update UI with the signed-in user's information
-                Log.d("google_login_debug", "signInWithCredential:success")
+                Log.d("google_login_debug", "signInWithCredential:")
+                task.result.user?.let {
+                    FirebaseManager.mFirebaseUser = it
+                    loginCallback?.onLoginSuccessful()
+                }
+
                 //val user = auth.currentUser
                 //updateUI(user)
             } else {
@@ -44,20 +50,27 @@ class LoginViewModel : ViewModel() {
         }
     }
 
+
     fun firebaseAuthWithFacebook(token: AccessToken) {
         loginAndRegistrationManager.firebaseAuthWithFacebook(token).addOnCompleteListener {
             task ->
             if (task.isSuccessful) {
                 // Sign in success, update UI with the signed-in user's information
-                Log.d("fb_login_debug", "signInWithCredential:success")
+                Log.d("fb_login_debug", "signInWithCredential:success " + loginCallback)
                 /*val user = auth.currentUser
                 updateUI(user)*/
+                task.result.user?.let {
+                    FirebaseManager.mFirebaseUser = it
+                    loginCallback?.onLoginSuccessful()
+                }
+
             } else {
                 // If sign in fails, display a message to the user.
                 Log.w("fb_login_debug", "signInWithCredential:failure", task.exception)
                 /*Toast.makeText(baseContext, "Authentication failed.",
                     Toast.LENGTH_SHORT).show()*/
                 //updateUI(null)
+                loginCallback?.onLoginFailed()
             }
         }
 
@@ -130,6 +143,13 @@ class LoginViewModel : ViewModel() {
             Log.d("fb_login_debug", "mCallbackManager: ${mCallbackManager}")
             mCallbackManager?.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+
+
+    interface LoginCallback{
+        fun onLoginSuccessful()
+        fun onLoginFailed()
     }
 
 

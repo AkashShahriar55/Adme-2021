@@ -6,13 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import com.cookietech.namibia.adme.Application.AppComponent.MODE_CLIENT
+import com.cookietech.namibia.adme.Application.AppComponent.MODE_SERVICE_PROVIDER
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.loginRegistration.LoginRegistrationMainViewModel
+import com.cookietech.namibia.adme.managers.LoginAndRegistrationManager
+import com.cookietech.namibia.adme.managers.SharedPreferenceManager
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.*
+import java.lang.Exception
 
 
 class SplashFragment : Fragment() {
@@ -43,33 +49,66 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-       val job =  workerScope.launch {
-            delay(1000)
-            Log.d("akash_view_model_debug", "onViewCreated: " + loginRegistrationMainViewModel.checkIfAlreadyLoggedIn())
+        val alreadyLoggedIn = loginRegistrationMainViewModel.tryToLogin(object : LoginAndRegistrationManager.UserCreationCallback{
+            override fun onUserCreationSuccessful() {
+                navigateToUserInfo()
+            }
 
-            initializationDone = true
-           navigateToNextScreen()
+            override fun onUserFetchSuccessful() {
+                when(SharedPreferenceManager.user_mode){
+                    MODE_CLIENT-> navigateToClientActivity()
+                    MODE_SERVICE_PROVIDER -> navigateToServiceActivity()
+                }
+            }
 
+            override fun onUserCreationFailed(exception: Exception) {
+                Toast.makeText(context,"Something went wrong",Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
+        if(!alreadyLoggedIn){
+            val job =  workerScope.launch {
+                delay(1000)
+
+
+                initializationDone = true
+                navigateToLoginScreen()
+
+            }
+
+            job.invokeOnCompletion {
+                Log.d("akash_view_model_debug", "onViewCreated: " + it)
+            }
         }
 
-        job.invokeOnCompletion {
-            Log.d("akash_view_model_debug", "onViewCreated: " + it)
-        }
+
     }
 
-    private fun navigateToNextScreen() {
+    private fun navigateToServiceActivity() {
+        findNavController().navigate(R.id.splash_to_service_activity)
+    }
+
+    private fun navigateToClientActivity() {
+        findNavController().navigate(R.id.splash_to_client_activity)
+    }
+
+    private fun navigateToUserInfo() {
+        findNavController().navigate(R.id.splash_to_user_info)
+    }
+
+    private fun navigateToLoginScreen() {
         val extras = FragmentNavigatorExtras(
-            banner_logo to "banner_logo"
+                banner_logo to "banner_logo"
         )
         findNavController().navigate(R.id.splash_to_login,null,null,extras)
-
     }
 
     override fun onResume() {
         super.onResume()
-        if(initializationDone){
-            navigateToNextScreen()
-        }
+      /*  if(initializationDone){
+            navigateToLoginScreen()
+        }*/
     }
 
 
