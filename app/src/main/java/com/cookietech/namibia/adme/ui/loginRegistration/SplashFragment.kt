@@ -25,7 +25,7 @@ class SplashFragment : Fragment() {
     private var initializationDone: Boolean = false
     var mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     var workerScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-    val loginRegistrationMainViewModel: LoginRegistrationMainViewModel by activityViewModels()
+    private val loginRegistrationMainViewModel: LoginRegistrationMainViewModel by activityViewModels()
 
     init {
 
