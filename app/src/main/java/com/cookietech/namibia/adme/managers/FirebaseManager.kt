@@ -10,6 +10,7 @@ import com.google.firebase.storage.FirebaseStorage
 
 object FirebaseManager {
     private const val USER_COLLECTION_ID = "Adme_User"
+
     val mDataBase: FirebaseFirestore = FirebaseFirestore.getInstance()
     val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     val mStorage: FirebaseStorage = FirebaseStorage.getInstance()
