@@ -5,7 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import com.cookietech.namibia.adme.R
+import com.cookietech.namibia.adme.managers.FirebaseManager
+import kotlinx.android.synthetic.main.fragment_profile.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -56,5 +59,32 @@ class ProfileFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initialFields()
+    }
+
+    private fun initialFields() {
+        setProfilePhoto()
+        setUserName()
+    }
+
+    private fun setProfilePhoto() {
+        FirebaseManager.currentUser!!.profile_image_url?.let {
+            Glide.with(requireContext())
+                .load(it)
+                .placeholder(R.mipmap.default_user_photo)
+                .into(profileImage)
+        } ?: kotlin.run {
+            FirebaseManager.mFirebaseUser!!.photoUrl
+        }
+
+    }
+
+    private fun setUserName() {
+        user_name.text = FirebaseManager.currentUser?.user_name ?: "Adme User"
     }
 }

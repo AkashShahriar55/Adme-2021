@@ -14,6 +14,7 @@
     <dimen name="back_button_size">25dp</dimen>
     <dimen name="semi_titte_size">16sp</dimen>
     <dimen name="setting_section_card_size">65dp</dimen>
+    <dimen name="profile_content_margin_top">10dp</dimen>
 
     <!-- for profile fragment ends -->
 
