@@ -129,6 +129,7 @@
     <string name="total_services">Total services</string>
     <string name="service_history_with_ratings">Service history with ratings</string>
     <string name="full_money_history">Full money history</string>
+    <string name="notifications">Notifications</string>
 
 
 </resources>

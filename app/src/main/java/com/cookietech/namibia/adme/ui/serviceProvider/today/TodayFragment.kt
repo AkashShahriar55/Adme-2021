@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.serviceProvider.ServiceProviderViewModel
@@ -77,6 +78,14 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         initializeViews()
         initializeObservers()
+        initializeClicks()
+    }
+
+    private fun initializeClicks() {
+
+        client_notification_btn.setOnClickListener{
+            findNavController().navigate(R.id.today_to_notification)
+        }
     }
 
     private fun initializeObservers() {

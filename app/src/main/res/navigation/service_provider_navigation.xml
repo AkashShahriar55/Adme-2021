@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/service_provider_navigation"
     app:startDestination="@id/todayFragment">
 
     <fragment
         android:id="@+id/todayFragment"
         android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.TodayFragment"
-        android:label="HomeFragment" />
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/today_to_notification"
+            app:destination="@id/notificationFragment" />
+    </fragment>
     <fragment
         android:id="@+id/leaderBoardFragment"
         android:name="com.cookietech.namibia.adme.ui.serviceProvider.leaderboard.LeaderBoardFragment"
@@ -20,4 +25,9 @@
         android:id="@+id/service_provider_profileFragment"
         android:name="com.cookietech.namibia.adme.ui.common.profile.ProfileFragment"
         android:label="ProfileFragment" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.cookietech.namibia.adme.ui.common.notification.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
 </navigation>
