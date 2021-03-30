@@ -127,6 +127,8 @@
     <string name="change_contact_info">Change contact info</string>
     <string name="contact_info">Contact Info</string>
     <string name="total_services">Total services</string>
+    <string name="service_history_with_ratings">Service history with ratings</string>
+    <string name="full_money_history">Full money history</string>
 
 
 </resources>
