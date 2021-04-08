@@ -130,6 +130,7 @@
     <string name="service_history_with_ratings">Service history with ratings</string>
     <string name="full_money_history">Full money history</string>
     <string name="notifications">Notifications</string>
+    <string name="my_deals">My Deals</string>
 
 
 </resources>

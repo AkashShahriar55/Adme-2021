@@ -14,8 +14,11 @@ import kotlinx.android.synthetic.main.activity_service_provider.*
 import java.lang.Exception
 
 class ServiceProviderActivity : AppCompatActivity() {
+
     val serviceProviderViewModel: ServiceProviderViewModel by viewModels()
     private lateinit var navController: NavController
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_service_provider)
