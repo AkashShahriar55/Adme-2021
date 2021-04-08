@@ -1,14 +1,16 @@
 package com.cookietech.namibia.adme.ui.common.profile
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.managers.FirebaseManager
 import kotlinx.android.synthetic.main.fragment_profile.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -70,6 +72,18 @@ class ProfileFragment : Fragment() {
     private fun initialFields() {
         setProfilePhoto()
         setUserName()
+        setMemberSince()
+    }
+
+    private fun setMemberSince() {
+        val simpleDate = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+
+        val registration_date : String = simpleDate.format(FirebaseManager.currentUser!!.registration_date!!.toDate())
+
+        //Log.d("setMemberSince", "setMemberSince: " + registraion_date)
+        sinceTime.text = "Member Since $registration_date"
+
+
     }
 
     private fun setProfilePhoto() {
@@ -79,7 +93,11 @@ class ProfileFragment : Fragment() {
                 .placeholder(R.mipmap.default_user_photo)
                 .into(profileImage)
         } ?: kotlin.run {
-            FirebaseManager.mFirebaseUser!!.photoUrl
+
+            Glide.with(requireContext())
+                .load(FirebaseManager.mFirebaseUser!!.photoUrl)
+                .placeholder(R.mipmap.default_user_photo)
+                .into(profileImage)
         }
 
     }

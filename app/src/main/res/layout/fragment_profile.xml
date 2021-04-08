@@ -40,11 +40,11 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profileImage"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
                         android:layout_marginTop="20dp"
                         android:layout_marginBottom="20dp"
-                        android:background="@mipmap/default_user_photo"
+                        android:src="@mipmap/default_user_photo"
                         android:clickable="true"
                         android:contentDescription="@string/todo"
                         android:focusable="true"
@@ -85,7 +85,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:text="Member since 2015"
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
