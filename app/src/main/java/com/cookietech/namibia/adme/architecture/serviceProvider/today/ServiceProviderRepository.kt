@@ -3,13 +3,13 @@ package com.cookietech.namibia.adme.architecture.serviceProvider.today
 import android.util.Log
 import com.cookietech.namibia.adme.interfaces.ServiceProviderDataCallback
 import com.cookietech.namibia.adme.managers.FirebaseManager
-import com.cookietech.namibia.adme.managers.LoginAndRegistrationManager
 import com.cookietech.namibia.adme.models.ServiceProviderPOJO
-import com.cookietech.namibia.adme.models.UserPOJO
+import com.cookietech.namibia.adme.models.ServicesPOJO
 import com.cookietech.namibia.adme.utils.SingleLiveEvent
-import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseUser
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
+import java.lang.Exception
 
 class ServiceProviderRepository {
     private val SERVICE_PROVIDER_PATH = "/data/service_provider"
@@ -44,4 +44,31 @@ class ServiceProviderRepository {
         }
 
     }
+
+    fun fetchAllServices(callback:AllServiceFetch) {
+        FirebaseManager.currentUser?.apply {
+             FirebaseManager.mUserRef.document(user_id).collection("data").document("service_provider").collection("services").addSnapshotListener { value, error ->
+                 Log.d("database_debug", "fetchAllServices: ")
+                 error?.let {
+                     callback.onFetchFailed(it)
+                 }
+
+                 value?.let {
+                     val services_temp = ArrayList<ServicesPOJO>()
+                     for (document in it.documents){
+                         val service = document.toObject(ServicesPOJO::class.java)
+                         service?.let { s -> services_temp.add(s) }
+                     }
+                     callback.onFetchSuccess(services_temp)
+                 }
+             }
+        }
+
+    }
+
+    interface AllServiceFetch{
+        fun onFetchSuccess(services:ArrayList<ServicesPOJO>)
+        fun onFetchFailed(exception: Exception)
+    }
+
 }

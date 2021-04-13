@@ -217,8 +217,8 @@ class UserInfoFragment : Fragment(), OnMapReadyCallback{
         val name = edt_profile_username.editText?.text.toString()
         val phone_number = ccp.fullNumberWithPlus.toString()
         val address = edt_profile_address.editText?.text.toString()
-        name?.let {name->
-            phone_number?.let { phone_number->
+        name.let { name->
+            phone_number.let { phone_number->
                 userInfoViewModel.updateUserInfo(name,phone_number,lat.toString(),lng.toString(),imageDownloadUrl,object : UpdateDataCallback{
                     override fun updateSuccessful() {
                         dialog.dismiss()
@@ -358,7 +358,8 @@ class UserInfoFragment : Fragment(), OnMapReadyCallback{
                 edt_phone_number.isEnabled = false
                 isPhoneVerifyed = true
             }
-            Glide.with(this).load(FirebaseManager.mFirebaseUser?.photoUrl).into(profile_photo)
+            imageDownloadUrl = FirebaseManager.mFirebaseUser?.photoUrl.toString()
+            Glide.with(this).load(imageDownloadUrl).into(profile_photo)
             edt_profile_username.editText?.setText(FirebaseManager.mFirebaseUser?.displayName)
         }
 

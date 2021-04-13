@@ -12,6 +12,9 @@
         <action
             android:id="@+id/today_to_notification"
             app:destination="@id/notificationFragment" />
+        <action
+            android:id="@+id/today_to_add_service"
+            app:destination="@id/addServiceActivity" />
     </fragment>
     <fragment
         android:id="@+id/leaderBoardFragment"
@@ -30,4 +33,8 @@
         android:name="com.cookietech.namibia.adme.ui.common.notification.NotificationFragment"
         android:label="fragment_notification"
         tools:layout="@layout/fragment_notification" />
+    <activity
+        android:id="@+id/addServiceActivity"
+        android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.addservice.AddServiceActivity"
+        android:label="AddServiceActivity" />
 </navigation>

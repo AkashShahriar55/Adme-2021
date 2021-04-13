@@ -1,14 +1,259 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    tools:context=".ui.serviceProvider.HomeFragment">
+    android:layout_width="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_search"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            app:cardBackgroundColor="#ffffff"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="@+id/map"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/search_image"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop=".5dp"
+                android:background="@drawable/ic_search_black_24dp" />
+
+            <TextView
+                android:id="@+id/search1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="60dp"
+                android:ellipsize="none"
+                android:scrollbars="horizontal"
+                android:singleLine="true"
+                android:text="Which service?"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <FrameLayout
+            android:id="@+id/map"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_optimizationLevel="standard" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/client_location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_location"
+        app:backgroundTint="@color/white"
+        app:layout_anchor="@id/bottom_details"
+        app:layout_anchorGravity="end|top"
+        app:fabCustomSize="50dp"
+        android:focusable="true" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_details"
+        android:layout_width="match_parent"
+        android:layout_height="245dp"
+        android:paddingTop="45dp"
+        android:transitionName="bottom_details"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="95dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        app:layout_constraintTop_toTopOf="@+id/guideline18">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/client_bottom_details_background">
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/bottom_details_toolbar"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/toolbar_height"
+                android:transitionName="bootm_details_toolbar"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/bottom_details_button"
+                        android:layout_width="60dp"
+                        android:layout_height="0dp"
+                        android:clickable="true"
+                        android:contentDescription="TODO"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:scaleType="center"
+                        android:src="@drawable/ic_up_icon"
+                        android:transitionName="bottom_details_back"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/client_notification_btn"
+                        android:layout_width="60dp"
+                        android:layout_height="0dp"
+                        android:clickable="true"
+                        android:contentDescription="TODO"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:scaleType="center"
+                        android:src="@drawable/ic_notification_bell"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/today_status_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/services_available_in_your_area"
+                        android:textColor="@color/color_not_active"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/bottom_details_button"
+                        app:layout_constraintEnd_toStartOf="@+id/client_notification_btn"
+                        app:layout_constraintStart_toEndOf="@+id/bottom_details_button"
+                        app:layout_constraintTop_toTopOf="@+id/bottom_details_button" />
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/today_notification_badge"
+                        android:layout_width="6dp"
+                        android:layout_height="6dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginBottom="20dp"
+                        app:cardBackgroundColor="@color/client_primary"
+                        app:cardCornerRadius="3dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/client_notification_btn"
+                        app:layout_constraintEnd_toEndOf="@+id/client_notification_btn"
+                        app:layout_constraintStart_toStartOf="@+id/client_notification_btn"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/available_service_rv"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bottom_details_toolbar"
+                android:background="@color/default_background"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--        android:visibility="gone"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent">-->
+
+    <!--        <androidx.constraintlayout.widget.Guideline-->
+    <!--            android:id="@+id/guideline18"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:orientation="horizontal"-->
+    <!--            app:layout_constraintGuide_end="@dimen/toolbar_height" />-->
+
+    <!--        <androidx.constraintlayout.widget.Guideline-->
+    <!--            android:id="@+id/guideline19"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:orientation="vertical"-->
+    <!--            app:layout_constraintGuide_percent="0.95" />-->
+
+    <!--        <androidx.constraintlayout.widget.Guideline-->
+    <!--            android:id="@+id/guideline21"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:orientation="vertical"-->
+    <!--            app:layout_constraintGuide_percent="0.05" />-->
+
+    <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--            android:id="@+id/constraintLayout18"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:background="@color/white"-->
+    <!--            android:paddingTop="8dp"-->
+    <!--            android:paddingBottom="8dp"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="parent">-->
+
+    <!--            <SearchView-->
+    <!--                android:id="@+id/searchView"-->
+    <!--                android:layout_width="0dp"-->
+    <!--                android:layout_height="40dp"-->
+    <!--                android:layout_marginStart="16dp"-->
+    <!--                android:layout_marginEnd="16dp"-->
+    <!--                android:background="@drawable/search_service_background"-->
+    <!--                android:iconifiedByDefault="false"-->
+    <!--                android:queryBackground="@null"-->
+    <!--                android:queryHint="Search For a Service"-->
+    <!--                app:layout_constraintEnd_toEndOf="parent"-->
+    <!--                app:layout_constraintStart_toStartOf="parent"-->
+    <!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+    <!--        <androidx.recyclerview.widget.RecyclerView-->
+    <!--            android:visibility="gone"-->
+    <!--            android:id="@+id/rv_service_result"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="0dp"-->
+    <!--            android:background="@color/default_background"-->
+    <!--            android:clipToPadding="false"-->
+    <!--            android:paddingBottom="16dp"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toBottomOf="@+id/constraintLayout18" />-->
+
+    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

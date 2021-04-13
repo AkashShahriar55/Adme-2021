@@ -1,13 +1,20 @@
 package com.cookietech.namibia.adme.ui.common.profile
 
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.cookietech.namibia.adme.Application.AppComponent
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.managers.FirebaseManager
+import com.cookietech.namibia.adme.managers.SharedPreferenceManager
+import com.cookietech.namibia.adme.ui.client.ClientActivity
+import com.cookietech.namibia.adme.ui.serviceProvider.ServiceProviderActivity
+import com.facebook.share.Share
 import kotlinx.android.synthetic.main.fragment_profile.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -67,6 +74,30 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initialFields()
+        initializeClicks()
+    }
+
+    private fun initializeClicks() {
+        cardChangeMode.setOnClickListener {
+            changeMode()
+        }
+    }
+
+    private fun changeMode() {
+
+        if(SharedPreferenceManager.user_mode == AppComponent.MODE_CLIENT){
+            val intent = Intent(requireContext(), ServiceProviderActivity::class.java).apply {
+                flags = FLAG_ACTIVITY_CLEAR_TOP
+            }
+            startActivity(intent)
+            SharedPreferenceManager.user_mode = AppComponent.MODE_SERVICE_PROVIDER
+        }else{
+            val intent = Intent(requireContext(), ClientActivity::class.java).apply {
+                flags = FLAG_ACTIVITY_CLEAR_TOP
+            }
+            startActivity(intent)
+            SharedPreferenceManager.user_mode = AppComponent.MODE_CLIENT
+        }
     }
 
     private fun initialFields() {

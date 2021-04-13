@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/available_service_constraint_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/rounded_corner_gray_white"
+    android:id="@+id/available_service_constraint_layout"
+    android:layout_width="125dp"
+    android:layout_height="match_parent"
     android:layout_marginStart="4dp"
+    android:layout_marginTop="4dp"
     android:layout_marginEnd="4dp"
-    android:padding="8dp"
     android:layout_marginBottom="4dp"
-    android:layout_marginTop="4dp">
+    android:background="@drawable/rounded_corner_gray_white"
+    android:padding="8dp"
+    app:layout_constraintDimensionRatio="1">
 
     <ImageView
-        android:id="@+id/imageView27"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/ic_repair"
-        app:layout_constraintBottom_toTopOf="@+id/textView91"
+        android:id="@+id/iv_service_icon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/tv_Service_text"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,18 +28,23 @@
     </ImageView>
 
     <TextView
-        android:id="@+id/textView91"
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_Service_text"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:maxLines="1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="6sp"
+        app:autoSizeMaxTextSize="18sp"
+        app:autoSizeStepGranularity="1sp"
         android:text="Appliance repair"
         android:textColor="@color/black"
-        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView27">
+        app:layout_constraintTop_toBottomOf="@+id/iv_service_icon">
 
     </TextView>
 

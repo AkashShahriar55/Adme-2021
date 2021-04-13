@@ -1,6 +1,7 @@
 package com.cookietech.namibia.adme.ui.serviceProvider.today
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.cookietech.namibia.adme.architecture.serviceProvider.ServiceProviderV
 import com.cookietech.namibia.adme.interfaces.ServiceProviderDataCallback
 import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.models.ServiceProviderPOJO
+import com.cookietech.namibia.adme.models.ServicesPOJO
 import com.cookietech.namibia.adme.utils.UiHelper
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -86,6 +88,10 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
         client_notification_btn.setOnClickListener{
             findNavController().navigate(R.id.today_to_notification)
         }
+
+        today_add_service.setOnClickListener {
+            findNavController().navigate(R.id.today_to_add_service)
+        }
     }
 
     private fun initializeObservers() {
@@ -103,11 +109,26 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
             }
 
         })
+
+
+
         serviceProviderViewModel.service_provider_data.observe(viewLifecycleOwner,
-            { data->
+            { data ->
                 serviceProviderPOJO = data
                 updateView()
+                serviceProviderViewModel.services.observe(viewLifecycleOwner, { services ->
+                    Log.d("database_debug", "initializeObservers:  ${services.size}")
+                    if (!services.isNullOrEmpty()) {
+                        servicesAdapter.services = services
+                    } else {
+
+                    }
+                })
             })
+
+
+
+
     }
 
     private fun setUpMap() {
