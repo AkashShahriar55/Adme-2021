@@ -7,7 +7,7 @@ import androidx.activity.viewModels
 import androidx.fragment.app.activityViewModels
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.loginRegistration.LoginRegistrationMainViewModel
-import com.cookietech.namibia.adme.architecture.loginRegistration.LoginViewModel
+
 
 class LoginRegistrationActivity : AppCompatActivity() {
 

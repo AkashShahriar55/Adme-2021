@@ -8,14 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.cookietech.namibia.adme.Application.AppComponent
 import com.cookietech.namibia.adme.R
+import com.cookietech.namibia.adme.architecture.common.profile.ProfileViewModel
 import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.managers.SharedPreferenceManager
 import com.cookietech.namibia.adme.ui.client.ClientActivity
 import com.cookietech.namibia.adme.ui.serviceProvider.ServiceProviderActivity
-import com.facebook.share.Share
 import kotlinx.android.synthetic.main.fragment_profile.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,7 +32,12 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class ProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+
+    val profileViewModel : ProfileViewModel by viewModels()
+
+    init {
+
+    }
     private var param1: String? = null
     private var param2: String? = null
 
@@ -82,6 +88,16 @@ class ProfileFragment : Fragment() {
         cardChangeMode.setOnClickListener {
             changeMode()
         }
+
+        cardLogout.setOnClickListener{
+            logout()
+        }
+    }
+
+    private fun logout() {
+
+        profileViewModel.logout(requireContext())
+
     }
 
     private fun changeMode() {
@@ -138,4 +154,6 @@ class ProfileFragment : Fragment() {
     private fun setUserName() {
         user_name.text = FirebaseManager.currentUser?.user_name ?: "Adme User"
     }
+
+
 }
