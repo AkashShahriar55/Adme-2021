@@ -42,6 +42,7 @@ class RegistrationViewModel(application: Application) : AndroidViewModel(applica
         override fun onVerificationFailed(exception: FirebaseException) {
             Log.d("akash_debug", "onVerificationFailed: $exception")
             Log.d("akash_debug", "onVerificationFailed: $exception")
+            registrationCallbacks?.onLoginFailed()
             if (exception.javaClass == FirebaseAuthInvalidCredentialsException::class.java) {
                 Log.d(
                     "akash_debug",

@@ -120,8 +120,11 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
                     Log.d("database_debug", "initializeObservers:  ${services.size}")
                     if (!services.isNullOrEmpty()) {
                         servicesAdapter.services = services
+                        service_recyclerview.visibility = View.VISIBLE
+                        empty_recyclerview.visibility = View.GONE
                     } else {
-
+                        service_recyclerview.visibility = View.GONE
+                        empty_recyclerview.visibility = View.VISIBLE
                     }
                 })
             })
@@ -239,8 +242,6 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
         }
 
         servicesAdapter = ServiceAdapter()
-        service_recyclerview.visibility = View.VISIBLE
-        empty_recyclerview.visibility = View.GONE
         service_recyclerview.layoutManager = LinearLayoutManager(context)
         service_recyclerview.adapter = servicesAdapter
 

@@ -44,6 +44,7 @@ class LoginViewModel : ViewModel() {
                 //updateUI(user)
             } else {
                 // If sign in fails, display a message to the user.
+                loginCallback?.onLoginFailed()
                 Log.w("google_login_debug", "signInWithCredential:failure", task.exception)
                 //updateUI(null)
             }
@@ -110,10 +111,12 @@ class LoginViewModel : ViewModel() {
                     }
 
                     override fun onCancel() {
+                        loginCallback?.onLoginFailed()
                         Log.d("fb_login_debug", "facebook: onCancel")
                     }
 
                     override fun onError(error: FacebookException) {
+                        loginCallback?.onLoginFailed()
                         Log.d("fb_login_debug", "facebook:onError", error)
                     }
 

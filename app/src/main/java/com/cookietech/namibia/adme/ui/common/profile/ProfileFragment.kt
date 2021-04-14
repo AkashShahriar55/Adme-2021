@@ -3,6 +3,7 @@ package com.cookietech.namibia.adme.ui.common.profile
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -118,6 +119,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setProfilePhoto() {
+        Log.d("pro_pic_debug", "setProfilePhoto: " + FirebaseManager.mFirebaseUser!!.photoUrl)
         FirebaseManager.currentUser!!.profile_image_url?.let {
             Glide.with(requireContext())
                 .load(it)

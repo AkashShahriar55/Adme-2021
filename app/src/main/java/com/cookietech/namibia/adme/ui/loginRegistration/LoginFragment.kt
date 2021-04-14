@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
@@ -100,8 +101,8 @@ class LoginFragment : Fragment() {
 
                     override fun onUserCreationFailed(exception: Exception) {
                         dialog.dismiss()
+                        Toast.makeText(context,exception.localizedMessage,Toast.LENGTH_SHORT).show()
                         Log.d("login_debug", "onUserCreationFailed: ")
-                        TODO("Not yet implemented")
                     }
 
                 })
@@ -111,7 +112,7 @@ class LoginFragment : Fragment() {
 
             override fun onLoginFailed() {
                 dialog.dismiss()
-                TODO("Not yet implemented")
+                Toast.makeText(context,"Something Went Wrong!",Toast.LENGTH_SHORT).show()
             }
 
         }
