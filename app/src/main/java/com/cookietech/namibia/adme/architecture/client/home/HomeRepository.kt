@@ -9,4 +9,5 @@ class HomeRepository {
     fun fetchCategories(): Task<QuerySnapshot> {
         return FirebaseManager.mCategoryReference.get()
     }
+
 }

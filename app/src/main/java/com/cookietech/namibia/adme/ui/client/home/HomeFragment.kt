@@ -1,24 +1,30 @@
 package com.cookietech.namibia.adme.ui.client.home
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.client.home.ClientHomeViewModel
 import com.cookietech.namibia.adme.managers.FirebaseManager
+import com.cookietech.namibia.adme.models.ServicesPOJO
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
@@ -33,6 +39,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     val viewModel: ClientHomeViewModel by activityViewModels()
     var workerScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     var mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    val markerOptions = arrayListOf<MarkerOptions>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -64,13 +71,59 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun initializeObservers() {
-        viewModel.categories.observe(viewLifecycleOwner, Observer {  service_list->
+        viewModel.categories.observe(viewLifecycleOwner, Observer { service_list ->
             availableServiceAdapter?.apply {
-                  categories =    service_list
+                categories = service_list
             }
         })
 
 
+        viewModel.services.observe(viewLifecycleOwner, Observer { services ->
+            services?.apply {
+                updateMapMarkers(this)
+            }
+        })
+
+
+    }
+
+    private fun updateMapMarkers(services: ArrayList<ServicesPOJO>) {
+        for (service in services) {
+            val latitude= service.latitude?.toDouble()
+            val longitude = service.longitude?.toDouble()
+            val position = latitude?.let { lat->
+                longitude?.let { lng ->
+                    LatLng(
+                        lat, lng
+                    )
+                }
+            }
+
+           Glide.with(requireContext())
+               .asBitmap()
+               .load(service.pic_url)
+               .into(object : CustomTarget<Bitmap>() {
+                   override fun onResourceReady(
+                       resource: Bitmap,
+                       transition: Transition<in Bitmap>?
+                   ) {
+                       val markerBitmap = viewModel.generateMarkerBitmap(requireContext(),resource)
+                       val marker =  MarkerOptions().position(position!!).icon(
+                           BitmapDescriptorFactory.fromBitmap(
+                               markerBitmap
+                           )
+                       ).title(service.user_name)
+                       markerOptions.add(marker)
+                   }
+
+                   override fun onLoadCleared(placeholder: Drawable?) {
+
+                   }
+
+               })
+
+
+        }
     }
 
     private fun setUpMap() {
@@ -85,7 +138,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
     private fun initializeServicesRecyclerView() {
-        available_service_rv.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+        available_service_rv.layoutManager = LinearLayoutManager(
+            context,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
         availableServiceAdapter = AvailableServiceAdapter(context)
         viewModel.categories.value?.apply {
             availableServiceAdapter?.categories = this
@@ -111,15 +168,23 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             map?.apply {
                 val lat = user.lattitude?.toDoubleOrNull()
                 val lng = user.longitude?.toDoubleOrNull()
-                val currentLocation = lat?.let {latitude-> lng?.let { longitude -> LatLng(latitude, longitude) } }
+                val currentLocation = lat?.let { latitude-> lng?.let { longitude -> LatLng(
+                    latitude,
+                    longitude
+                ) } }
                 clear()
-                addMarker(currentLocation?.let {latlng->
+                addMarker(currentLocation?.let { latlng ->
                     MarkerOptions().position(latlng)
                         .title("your location")
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_location_marker))
                 })
                 moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
             }
+        }
+
+
+        for(marker in markerOptions){
+            mMap?.addMarker(marker)
         }
 
     }

@@ -12,6 +12,7 @@ import com.google.firebase.storage.StorageReference
 object FirebaseManager {
     private const val USER_COLLECTION_ID = "Adme_User"
     private const val CATEGORY_COLLECTION = "Adme_Service_Category"
+    private const val SERVICE_LIST = "Adme_Service_list"
     const val STORAGE_FOLDER_SERVICE_PORTFOLIO = "service_portfolio"
     val mDataBase: FirebaseFirestore = FirebaseFirestore.getInstance()
 
@@ -23,11 +24,13 @@ object FirebaseManager {
     var mFirebaseUser:FirebaseUser? = null
     var mCategoryReference:CollectionReference
     var mPortfolioImageReference: StorageReference = mStorage.reference.child(STORAGE_FOLDER_SERVICE_PORTFOLIO)
+    var mServiceListReference:CollectionReference
 
     init {
         mUserRef = mDataBase.collection(USER_COLLECTION_ID)
         mCategoryReference = mDataBase.collection(CATEGORY_COLLECTION)
         mFirebaseUser = mAuth.currentUser
+        mServiceListReference = mDataBase.collection(SERVICE_LIST)
     }
 
 }
