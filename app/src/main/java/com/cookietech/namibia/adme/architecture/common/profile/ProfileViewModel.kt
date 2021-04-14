@@ -58,6 +58,7 @@ class ProfileViewModel : ViewModel() {
         }
 
         FirebaseManager.currentUser = null
+        FirebaseManager.mFirebaseUser = null
 
     }
 
