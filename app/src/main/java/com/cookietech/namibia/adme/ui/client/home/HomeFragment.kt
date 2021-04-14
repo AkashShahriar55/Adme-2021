@@ -3,6 +3,7 @@ package com.cookietech.namibia.adme.ui.client.home
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -80,14 +81,21 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         viewModel.services.observe(viewLifecycleOwner, Observer { services ->
             services?.apply {
+                Log.d("marker_debug", "initializeObservers: service asche " + services.size)
                 updateMapMarkers(this)
             }
         })
 
 
+        viewModel.services.value?.apply {
+            updateMapMarkers(this)
+        }
+
+
     }
 
     private fun updateMapMarkers(services: ArrayList<ServicesPOJO>) {
+        markerOptions.clear()
         for (service in services) {
             val latitude= service.latitude?.toDouble()
             val longitude = service.longitude?.toDouble()
@@ -114,6 +122,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                            )
                        ).title(service.user_name)
                        markerOptions.add(marker)
+                       addMarkers()
                    }
 
                    override fun onLoadCleared(placeholder: Drawable?) {
@@ -182,10 +191,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
+        addMarkers()
 
+    }
+
+    private fun addMarkers() {
+        Log.d("marker_debug", "initializeObservers: service asche marker oo asbe " + markerOptions.size)
         for(marker in markerOptions){
             mMap?.addMarker(marker)
         }
-
     }
 }
