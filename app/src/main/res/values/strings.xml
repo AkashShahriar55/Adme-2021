@@ -68,7 +68,7 @@
     <string name="title_service_history">Service history</string>
     <string name="services_available_in_your_area">Services available in your area</string>
 
-    <string-array  name="service_category">
+    <string-array name="service_category">
         <item>Paint Job</item>
         <item>Electrical Job</item>
         <item>Telephone Line Repairing</item>

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.client.home.ClientHomeViewModel
@@ -53,6 +54,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         initializeObservers();
         initializeServicesRecyclerView()
         setUpMap()
+        initializeClicksAndViews()
+    }
+
+    private fun initializeClicksAndViews() {
+        cv_search.setOnClickListener {
+            findNavController().navigate(R.id.home_to_search_service)
+        }
     }
 
     private fun initializeObservers() {

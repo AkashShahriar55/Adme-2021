@@ -304,7 +304,6 @@ class RegistrationFragment : Fragment(),RegistrationViewModel.RegistrationCallba
             override fun onUserCreationFailed(exception: Exception) {
                 dialog.dismiss()
                 Log.d("login_debug", "onUserCreationFailed: ")
-                TODO("Not yet implemented")
             }
 
         })
