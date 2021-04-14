@@ -69,6 +69,9 @@ class AddServiceViewModel : ViewModel() {
 
     fun updateDatabase(): Task<DocumentReference>? {
         var tags = ""
+        tags += service.user_name
+        tags +=", ${service.category}"
+        tags += ", ${service.description}"
         subServicesLiveData.value?.let {
             for (service in it){
                 Log.d("database_debug", "updateDatabase: $tags")
