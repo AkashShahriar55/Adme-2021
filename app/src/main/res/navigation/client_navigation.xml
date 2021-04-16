@@ -12,6 +12,9 @@
         <action
             android:id="@+id/home_to_search_service"
             app:destination="@id/searchServicesFragment" />
+        <action
+            android:id="@+id/home_to_marker_details"
+            app:destination="@id/markerClickDetailsDialog2" />
     </fragment>
     <fragment
         android:id="@+id/serviceHistoryFragment"
@@ -31,4 +34,8 @@
         android:id="@+id/searchServicesFragment"
         android:name="com.cookietech.namibia.adme.ui.client.home.SearchServicesFragment"
         android:label="SearchServicesFragment" />
+    <dialog
+        android:id="@+id/markerClickDetailsDialog2"
+        android:name="com.cookietech.namibia.adme.ui.client.home.MarkerClickDetailsDialog"
+        android:label="MarkerClickDetailsDialog" />
 </navigation>

@@ -1,19 +1,25 @@
 package com.cookietech.namibia.adme.ui.client.home
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.client.home.ClientHomeViewModel
@@ -33,14 +39,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
-class HomeFragment : Fragment(), OnMapReadyCallback {
+class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
+    private var isMarkerSet: Boolean = false
     private var mMap: GoogleMap? = null
     private var availableServiceAdapter: AvailableServiceAdapter? = null
     val viewModel: ClientHomeViewModel by activityViewModels()
     var workerScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     var mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-    val markerOptions = arrayListOf<MarkerOptions>()
+    val markers = arrayListOf<Marker?>()
+    val markerMaps = hashMapOf<Marker?,ServicesPOJO?>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -79,23 +87,17 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         })
 
 
-        viewModel.services.observe(viewLifecycleOwner, Observer { services ->
-            services?.apply {
-                Log.d("marker_debug", "initializeObservers: service asche " + services.size)
-                updateMapMarkers(this)
-            }
-        })
 
-
-        viewModel.services.value?.apply {
-            updateMapMarkers(this)
-        }
 
 
     }
 
     private fun updateMapMarkers(services: ArrayList<ServicesPOJO>) {
-        markerOptions.clear()
+        isMarkerSet = true
+        markers.clear()
+        markerMaps.keys.forEach { marker->
+            marker?.remove()
+        }
         for (service in services) {
             val latitude= service.latitude?.toDouble()
             val longitude = service.longitude?.toDouble()
@@ -110,23 +112,53 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
            Glide.with(requireContext())
                .asBitmap()
                .load(service.pic_url)
+               .addListener(object : RequestListener<Bitmap> {
+                   override fun onLoadFailed(
+                       e: GlideException?,
+                       model: Any?,
+                       target: Target<Bitmap>?,
+                       isFirstResource: Boolean
+                   ): Boolean {
+                       Log.d("bitmap_debug", "onLoadFailed: ${service.pic_url}")
+                       val markerBitmap = viewModel.generateMarkerBitmap(requireContext(),BitmapFactory.decodeResource(
+                           resources, R.drawable.profile
+                       ))
+                       addMarker(markerBitmap,position,service)
+                       return false
+                   }
+
+                   override fun onResourceReady(
+                       resource: Bitmap?,
+                       model: Any?,
+                       target: Target<Bitmap>?,
+                       dataSource: DataSource?,
+                       isFirstResource: Boolean
+                   ): Boolean {
+                       Log.d("bitmap_debug", "onResourceReady: ${service.pic_url}")
+                       val markerBitmap = if (resource != null) {
+                           viewModel.generateMarkerBitmap(requireContext(), resource)
+                       } else {
+                           viewModel.generateMarkerBitmap(requireContext(), BitmapFactory.decodeResource(
+                               resources, R.drawable.profile
+                           ))
+
+                       }
+                        addMarker(markerBitmap,position,service)
+
+                       return false
+                   }
+
+               })
                .into(object : CustomTarget<Bitmap>() {
                    override fun onResourceReady(
                        resource: Bitmap,
                        transition: Transition<in Bitmap>?
                    ) {
-                       val markerBitmap = viewModel.generateMarkerBitmap(requireContext(),resource)
-                       val marker =  MarkerOptions().position(position!!).icon(
-                           BitmapDescriptorFactory.fromBitmap(
-                               markerBitmap
-                           )
-                       ).title(service.user_name)
-                       markerOptions.add(marker)
-                       addMarkers()
+
                    }
 
                    override fun onLoadCleared(placeholder: Drawable?) {
-
+                       Log.d("marker_debug", "onLoadCleared: image asheni ")
                    }
 
                })
@@ -172,7 +204,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap?) {
         this.mMap = map
-
+        mMap?.setOnMarkerClickListener(this)
         FirebaseManager.currentUser?.let { user->
             map?.apply {
                 val lat = user.lattitude?.toDoubleOrNull()
@@ -191,14 +223,47 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
-        addMarkers()
 
-    }
+        viewModel.services.observe(viewLifecycleOwner, Observer { services ->
+            services?.apply {
+                Log.d("marker_debug", "initializeObservers: service asche " + services.size)
+                if (!isMarkerSet)
+                    updateMapMarkers(this)
+            }
+        })
 
-    private fun addMarkers() {
-        Log.d("marker_debug", "initializeObservers: service asche marker oo asbe " + markerOptions.size)
-        for(marker in markerOptions){
-            mMap?.addMarker(marker)
+
+        viewModel.services.value?.apply {
+            if(!isMarkerSet)
+                updateMapMarkers(this)
         }
+
     }
+
+
+    fun addMarker(markerBitmap:Bitmap?,position:LatLng?,id:ServicesPOJO?){
+        val marker = mMap?.addMarker(
+            MarkerOptions().position(position!!).icon(
+                BitmapDescriptorFactory.fromBitmap(
+                    markerBitmap
+                )
+            )
+        )
+        markers.add(marker)
+        markerMaps[marker] = id
+    }
+
+    override fun onMarkerClick(marker: Marker?): Boolean {
+        Log.d("akash_debug", "onMarkerClick: ")
+        marker?.apply {
+            val service = markerMaps[this]
+            val bundle = Bundle()
+            bundle.putParcelable("data",service)
+            findNavController().navigate(R.id.home_to_marker_details,bundle)
+        }
+
+        return true
+    }
+
+
 }
