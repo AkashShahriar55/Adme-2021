@@ -53,6 +53,7 @@ class ClientHomeViewModel: ViewModel() {
                 val list = arrayListOf<ServicesPOJO>()
                 for (document in documents){
                     val service = document.toObject(ServicesPOJO::class.java)
+                    service.mServiceId = document.id
                     service.let { list.add(it) }
                 }
                 services.value = list
