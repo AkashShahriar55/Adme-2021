@@ -13,8 +13,8 @@
     </style>
 
     <style name="RatingBar" parent="Theme.AppCompat">
-        <item name="colorControlNormal">@color/sv_primary</item>
-        <item name="colorControlActivated">@color/sv_primary</item>
+        <item name="colorControlNormal">@color/quantum_grey</item>
+        <item name="colorControlActivated">@color/golden</item>
     </style>
 
     <style name="AppTheme2" parent="Theme.MaterialComponents.Light.NoActionBar">

@@ -29,6 +29,6 @@
         android:label="ProfileFragment" />
     <fragment
         android:id="@+id/searchServicesFragment"
-        android:name="com.cookietech.namibia.adme.ui.client.home.SearchServicesFragment"
+        android:name="com.cookietech.namibia.adme.ui.client.home.search.SearchServicesFragment"
         android:label="SearchServicesFragment" />
 </navigation>

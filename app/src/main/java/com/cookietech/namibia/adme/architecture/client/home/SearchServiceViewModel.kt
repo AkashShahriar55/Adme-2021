@@ -13,7 +13,7 @@ class SearchServiceViewModel:ViewModel() {
     val searchServiceRepository = SearchServiceRepository()
 
 
-    fun bindSearch(searchView: EditText) {
+    fun bindSearch(searchView: EditText, searchCallback: SearchServiceRepository.SearchCallback) {
         searchView.textChanges()
             .skipInitialValue()
             .debounce(500, TimeUnit.MILLISECONDS)
@@ -21,7 +21,7 @@ class SearchServiceViewModel:ViewModel() {
             .subscribe { charSequence ->
                 Log.d("debounce_debug", "accept: $charSequence")
                 if (!TextUtils.isEmpty(charSequence))
-                    searchServiceRepository.getSearchResults(charSequence.toString())
+                    searchServiceRepository.getSearchResults(charSequence.toString(),searchCallback)
             }
     }
 }
