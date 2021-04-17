@@ -37,5 +37,14 @@
     <dialog
         android:id="@+id/markerClickDetailsDialog2"
         android:name="com.cookietech.namibia.adme.ui.client.home.MarkerClickDetailsDialog"
-        android:label="MarkerClickDetailsDialog" />
+        android:label="MarkerClickDetailsDialog" >
+        <action
+            android:id="@+id/marker_dialog_to_sp_activity"
+            app:destination="@id/serviceProviderDetailsActivity" />
+    </dialog>
+    <activity
+        android:id="@+id/serviceProviderDetailsActivity"
+        android:name="com.cookietech.namibia.adme.ui.client.home.ServiceProviderDetailsActivity"
+        android:label="activity_service_provider_details"
+        tools:layout="@layout/activity_service_provider_details" />
 </navigation>

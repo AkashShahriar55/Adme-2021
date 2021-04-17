@@ -14,10 +14,11 @@
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".ui.serviceProvider.today.addservice.AddServiceActivity"></activity>
-        <activity android:name=".ui.serviceProvider.today.addservice.AddService" />
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".ui.client.home.ServiceProviderDetailsActivity"
+            android:theme="@style/AppTheme2"/>
+        <activity android:name=".ui.serviceProvider.today.addservice.AddServiceActivity" />
         <activity android:name=".ui.client.ClientActivity" />
         <activity android:name=".ui.serviceProvider.ServiceProviderActivity" />
         <activity android:name=".ui.loginRegistration.LoginRegistrationActivity">
@@ -51,6 +52,7 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".ui.loginRegistration.LoginRegistrationActivity" />
