@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.models.ServicesPOJO
+import com.cookietech.namibia.adme.ui.client.home.search.SearchData
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.layout_marker_click_details.*
 import kotlinx.android.synthetic.main.layout_marker_click_details.tv_category
@@ -18,7 +19,7 @@ import kotlin.math.log
 
 class MarkerClickDetailsDialog(): BottomSheetDialogFragment() {
 
-    var service:ServicesPOJO? = null
+    var service:SearchData? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +71,7 @@ class MarkerClickDetailsDialog(): BottomSheetDialogFragment() {
                 .load(pic_url)
                 .into(marker_profile_image)
 
-            ratingBar.rating = rating.toFloat()
+            ratingBar.rating = rating?.toFloat() ?: 0.0f
             tv_work_done.text = reviews
 
         }
