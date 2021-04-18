@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.services_item_layout.*
 
 class MarkerClickDetailsDialog(): BottomSheetDialogFragment() {
 
-    var service:SearchData? = null
+    var service:ServicesPOJO? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +51,7 @@ class MarkerClickDetailsDialog(): BottomSheetDialogFragment() {
                 .load(pic_url)
                 .into(marker_profile_image)
 
-            ratingBar.rating = rating?.toFloat() ?: 0.0f
+            ratingBar.rating = rating.toFloat()
             tv_work_done.text = reviews
 
         }

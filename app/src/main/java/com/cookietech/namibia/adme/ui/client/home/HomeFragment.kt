@@ -49,7 +49,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     var workerScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     var mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     val markers = arrayListOf<Marker?>()
-    val markerMaps = hashMapOf<Marker?,SearchData?>()
+    val markerMaps = hashMapOf<Marker?,ServicesPOJO?>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -112,7 +112,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     }
 
-    private fun updateMapMarkers(services: ArrayList<SearchData>) {
+    private fun updateMapMarkers(services: ArrayList<ServicesPOJO>) {
         isMarkerSet = true
         markers.clear()
         markerMaps.keys.forEach { marker->
@@ -261,7 +261,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
 
-    fun addMarker(markerBitmap:Bitmap?,position:LatLng?,id:SearchData?){
+    fun addMarker(markerBitmap:Bitmap?,position:LatLng?,id:ServicesPOJO?){
         val marker = mMap?.addMarker(
             MarkerOptions().position(position!!).icon(
                 BitmapDescriptorFactory.fromBitmap(
