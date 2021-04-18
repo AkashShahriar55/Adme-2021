@@ -2,11 +2,10 @@ package com.cookietech.namibia.adme.ui.client.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.models.ServicesPOJO
@@ -15,6 +14,7 @@ import kotlinx.android.synthetic.main.layout_marker_click_details.*
 import kotlinx.android.synthetic.main.layout_marker_click_details.tv_category
 import kotlinx.android.synthetic.main.leaderboard_item.*
 import kotlinx.android.synthetic.main.services_item_layout.*
+import kotlin.math.log
 
 class MarkerClickDetailsDialog(): BottomSheetDialogFragment() {
 
@@ -43,7 +43,17 @@ class MarkerClickDetailsDialog(): BottomSheetDialogFragment() {
     private fun setUpClicks() {
         /**View Profile**/
         btn_view_profile.setOnClickListener{
-           findNavController().navigate(R.id.marker_dialog_to_sp_activity)
+            val bundle = Bundle()
+            bundle.putParcelable("service", service)
+
+           //findNavController().navigate(R.id.marker_dialog_to_sp_activity,bundle)
+            val intent = Intent(context, ServiceProviderDetailsActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+
+            }
+
+            intent.putExtras(bundle)
+            startActivity(intent)
         }
     }
 

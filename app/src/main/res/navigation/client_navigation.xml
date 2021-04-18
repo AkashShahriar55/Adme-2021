@@ -46,5 +46,9 @@
         android:id="@+id/serviceProviderDetailsActivity"
         android:name="com.cookietech.namibia.adme.ui.client.home.ServiceProviderDetailsActivity"
         android:label="activity_service_provider_details"
-        tools:layout="@layout/activity_service_provider_details" />
+        tools:layout="@layout/activity_service_provider_details">
+        <argument
+            android:name="serviceProviderDetailsActivityArgs"
+             />
+    </activity>
 </navigation>
