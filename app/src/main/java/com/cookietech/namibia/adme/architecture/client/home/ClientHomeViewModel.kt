@@ -9,6 +9,7 @@ import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.models.ServiceCategory
 import com.cookietech.namibia.adme.models.ServicesPOJO
+import com.cookietech.namibia.adme.ui.client.home.search.SearchData
 import com.cookietech.namibia.adme.utils.SingleLiveEvent
 import com.google.firebase.firestore.ListenerRegistration
 
@@ -16,7 +17,7 @@ class ClientHomeViewModel: ViewModel() {
 
     val categories: SingleLiveEvent<ArrayList<ServiceCategory>> = SingleLiveEvent()
     val homeRepository = HomeRepository()
-    val services = SingleLiveEvent<ArrayList<ServicesPOJO>>()
+    val services = SingleLiveEvent<ArrayList<SearchData>>()
     var servicesListenerRegistration:ListenerRegistration? = null
 
     init {
@@ -50,10 +51,10 @@ class ClientHomeViewModel: ViewModel() {
 
             value?.let { documents->
 
-                val list = arrayListOf<ServicesPOJO>()
+                val list = arrayListOf<SearchData>()
                 for (document in documents){
-                    val service = document.toObject(ServicesPOJO::class.java)
-                    service.mServiceId = document.id
+                    val service = document.toObject(SearchData::class.java)
+                    service.id = document.id
                     service.let { list.add(it) }
                 }
                 services.value = list
