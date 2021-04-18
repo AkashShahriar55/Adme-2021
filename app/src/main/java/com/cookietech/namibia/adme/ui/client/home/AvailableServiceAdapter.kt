@@ -14,7 +14,7 @@ import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.models.ServiceCategory
 import kotlinx.android.synthetic.main.available_service_item.view.*
 
-class AvailableServiceAdapter(val context: Context?):
+class AvailableServiceAdapter(val context: Context?,val fromDetails:Boolean):
     RecyclerView.Adapter<AvailableServiceAdapter.AvailableServiceViewHolder>() {
 
     var categories = ArrayList<ServiceCategory>()
@@ -31,7 +31,12 @@ class AvailableServiceAdapter(val context: Context?):
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AvailableServiceViewHolder {
         val view: View
         val mInflator: LayoutInflater = LayoutInflater.from(parent.context)
-        view = mInflator.inflate(R.layout.available_service_item, parent, false)
+        view = if(fromDetails){
+            mInflator.inflate(R.layout.available_service_item_for_details, parent, false)
+        }else{
+            mInflator.inflate(R.layout.available_service_item, parent, false)
+        }
+
         return AvailableServiceViewHolder(view)
     }
 

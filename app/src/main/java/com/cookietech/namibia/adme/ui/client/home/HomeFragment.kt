@@ -204,7 +204,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             LinearLayoutManager.HORIZONTAL,
             false
         )
-        availableServiceAdapter = AvailableServiceAdapter(context)
+        availableServiceAdapter = AvailableServiceAdapter(context,false)
         viewModel.categories.value?.apply {
             availableServiceAdapter?.categories = this
         }
