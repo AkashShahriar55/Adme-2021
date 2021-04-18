@@ -25,6 +25,7 @@ import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.client.home.ClientHomeViewModel
 import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.models.ServicesPOJO
+import com.cookietech.namibia.adme.ui.client.home.search.SearchData
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -48,7 +49,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     var workerScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     var mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     val markers = arrayListOf<Marker?>()
-    val markerMaps = hashMapOf<Marker?,ServicesPOJO?>()
+    val markerMaps = hashMapOf<Marker?,SearchData?>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -77,6 +78,25 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         cv_search.setOnClickListener {
             findNavController().navigate(R.id.home_to_search_service)
         }
+
+        client_location_button.setOnClickListener {
+            FirebaseManager.currentUser?.let { user->
+                map?.apply {
+                    val lat = user.lattitude?.toDoubleOrNull()
+                    val lng = user.longitude?.toDoubleOrNull()
+                    val currentLocation = lat?.let { latitude-> lng?.let { longitude -> LatLng(
+                        latitude,
+                        longitude
+                    ) } }
+                    mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 20f))
+                }
+            }
+        }
+
+
+        bottom_details_button.setOnClickListener {
+            findNavController().navigate(R.id.home_to_bottom_details)
+        }
     }
 
     private fun initializeObservers() {
@@ -92,7 +112,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     }
 
-    private fun updateMapMarkers(services: ArrayList<ServicesPOJO>) {
+    private fun updateMapMarkers(services: ArrayList<SearchData>) {
         isMarkerSet = true
         markers.clear()
         markerMaps.keys.forEach { marker->
@@ -241,7 +261,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
 
-    fun addMarker(markerBitmap:Bitmap?,position:LatLng?,id:ServicesPOJO?){
+    fun addMarker(markerBitmap:Bitmap?,position:LatLng?,id:SearchData?){
         val marker = mMap?.addMarker(
             MarkerOptions().position(position!!).icon(
                 BitmapDescriptorFactory.fromBitmap(
@@ -256,10 +276,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     override fun onMarkerClick(marker: Marker?): Boolean {
         Log.d("akash_debug", "onMarkerClick: ")
         marker?.apply {
-            val service = markerMaps[this]
-            val bundle = Bundle()
-            bundle.putParcelable("data",service)
-            findNavController().navigate(R.id.home_to_marker_details,bundle)
+            if(markerMaps.containsKey(this)){
+                val service = markerMaps[this]
+                val bundle = Bundle()
+                bundle.putParcelable("data",service)
+                findNavController().navigate(R.id.home_to_marker_details,bundle)
+            }
         }
 
         return true
