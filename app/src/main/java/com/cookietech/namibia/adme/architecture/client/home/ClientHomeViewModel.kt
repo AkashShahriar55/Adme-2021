@@ -17,7 +17,7 @@ class ClientHomeViewModel: ViewModel() {
 
     val categories: SingleLiveEvent<ArrayList<ServiceCategory>> = SingleLiveEvent()
     val homeRepository = HomeRepository()
-    val services = SingleLiveEvent<ArrayList<SearchData>>()
+    val services = SingleLiveEvent<ArrayList<ServicesPOJO>>()
     var servicesListenerRegistration:ListenerRegistration? = null
 
     init {
@@ -51,10 +51,10 @@ class ClientHomeViewModel: ViewModel() {
 
             value?.let { documents->
 
-                val list = arrayListOf<SearchData>()
+                val list = arrayListOf<ServicesPOJO>()
                 for (document in documents){
-                    val service = document.toObject(SearchData::class.java)
-                    service.id = document.id
+                    val service = document.toObject(ServicesPOJO::class.java)
+                    service.mServiceId = document.id
                     service.let { list.add(it) }
                 }
                 services.value = list
