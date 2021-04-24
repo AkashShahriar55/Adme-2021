@@ -41,6 +41,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import kotlinx.android.synthetic.main.activity_service_provider_details.*
 import kotlinx.android.synthetic.main.fragment_user_info.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -328,7 +329,8 @@ class UserInfoFragment : Fragment(), OnMapReadyCallback{
                                 val postalCode = addresses[0].postalCode
                                 val knownName =
                                     addresses[0].featureName // Only if available else return NULL'
-                                edt_txt_address.setText(address)
+                                tv_location_short.text = "$state,$city";
+                                tv_location_details.text = address
                             } catch (e: IOException) {
                                 e.printStackTrace()
                             }

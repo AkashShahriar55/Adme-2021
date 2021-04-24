@@ -47,9 +47,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private var availableServiceAdapter: AvailableServiceAdapter? = null
     val viewModel: ClientHomeViewModel by activityViewModels()
     var workerScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-    var mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-    val markers = arrayListOf<Marker?>()
-    val markerMaps = hashMapOf<Marker?,ServicesPOJO?>()
+    private var mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private val markers = arrayListOf<Marker?>()
+    private val markerMaps = hashMapOf<Marker?,ServicesPOJO?>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -68,7 +68,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeObservers();
+        initializeObservers()
         initializeServicesRecyclerView()
         setUpMap()
         initializeClicksAndViews()
@@ -77,6 +77,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private fun initializeClicksAndViews() {
         cv_search.setOnClickListener {
             findNavController().navigate(R.id.home_to_search_service)
+        }
+
+        client_notification_btn.setOnClickListener {
+            findNavController().navigate(R.id.client_to_notification_fragment)
         }
 
         client_location_button.setOnClickListener {
@@ -100,7 +104,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
     private fun initializeObservers() {
-        viewModel.categories.observe(viewLifecycleOwner, Observer { service_list ->
+        viewModel.categories.observe(viewLifecycleOwner, { service_list ->
             availableServiceAdapter?.apply {
                 categories = service_list
             }
@@ -244,7 +248,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         }
 
 
-        viewModel.services.observe(viewLifecycleOwner, Observer { services ->
+        viewModel.services.observe(viewLifecycleOwner, { services ->
             services?.apply {
                 Log.d("marker_debug", "initializeObservers: service asche " + services.size)
                 if (!isMarkerSet)

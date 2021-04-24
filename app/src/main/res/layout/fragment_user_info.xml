@@ -41,7 +41,6 @@
         app:layout_constraintTop_toBottomOf="@+id/user_info_top_back">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tv_service_quotation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawablePadding="10dp" />

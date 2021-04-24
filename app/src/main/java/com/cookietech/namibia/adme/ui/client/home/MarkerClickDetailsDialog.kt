@@ -74,6 +74,8 @@ class MarkerClickDetailsDialog(): BottomSheetDialogFragment() {
             ratingBar.rating = rating.toFloat()
             tv_work_done.text = reviews
 
+            Log.d("service_debug", "setUpViews: $latitude $longitude")
+
         }
     }
 
