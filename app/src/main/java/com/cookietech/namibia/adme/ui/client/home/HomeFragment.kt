@@ -97,6 +97,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         bottom_details_button.setOnClickListener {
             findNavController().navigate(R.id.home_to_bottom_details)
         }
+
+        client_notification_btn.setOnClickListener{
+            findNavController().navigate(R.id.home_to_notification)
+        }
     }
 
     private fun initializeObservers() {
