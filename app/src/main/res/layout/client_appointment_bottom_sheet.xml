@@ -98,6 +98,29 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout3"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:hint="Request a price"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/til_address">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tv_service_money"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_attach_money_black_24dp"
+                        android:drawablePadding="10dp"
+                        android:inputType="numberDecimal"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputLayout51"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
@@ -152,7 +175,8 @@
                         android:focusable="false"
                         android:imeOptions="actionNext"
                         android:inputType="none"
-                        android:maxLines="1" />
+                        android:maxLines="1"
+                        android:textSize="12sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -179,7 +203,8 @@
                         android:focusable="false"
                         android:imeOptions="actionNext"
                         android:inputType="none"
-                        android:maxLines="1" />
+                        android:maxLines="1"
+                        android:textSize="12sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -204,32 +229,30 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout3"
+                    android:id="@+id/til_address"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:hint="Request a price"
+                    android:hint="Your Address"
                     app:errorEnabled="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tv_service_money"
+                        android:id="@+id/edt_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_attach_money_black_24dp"
-                        android:drawablePadding="10dp"
-                        android:inputType="numberDecimal"
-                        android:maxLines="1" />
+                        android:drawableStart="@drawable/ic_adress_pin"
+                        android:drawablePadding="10dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
                     android:id="@+id/send_button"
                     android:layout_width="0dp"
-                    android:layout_height="66dp"
+                    android:layout_height="@dimen/_50sdp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"

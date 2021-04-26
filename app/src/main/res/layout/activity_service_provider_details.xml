@@ -213,7 +213,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:background="@color/white"
                 android:paddingBottom="16dp"
@@ -237,7 +236,7 @@
                         android:id="@+id/tv_location"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="16dp"
                         android:layout_marginBottom="16dp"
                         android:text="@string/location"
                         android:textColor="@color/sv_primary"
@@ -245,8 +244,7 @@
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.533" />
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <ImageView
@@ -279,10 +277,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="3dp"
-                    android:layout_marginEnd="24dp"
+                    android:layout_marginEnd="16dp"
                     android:text="Rohonpur,Gomostapur,Chapainawabganj,Rajshahi"
                     android:textSize="12sp"
-                    app:layout_constraintEnd_toStartOf="@+id/barrier10"
+                    app:layout_constraintEnd_toStartOf="@+id/textView84"
                     app:layout_constraintStart_toEndOf="@+id/imageView6"
                     app:layout_constraintTop_toBottomOf="@+id/tv_location_short" />
 
@@ -311,27 +309,7 @@
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_location_details"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/barrier10"
                     app:layout_constraintTop_toBottomOf="@+id/tv_distance" />
-
-                <androidx.constraintlayout.widget.Barrier
-                    android:id="@+id/barrier6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="tv_location"
-                    tools:layout_editor_absoluteX="8dp"
-                    tools:layout_editor_absoluteY="292dp"
-                    tools:ignore="NotSibling" />
-
-                <androidx.constraintlayout.widget.Barrier
-                    android:id="@+id/barrier10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:barrierDirection="end"
-                    app:constraint_referenced_ids="tv_location_details,tv_location_short"
-                    tools:layout_editor_absoluteX="403dp"
-                    tools:layout_editor_absoluteY="8dp" />
 
                 <FrameLayout
                     android:id="@+id/map"

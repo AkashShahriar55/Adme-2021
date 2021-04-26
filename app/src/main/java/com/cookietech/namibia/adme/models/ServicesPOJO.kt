@@ -25,63 +25,51 @@ class ServicesPOJO():Parcelable {
      @Exclude
      var mServiceId: String? = null
 
+    constructor(parcel: Parcel) : this() {
+        category = parcel.readString()
+        categoryId = parcel.readString()
+        rating = parcel.readDouble()
+        reviews = parcel.readString()
+        startTime = parcel.readString()
+        endTime = parcel.readString()
+        user_name = parcel.readString()
+        pic_url = parcel.readString()
+        user_ref = parcel.readString()
+        description = parcel.readString()
+        latitude = parcel.readString()
+        longitude = parcel.readString()
+        feature_images = parcel.createStringArrayList()!!
+        tags = parcel.readString()
+        status = parcel.readByte() != 0.toByte()
+        mServiceId = parcel.readString()
+    }
+
 
     init {
         rating = 0.0
     }
 
-    constructor(
-        category: String?,
-        categoryId:String?,
-        description: String?,
-        startTime: String?,
-        endTime: String?,
-        user_name: String?,
-        pic_url: String?,
-        user_ref: String?,
-        latitude:String?,
-        longitude:String?,
-        feature_images: List<String>,
-        services: MutableList<Map<String, String?>>,
-        tags: String?,
-        status: Boolean
-    ) : this() {
-        this.category = category
-        this.categoryId = categoryId
-        this.description = description
-        rating = 0.0
-        reviews = "0"
-        this.startTime = startTime
-        this.endTime = endTime
-        this.user_name = user_name
-        this.pic_url = pic_url
-        this.user_ref = user_ref
-        this.latitude = latitude
-        this.longitude = longitude
-        this.feature_images = feature_images
-        this.tags = tags
-        this.status = status
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(category)
+        parcel.writeString(categoryId)
+        parcel.writeDouble(rating)
+        parcel.writeString(reviews)
+        parcel.writeString(startTime)
+        parcel.writeString(endTime)
+        parcel.writeString(user_name)
+        parcel.writeString(pic_url)
+        parcel.writeString(user_ref)
+        parcel.writeString(description)
+        parcel.writeString(latitude)
+        parcel.writeString(longitude)
+        parcel.writeStringList(feature_images)
+        parcel.writeString(tags)
+        parcel.writeByte(if (status) 1 else 0)
+        parcel.writeString(mServiceId)
     }
 
-
-
-
-
-
-    constructor(`in`: Parcel) : this() {
-        category = `in`.readString()
-        description = `in`.readString()
-        rating = `in`.readDouble()
-        reviews = `in`.readString()
-        startTime = `in`.readString()
-        endTime = `in`.readString()
-        feature_images = `in`.createStringArrayList()!!
-        tags = `in`.readString()
-        user_name = `in`.readString()
-        pic_url = `in`.readString()
-        user_ref = `in`.readString()
-        status =  `in`.readByte() != 0.toByte()
-        mServiceId = `in`.readString()
+    override fun describeContents(): Int {
+        return 0
     }
 
     companion object CREATOR : Parcelable.Creator<ServicesPOJO> {
@@ -92,30 +80,6 @@ class ServicesPOJO():Parcelable {
         override fun newArray(size: Int): Array<ServicesPOJO?> {
             return arrayOfNulls(size)
         }
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeString(category)
-        dest.writeString(description)
-        dest.writeDouble(rating)
-        dest.writeString(reviews)
-        dest.writeString(startTime)
-        dest.writeString(endTime)
-        dest.writeStringList(feature_images)
-        dest.writeString(tags)
-        dest.writeString(user_name)
-        dest.writeString(pic_url)
-        dest.writeString(user_ref)
-        dest.writeByte(if (status) 1 else 0)
-        dest.writeString(mServiceId)
-    }
-
-    override fun toString(): String {
-        return "ServicesPOJO(category=$category, categoryId=$categoryId, rating=$rating, reviews=$reviews, startTime=$startTime, endTime=$endTime, user_name=$user_name, pic_url=$pic_url, user_ref=$user_ref, description=$description, latitude=$latitude, longitude=$longitude, feature_images=$feature_images, tags=$tags, status=$status, mServiceId=$mServiceId, CREATOR=$CREATOR)"
     }
 
 
