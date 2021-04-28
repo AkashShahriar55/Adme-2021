@@ -65,6 +65,10 @@ class ServiceProviderRepository {
         }
 
     }
+    private val SERVICE_PROVIDER_REF= "service_provider_ref"
+    fun fetchAllAppointments(uid: String): Task<QuerySnapshot> {
+        return FirebaseManager.mAppointmentReference.whereEqualTo(SERVICE_PROVIDER_REF,uid).get()
+    }
 
     interface AllServiceFetch{
         fun onFetchSuccess(services:ArrayList<ServicesPOJO>)

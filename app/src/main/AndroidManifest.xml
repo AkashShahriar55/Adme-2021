@@ -16,8 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.client.home.ServiceProviderDetailsActivity"
-            android:theme="@style/AppTheme2"/>
+        <activity android:name=".ui.serviceProvider.today.appointment.AppointmentDetailsActivity"></activity>
+        <activity
+            android:name=".ui.client.home.ServiceProviderDetailsActivity"
+            android:theme="@style/AppTheme2" />
         <activity android:name=".ui.serviceProvider.today.addservice.AddServiceActivity" />
         <activity android:name=".ui.client.ClientActivity" />
         <activity android:name=".ui.serviceProvider.ServiceProviderActivity" />

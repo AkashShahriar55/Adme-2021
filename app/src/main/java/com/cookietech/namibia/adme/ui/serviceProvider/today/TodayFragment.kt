@@ -14,6 +14,7 @@ import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.serviceProvider.ServiceProviderViewModel
 import com.cookietech.namibia.adme.interfaces.ServiceProviderDataCallback
 import com.cookietech.namibia.adme.managers.FirebaseManager
+import com.cookietech.namibia.adme.models.AppointmentPOJO
 import com.cookietech.namibia.adme.models.ServiceProviderPOJO
 import com.cookietech.namibia.adme.models.ServicesPOJO
 import com.cookietech.namibia.adme.utils.UiHelper
@@ -45,6 +46,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class TodayFragment : Fragment(), OnMapReadyCallback {
+    private lateinit var appointmentAdapter: AppointmentAdapter
     var workerScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     var mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var oldPeekHeight: Int = 0
@@ -112,6 +114,10 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
 
 
 
+
+
+
+
         serviceProviderViewModel.service_provider_data.observe(viewLifecycleOwner,
             { data ->
                 serviceProviderPOJO = data
@@ -125,6 +131,18 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
                     } else {
                         service_recyclerview.visibility = View.GONE
                         empty_recyclerview.visibility = View.VISIBLE
+                    }
+                })
+
+
+                serviceProviderViewModel.observableAppointments.observe(viewLifecycleOwner,{ appointments->
+                    if (!appointments.isNullOrEmpty()) {
+                        appointmentAdapter.appointments = appointments
+                        appointment_container.visibility = View.VISIBLE
+                        empty_recyclerview_appointment.visibility = View.GONE
+                    } else {
+                        appointment_container.visibility = View.GONE
+                        empty_recyclerview_appointment.visibility = View.VISIBLE
                     }
                 })
             })
@@ -244,6 +262,17 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
         servicesAdapter = ServiceAdapter()
         service_recyclerview.layoutManager = LinearLayoutManager(context)
         service_recyclerview.adapter = servicesAdapter
+
+
+        appointmentAdapter = AppointmentAdapter(object :AppointmentAdapter.AppointmentListCallback{
+            override fun onAppointmentDetailsClicked(appointment: AppointmentPOJO) {
+                val bundle = Bundle()
+                bundle.putParcelable("appointment",appointment)
+                findNavController().navigate(R.id.today_to_appointment_activity,bundle)
+            }
+        })
+        appointment_container.layoutManager= LinearLayoutManager(context)
+        appointment_container.adapter = appointmentAdapter
 
     }
 }

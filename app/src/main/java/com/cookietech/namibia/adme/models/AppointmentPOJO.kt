@@ -2,6 +2,7 @@ package com.cookietech.namibia.adme.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.IgnoreExtraProperties
 
 @IgnoreExtraProperties
@@ -10,25 +11,27 @@ data class AppointmentPOJO(var client_name:String,
                            var client_ref:String,
                            var client_quotation:String,
                            var client_price:String
-                           ,var client_latitude:String
-                           ,var client_longitude:String
-                           ,var client_address:String
-                           ,var client_time:String
-                           ,var service_provider_name:String
-                           ,var service_provider_phone:String
-                           ,var service_provider_ref:String
-                           ,var service_ref:String
-                           ,var service_provider_quotation:String?
-                           ,var service_provider_price:String?
-                           ,var service_provider_latitude:String
-                           ,var service_provider_longitude:String
-                           ,var service_provider_time:String?
-                           ,var approved:Boolean
-                           ,var state:String
-                           ,var client_profile_pic:String?
-                           ,var service_provider_pic:String?
-                           ,var time_in_millis:String): Parcelable {
+                           , var client_latitude:String
+                           , var client_longitude:String
+                           , var client_address:String
+                           , var client_time:String
+                           , var service_provider_name:String
+                           , var service_provider_phone:String
+                           , var service_provider_ref:String
+                           , var service_name:String
+                           , var service_ref:String
+                           , var service_provider_quotation:String?
+                           , var service_provider_price:String?
+                           , var service_provider_latitude:String
+                           , var service_provider_longitude:String
+                           , var service_provider_time:String?
+                           , var approved:Boolean
+                           , var state:String
+                           , var client_profile_pic:String?
+                           , var service_provider_pic:String?
+                           , var time_in_millis:String): Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
@@ -53,7 +56,14 @@ data class AppointmentPOJO(var client_name:String,
         parcel.readString(),
         parcel.readString().toString()
     ) {
+        id = parcel.readString().toString()
     }
+
+
+    @Exclude var id:String? = null
+
+
+    constructor() : this("","","","","","","","","","","","","","","","","","","",false,"","","","")
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(client_name)
@@ -68,6 +78,7 @@ data class AppointmentPOJO(var client_name:String,
         parcel.writeString(service_provider_name)
         parcel.writeString(service_provider_phone)
         parcel.writeString(service_provider_ref)
+        parcel.writeString(service_name)
         parcel.writeString(service_ref)
         parcel.writeString(service_provider_quotation)
         parcel.writeString(service_provider_price)
@@ -79,6 +90,7 @@ data class AppointmentPOJO(var client_name:String,
         parcel.writeString(client_profile_pic)
         parcel.writeString(service_provider_pic)
         parcel.writeString(time_in_millis)
+        parcel.writeString(id)
     }
 
     override fun describeContents(): Int {

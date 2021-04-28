@@ -329,8 +329,7 @@ class UserInfoFragment : Fragment(), OnMapReadyCallback{
                                 val postalCode = addresses[0].postalCode
                                 val knownName =
                                     addresses[0].featureName // Only if available else return NULL'
-                                tv_location_short.text = "$state,$city";
-                                tv_location_details.text = address
+                                edt_txt_address.setText(address)
                             } catch (e: IOException) {
                                 e.printStackTrace()
                             }

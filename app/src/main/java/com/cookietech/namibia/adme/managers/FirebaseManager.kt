@@ -14,7 +14,11 @@ object FirebaseManager {
     private const val CATEGORY_COLLECTION = "Adme_Service_Category"
     private const val SERVICE_LIST = "Adme_Service_list"
     private const val APPOINTMENT_LIST= "Adme_Appointment_list"
+
     const val STORAGE_FOLDER_SERVICE_PORTFOLIO = "service_portfolio"
+
+
+
     val mDataBase: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     val mAuth: FirebaseAuth = FirebaseAuth.getInstance()

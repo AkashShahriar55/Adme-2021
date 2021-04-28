@@ -20,6 +20,7 @@ import com.cookietech.namibia.adme.models.AppointmentPOJO
 import com.cookietech.namibia.adme.models.ServicesPOJO
 import com.cookietech.namibia.adme.models.SubServicesPOJO
 import com.cookietech.namibia.adme.utils.GoogleMapUtils
+import com.cookietech.namibia.adme.views.LoadingDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -43,7 +44,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
-
+    private lateinit var dialog: LoadingDialog
     private var phoneNumber: String? = null
     private var startTimeCalender: Calendar? = null
     private var endTimeCalender: Calendar? = null
@@ -77,7 +78,7 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         setUpMap()
         setUpObserver()
         setUpUserAddress()
-
+        dialog = LoadingDialog(this, "Updating", "Please wait...")
         send_button.setOnClickListener {
             validateDataAndSendRequest()
         }
@@ -90,14 +91,40 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             val client_phone = FirebaseManager.currentUser?.phone!!
             val client_ref = FirebaseManager.currentUser?.user_id!!
             val client_quotation = tv_service_quotation.text.toString()
+            if(client_quotation.isEmpty()){
+                tv_service_quotation.error = "Please fill up this"
+                tv_service_quotation.requestFocus()
+                return
+            }
             val client_price = tv_service_money.text.toString()
+            if(client_price.isEmpty()){
+                tv_service_money.error = "Please fill up this"
+                tv_service_money.requestFocus()
+                return
+            }
             val client_latitude = FirebaseManager.currentUser?.lattitude!!
             val client_longitude = FirebaseManager.currentUser?.longitude!!
             val client_address = edt_address.text.toString()
+            if(client_address.isEmpty()){
+                edt_address.error = "Please fill up this"
+                edt_address.requestFocus()
+                return
+            }
             val client_time = myCalendar.timeInMillis.toString()
+            if(tv_service_time.text.toString().isEmpty()){
+                tv_service_time.error = "Please fill up this"
+                tv_service_time.requestFocus()
+                return
+            }
+            if(tv_service_date.text.toString().isEmpty()){
+                tv_service_date.error = "Please fill up this"
+                tv_service_date.requestFocus()
+                return
+            }
             val service_provider_name = service?.user_name!!
             val service_provider_phone = phoneNumber!!
             val service_provider_ref = service?.user_ref!!
+            val service_name = service?.category!!
             val service_ref = service?.mServiceId!!
             val service_provider_latitude = service?.latitude!!
             val services_provider_longitude = service?.longitude!!
@@ -107,13 +134,16 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             val service_provider_pic = service?.pic_url
             val time_in_millis = System.currentTimeMillis().toString()
 
-            val appointment = AppointmentPOJO(client_name,client_phone,client_ref,client_quotation,client_price,client_latitude,client_longitude,client_address,client_time,service_provider_name,service_provider_phone,service_provider_ref,service_ref,null,null,service_provider_latitude,services_provider_longitude,null,false,state,client_profile_pic, service_provider_pic,time_in_millis)
+            val appointment = AppointmentPOJO(client_name,client_phone,client_ref,client_quotation,client_price,client_latitude,client_longitude,client_address,client_time,service_provider_name,service_provider_phone,service_provider_ref,service_name,service_ref,null,null,service_provider_latitude,services_provider_longitude,null,is_approved,state,client_profile_pic, service_provider_pic,time_in_millis)
+            showDialog("Sending Quotation","Please wait...")
             viewmodel.sendRequest(appointment,selectedServices,object : ServiceProviderDetailsViewModel.SendRequestCallback{
                 override fun onRequestSentSuccessfully() {
+                    hideDialog()
                     finish()
                 }
 
                 override fun onRequestSendFailed(exception: Exception) {
+                    hideDialog()
                     Toast.makeText(this@ServiceProviderDetailsActivity,exception.localizedMessage,Toast.LENGTH_SHORT).show()
                 }
 
@@ -122,6 +152,18 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             Toast.makeText(this,exception.localizedMessage,Toast.LENGTH_SHORT).show()
         }
 
+    }
+
+    fun showDialog(title:String,message:String){
+        if(!dialog.isShowing)
+            dialog.show()
+        dialog.updateTitle(title)
+        dialog.updateMessage(message)
+    }
+
+    fun hideDialog(){
+        if(dialog.isShowing)
+            dialog.dismiss()
     }
 
     private fun setUpUserAddress() {
@@ -219,6 +261,7 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                 myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)
             )
+            mDatePickerDialog1.datePicker.minDate = System.currentTimeMillis()
             mDatePickerDialog1.show()
         }
     }

@@ -15,6 +15,9 @@
         <action
             android:id="@+id/today_to_add_service"
             app:destination="@id/addServiceActivity" />
+        <action
+            android:id="@+id/today_to_appointment_activity"
+            app:destination="@id/appointmentDetailsActivity" />
     </fragment>
     <fragment
         android:id="@+id/leaderBoardFragment"
@@ -37,4 +40,8 @@
         android:id="@+id/addServiceActivity"
         android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.addservice.AddServiceActivity"
         android:label="AddServiceActivity" />
+    <activity
+        android:id="@+id/appointmentDetailsActivity"
+        android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.appointment.AppointmentDetailsActivity"
+        android:label="AppointmentDetailsActivity" />
 </navigation>
