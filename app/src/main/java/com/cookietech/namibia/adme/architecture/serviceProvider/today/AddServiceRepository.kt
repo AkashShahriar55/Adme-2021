@@ -91,6 +91,16 @@ class AddServiceRepository {
         return null
     }
 
+    fun getSubServices(mServiceId: String): Task<QuerySnapshot>? {
+        FirebaseManager.currentUser?.apply {
+            return FirebaseManager.mUserRef.document(user_id).collection("data")
+                .document("service_provider").collection("services").document(mServiceId)
+                .collection("sub_services").get()
+        }
+        return  null
+
+    }
+
 
     interface UploadImageCallback{
         fun onProgressUpdate(mb:String)

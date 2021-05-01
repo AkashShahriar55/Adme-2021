@@ -52,7 +52,7 @@ class AddServiceViewModel : ViewModel() {
 
     }
 
-    public fun addSubService(subService:SubServicesPOJO){
+    fun addSubService(subService:SubServicesPOJO){
         if(subServicesLiveData.value == null){
             val servicesArray = ArrayList<SubServicesPOJO>()
             servicesArray.add(subService)
@@ -89,5 +89,27 @@ class AddServiceViewModel : ViewModel() {
         }
         return null
 
+    }
+
+    fun getSubServices(mServiceId: String) {
+        addServiceRepository.getSubServices(mServiceId)?.addOnSuccessListener { documents ->
+            for (document in documents) {
+                //Log.d(TAG, "${document.id} => ${document.data}")
+                val subService =  document.toObject(SubServicesPOJO::class.java)
+
+                if(subServicesLiveData.value == null){
+                    val servicesArray = ArrayList<SubServicesPOJO>()
+                    servicesArray.add(subService)
+                    subServicesLiveData.value = servicesArray
+                }else{
+                    val serviceArray = subServicesLiveData.value
+                    serviceArray?.add(subService)
+                    subServicesLiveData.value = serviceArray
+                }
+            }
+
+        }?.addOnFailureListener {
+
+        }
     }
 }
