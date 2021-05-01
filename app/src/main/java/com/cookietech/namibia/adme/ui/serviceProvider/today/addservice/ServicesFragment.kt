@@ -93,8 +93,10 @@ class ServicesFragment : Fragment(), AddServiceDialog.AdServiceDialogListener,
     }
 
     private fun updateSubServices() {
-        Log.d("update_sub_service", "updateSubServices: ${viewmodel.service.mServiceId}")
-        viewmodel.service.mServiceId?.let { viewmodel.getSubServices(it) }
+        if(viewmodel.isServiceUpdate){
+            viewmodel.service.mServiceId?.let { viewmodel.getSubServices(it) }
+        }
+
     }
 
     private fun openDialogFromFragment() {

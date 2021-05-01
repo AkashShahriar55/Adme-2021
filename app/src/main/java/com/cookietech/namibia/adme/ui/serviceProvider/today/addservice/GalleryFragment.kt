@@ -23,23 +23,18 @@ import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.serviceProvider.today.AddServiceViewModel
 import kotlinx.android.synthetic.main.fragment_gallery.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [GalleryFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class GalleryFragment : Fragment() {
+
     private var code: Int = 0
     private val PERMISSION_REQUEST_CODE = 1
     private val IMAGE_PICK_CODE_1 = 100
     val IMAGE_PICK_CODE_2 = 101
     val IMAGE_PICK_CODE_3 = 102
-    // TODO: Rename and change types of parameters
+
     private var param1: String? = null
     private var param2: String? = null
     val viewmodel: AddServiceViewModel by activityViewModels()
@@ -90,6 +85,33 @@ class GalleryFragment : Fragment() {
         }
 
         initializeFields()
+
+        updateGalleryImage()
+    }
+
+    private fun updateGalleryImage() {
+        if (viewmodel.isServiceUpdate){
+            for ((index, img_url) in viewmodel.service.feature_images.withIndex()){
+                if(index == 0){
+                    Glide.with(requireContext())
+                        .load(img_url)
+                        .fitCenter()
+                        .into(service_image_1)
+                }
+                else if (index == 1){
+                    Glide.with(requireContext())
+                        .load(img_url)
+                        .fitCenter()
+                        .into(service_image_2)
+                }
+                else if (index == 2){
+                    Glide.with(requireContext())
+                        .load(img_url)
+                        .fitCenter()
+                        .into(service_image_3)
+                }
+            }
+        }
     }
 
     private fun initializeFields() {
@@ -237,15 +259,7 @@ class GalleryFragment : Fragment() {
 
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment GalleryFragment.
-         */
-        // TODO: Rename and change types and number of parameters
+
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             GalleryFragment().apply {

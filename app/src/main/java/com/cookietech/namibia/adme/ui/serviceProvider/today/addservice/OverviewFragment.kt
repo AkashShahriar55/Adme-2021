@@ -72,7 +72,7 @@ class OverviewFragment : Fragment() {
     private fun updateSelectedCategory(categories: ArrayList<ServiceCategory>) {
         if (viewmodel.isServiceUpdate){
             getSelectedCategory(categories)
-            service_category_spinner.isEnabled = false
+
 
         }
         else{
@@ -154,10 +154,12 @@ class OverviewFragment : Fragment() {
 
 
         if (!viewmodel.isServiceUpdate){
+            service_category_spinner.isEnabled = true
             updateStartTimeUi(viewmodel.startTime[Calendar.HOUR_OF_DAY], viewmodel.startTime[Calendar.MINUTE])
             updateEndTimeUi(viewmodel.endTime[Calendar.HOUR_OF_DAY], viewmodel.endTime[Calendar.MINUTE])
         }
         else{
+            service_category_spinner.isEnabled = false
             start_time_btn.text = viewmodel.service.startTime
             end_time_btn.text = viewmodel.service.endTime
         }
