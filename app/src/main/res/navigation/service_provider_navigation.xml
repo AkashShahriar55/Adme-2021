@@ -39,7 +39,12 @@
     <activity
         android:id="@+id/addServiceActivity"
         android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.addservice.AddServiceActivity"
-        android:label="AddServiceActivity" />
+        android:label="AddServiceActivity" >
+        <argument
+            android:name="services"
+            app:argType="com.cookietech.namibia.adme.models.ServicesPOJO"
+            app:nullable="true" />
+    </activity>
     <activity
         android:id="@+id/appointmentDetailsActivity"
         android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.appointment.AppointmentDetailsActivity"

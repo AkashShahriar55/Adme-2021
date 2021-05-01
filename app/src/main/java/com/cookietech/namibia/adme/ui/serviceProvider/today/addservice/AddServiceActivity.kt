@@ -5,9 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
-import androidx.navigation.findNavController
+import androidx.navigation.*
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.cookietech.namibia.adme.R
@@ -26,9 +24,11 @@ class AddServiceActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     val addServiceViewModel: AddServiceViewModel by viewModels()
     var currentTab = 0
+    val args: AddServiceActivityArgs by navArgs()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_service)
+        setUpServicesForUpdate()
         dialog = LoadingDialog(this, "none", "none")
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.add_service_nav_host) as NavHostFragment
         navController = navHostFragment.findNavController()
@@ -62,6 +62,25 @@ class AddServiceActivity : AppCompatActivity() {
         add_service_save_button.setOnClickListener {
             Log.d("save_debug", "verifyAndSave: clicked")
             verifyAndSave()
+        }
+
+        //val num = args.number
+        //Log.d("arg_debug", "onCreate: $num")
+
+    }
+
+    private fun setUpServicesForUpdate() {
+        val services = args.services
+        if (services == null){
+            Log.d("arg_debug", "null service: ")
+            addServiceViewModel.isServiceUpdate = false
+
+        }
+        else{
+            //Log.d("arg_debug", "ready for update: ${services.mServiceId}")
+            addServiceViewModel.isServiceUpdate = true
+            addServiceViewModel.service = services
+
         }
     }
 

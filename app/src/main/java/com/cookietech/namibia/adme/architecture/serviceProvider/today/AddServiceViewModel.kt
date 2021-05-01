@@ -21,10 +21,11 @@ class AddServiceViewModel : ViewModel() {
     val categories: SingleLiveEvent<ArrayList<ServiceCategory>> = SingleLiveEvent()
     val completedFlags = mutableListOf(false,false,false)
     val addServiceRepository = AddServiceRepository()
-    val service = ServicesPOJO()
+    var service = ServicesPOJO()
     val isOverviewSaved = false
     val imageUris: ArrayList<Uri?> = arrayListOf(null, null, null)
     val subServicesLiveData = SingleLiveEvent<ArrayList<SubServicesPOJO>?>()
+    var isServiceUpdate : Boolean = false
 
     init {
         Log.d("service_debug", ": add service view model initiated")

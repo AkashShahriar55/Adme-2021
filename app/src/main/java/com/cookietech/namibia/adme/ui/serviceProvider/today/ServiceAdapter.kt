@@ -1,5 +1,6 @@
 package com.cookietech.namibia.adme.ui.serviceProvider.today
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +11,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.models.ServicesPOJO
+import kotlin.math.log
 
-class ServiceAdapter(
-) : RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
+class ServiceAdapter(var itemClickListener: OnServiceItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
 
     var services = ArrayList<ServicesPOJO>()
     set(value) {
@@ -34,6 +35,13 @@ class ServiceAdapter(
         mainHolder.rb_rating.rating = service.rating.toFloat()
         mainHolder.tv_reviews.text = "0"
         mainHolder.tv_description.text = service.description
+
+
+
+        mainHolder.ct_parent.setOnClickListener {
+            Log.d("click", "onBindViewHolder: ")
+            itemClickListener.onItemClicked(service)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -41,20 +49,16 @@ class ServiceAdapter(
     }
 
     internal class ServiceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var viewServiceButton: Button
-        lateinit var tv_category: TextView
-        lateinit var tv_description:TextView
-        lateinit var tv_reviews:TextView
-        lateinit var rb_rating: RatingBar
-        lateinit var ct_parent: ConstraintLayout
-        init {
-            viewServiceButton = itemView.findViewById(R.id.view_service_button)
-            tv_category = itemView.findViewById(R.id.tv_category)
-            tv_description = itemView.findViewById<TextView>(R.id.tv_description)
-            tv_reviews = itemView.findViewById<TextView>(R.id.tv_reviews)
-            rb_rating = itemView.findViewById(R.id.rb_rating)
-            ct_parent = itemView.findViewById(R.id.ct_parent)
-        }
+        var viewServiceButton: Button = itemView.findViewById(R.id.view_service_button)
+        var tv_category: TextView = itemView.findViewById(R.id.tv_category)
+        var tv_description:TextView = itemView.findViewById<TextView>(R.id.tv_description)
+        var tv_reviews:TextView = itemView.findViewById<TextView>(R.id.tv_reviews)
+        var rb_rating: RatingBar = itemView.findViewById(R.id.rb_rating)
+        var ct_parent: ConstraintLayout = itemView.findViewById(R.id.ct_parent)
+    }
+
+    interface OnServiceItemClickListener{
+        fun onItemClicked(servicesPOJO: ServicesPOJO)
     }
 
 }

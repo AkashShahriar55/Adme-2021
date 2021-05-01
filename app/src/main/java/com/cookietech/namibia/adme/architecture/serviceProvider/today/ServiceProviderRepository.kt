@@ -57,6 +57,7 @@ class ServiceProviderRepository {
                      val services_temp = ArrayList<ServicesPOJO>()
                      for (document in it.documents){
                          val service = document.toObject(ServicesPOJO::class.java)
+                         service?.mServiceId = document.id
                          service?.let { s -> services_temp.add(s) }
                      }
                      callback.onFetchSuccess(services_temp)

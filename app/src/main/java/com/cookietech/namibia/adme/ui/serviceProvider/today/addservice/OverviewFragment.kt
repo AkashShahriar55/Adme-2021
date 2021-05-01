@@ -16,23 +16,16 @@ import androidx.lifecycle.Observer
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.serviceProvider.today.AddServiceViewModel
 import com.cookietech.namibia.adme.models.ServiceCategory
-import kotlinx.android.synthetic.main.activity_add_service.*
 import kotlinx.android.synthetic.main.fragment_overview.*
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [OverviewFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class OverviewFragment : Fragment() {
 
     private var isTimeValidated: Boolean = false
@@ -45,7 +38,7 @@ class OverviewFragment : Fragment() {
         Log.d("akash_fragment_debug", "init: overview")
     }
 
-    // TODO: Rename and change types of parameters
+
     private var param1: String? = null
     private var param2: String? = null
     val viewmodel: AddServiceViewModel by activityViewModels()
@@ -75,16 +68,37 @@ class OverviewFragment : Fragment() {
         setUpUi()
         setUpObservers()
 
+    }
 
+    private fun setupForUpdate(categories: ArrayList<ServiceCategory>) {
+        if (viewmodel.isServiceUpdate){
+            getSelectedCategory(categories)
+            service_category_spinner.isEnabled = false
+        }
+        else{
+            updateCategorySpinner(categories)
+        }
+    }
 
+    private fun getSelectedCategory(categories: ArrayList<ServiceCategory>) {
 
+        for (category in categories){
+            if (category.id.equals(viewmodel.service.categoryId)){
+                selectedCategory = category
+                viewmodel.service.category = selectedCategory?.category
+                viewmodel.service.categoryId = selectedCategory?.id
+                updateCategorySpinner(categories)
+                break
+            }
+        }
     }
 
     private fun setUpObservers() {
 
         viewmodel.categories.observe(viewLifecycleOwner, Observer { categories ->
             if (categories != null) {
-                updateCategorySpinner(categories)
+                setupForUpdate(categories)
+
             }
         })
     }
@@ -321,15 +335,7 @@ class OverviewFragment : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment OverviewFragment.
-         */
-        // TODO: Rename and change types and number of parameters
+
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             OverviewFragment().apply {

@@ -35,16 +35,10 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [TodayFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class TodayFragment : Fragment(), OnMapReadyCallback {
     private lateinit var appointmentAdapter: AppointmentAdapter
     var workerScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -92,7 +86,8 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
         }
 
         today_add_service.setOnClickListener {
-            findNavController().navigate(R.id.today_to_add_service)
+            val action = TodayFragmentDirections.todayToAddService(null)
+            findNavController().navigate(action)
         }
     }
 
@@ -196,15 +191,7 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment TodayFragment.
-         */
-        // TODO: Rename and change types and number of parameters
+
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             TodayFragment().apply {
@@ -259,7 +246,12 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
             tv_completed_today.text = completed.toString()
         }
 
-        servicesAdapter = ServiceAdapter()
+        servicesAdapter = ServiceAdapter(object : ServiceAdapter.OnServiceItemClickListener{
+            override fun onItemClicked(servicesPOJO: ServicesPOJO) {
+                val action = TodayFragmentDirections.todayToAddService(servicesPOJO)
+                findNavController().navigate(action)
+            }
+        })
         service_recyclerview.layoutManager = LinearLayoutManager(context)
         service_recyclerview.adapter = servicesAdapter
 
