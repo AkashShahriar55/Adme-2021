@@ -22,7 +22,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -70,10 +69,11 @@ class OverviewFragment : Fragment() {
 
     }
 
-    private fun setupForUpdate(categories: ArrayList<ServiceCategory>) {
+    private fun updateSelectedCategory(categories: ArrayList<ServiceCategory>) {
         if (viewmodel.isServiceUpdate){
             getSelectedCategory(categories)
             service_category_spinner.isEnabled = false
+
         }
         else{
             updateCategorySpinner(categories)
@@ -85,6 +85,7 @@ class OverviewFragment : Fragment() {
         for (category in categories){
             if (category.id.equals(viewmodel.service.categoryId)){
                 selectedCategory = category
+                viewmodel.selectedCategory = selectedCategory
                 viewmodel.service.category = selectedCategory?.category
                 viewmodel.service.categoryId = selectedCategory?.id
                 updateCategorySpinner(categories)
@@ -97,7 +98,7 @@ class OverviewFragment : Fragment() {
 
         viewmodel.categories.observe(viewLifecycleOwner, Observer { categories ->
             if (categories != null) {
-                setupForUpdate(categories)
+                updateSelectedCategory(categories)
 
             }
         })
@@ -152,11 +153,14 @@ class OverviewFragment : Fragment() {
 
 
 
-        updateStartTimeUi(
-            viewmodel.startTime[Calendar.HOUR_OF_DAY],
-            viewmodel.startTime[Calendar.MINUTE]
-        )
-        updateEndTimeUi(viewmodel.endTime[Calendar.HOUR_OF_DAY], viewmodel.endTime[Calendar.MINUTE])
+        if (!viewmodel.isServiceUpdate){
+            updateStartTimeUi(viewmodel.startTime[Calendar.HOUR_OF_DAY], viewmodel.startTime[Calendar.MINUTE])
+            updateEndTimeUi(viewmodel.endTime[Calendar.HOUR_OF_DAY], viewmodel.endTime[Calendar.MINUTE])
+        }
+        else{
+            start_time_btn.text = viewmodel.service.startTime
+            end_time_btn.text = viewmodel.service.endTime
+        }
 
         start_time_btn.setOnClickListener { v: View? ->
             val dialog = TimePickerDialog(

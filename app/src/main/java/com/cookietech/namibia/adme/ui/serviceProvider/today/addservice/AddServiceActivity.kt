@@ -77,7 +77,9 @@ class AddServiceActivity : AppCompatActivity() {
 
         }
         else{
-            //Log.d("arg_debug", "ready for update: ${services.mServiceId}")
+            Log.d("arg_debug", "ready for update: ${services.mServiceId}")
+            Log.d("arg_debug", "ready for update: ${services.startTime}")
+            Log.d("arg_debug", "ready for update: ${services.endTime}")
             addServiceViewModel.isServiceUpdate = true
             addServiceViewModel.service = services
 
