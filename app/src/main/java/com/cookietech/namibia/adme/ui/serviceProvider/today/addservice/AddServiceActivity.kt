@@ -56,7 +56,7 @@ class AddServiceActivity : AppCompatActivity() {
         }
 
         add_service_cancel_button.setOnClickListener {
-            it.findNavController().navigateUp()
+            onBackPressed()
         }
 
         add_service_save_button.setOnClickListener {
@@ -77,11 +77,10 @@ class AddServiceActivity : AppCompatActivity() {
 
         }
         else{
-            Log.d("arg_debug", "ready for update: ${services.mServiceId}")
-            Log.d("arg_debug", "ready for update: ${services.startTime}")
-            Log.d("arg_debug", "ready for update: ${services.endTime}")
+
             addServiceViewModel.isServiceUpdate = true
             addServiceViewModel.service = services
+            services.mServiceId?.let { addServiceViewModel.getSubServices(it) }
 
         }
     }

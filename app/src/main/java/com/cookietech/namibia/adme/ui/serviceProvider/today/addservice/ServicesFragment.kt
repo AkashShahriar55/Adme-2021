@@ -87,15 +87,6 @@ class ServicesFragment : Fragment(), AddServiceDialog.AdServiceDialogListener,
             }
         })
 
-        updateSubServices()
-
-
-    }
-
-    private fun updateSubServices() {
-        if(viewmodel.isServiceUpdate){
-            viewmodel.service.mServiceId?.let { viewmodel.getSubServices(it) }
-        }
 
     }
 
