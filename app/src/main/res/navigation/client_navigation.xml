@@ -31,7 +31,11 @@
         android:id="@+id/myDealsFragment"
         android:name="com.cookietech.namibia.adme.ui.client.myDeals.MyDealsFragment"
         android:label="fragment_my_deals"
-        tools:layout="@layout/fragment_my_deals" />
+        tools:layout="@layout/fragment_my_deals" >
+        <action
+            android:id="@+id/my_deals_to_appointment_details"
+            app:destination="@id/appointmentDetailsActivity2" />
+    </fragment>
     <fragment
         android:id="@+id/client_profileFragment"
         android:name="com.cookietech.namibia.adme.ui.common.profile.ProfileFragment"
@@ -67,5 +71,9 @@
         android:name="com.cookietech.namibia.adme.ui.common.notification.NotificationFragment"
         android:label="fragment_notification"
         tools:layout="@layout/fragment_notification" />
+    <activity
+        android:id="@+id/appointmentDetailsActivity2"
+        android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.appointment.AppointmentDetailsActivity"
+        android:label="AppointmentDetailsActivity" />
 
 </navigation>

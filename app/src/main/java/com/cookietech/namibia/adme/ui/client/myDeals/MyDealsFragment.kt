@@ -5,7 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookietech.namibia.adme.R
+import com.cookietech.namibia.adme.architecture.client.myDeals.MyDealsViewModel
+import com.cookietech.namibia.adme.models.AppointmentPOJO
+import com.cookietech.namibia.adme.ui.serviceProvider.today.AppointmentAdapter
+import kotlinx.android.synthetic.main.fragment_my_deals.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -18,9 +25,13 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class MyDealsFragment : Fragment() {
+    private lateinit var adapter: AppointmentAdapter
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    val viewModel:MyDealsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +47,35 @@ class MyDealsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_my_deals, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initializeRecyclerView()
+        initializeObserver()
+    }
+
+    private fun initializeObserver() {
+        viewModel.observableAppointments.observe(viewLifecycleOwner,{
+            it?.let { appointments->
+                adapter.appointments = appointments
+            }
+        })
+    }
+
+    private fun initializeRecyclerView() {
+        client_appointment_rv.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+        adapter = AppointmentAdapter(object :AppointmentAdapter.AppointmentListCallback{
+            override fun onAppointmentDetailsClicked(appointment: AppointmentPOJO) {
+                val bundle = Bundle()
+                bundle.putParcelable("appointment",appointment)
+                findNavController().navigate(R.id.my_deals_to_appointment_details,bundle)
+            }
+
+        })
+
+        client_appointment_rv.adapter = adapter
     }
 
     companion object {
