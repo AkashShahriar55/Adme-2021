@@ -131,6 +131,18 @@
     <string name="full_money_history">Full money history</string>
     <string name="notifications">Notifications</string>
     <string name="my_deals">My Deals</string>
+    <string name="add_services">Add Services</string>
+    <string name="unit">Unit</string>
+
+    <string name="price_per_unit">Price Per Unit</string>
+
+    <string-array name="units">
+        <item>square feet</item>
+        <item>square inch</item>
+        <item>person</item>
+        <item>item</item>
+        <item>cloth</item>
+    </string-array>
 
 
 </resources>

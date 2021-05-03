@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.add_service_dialog.*
 import java.util.*
 
 class AddServiceDialog(private val calledFrom: String) : AppCompatDialogFragment() {
-    private var listener: AdServiceDialogListener? = null
+    /*private var listener: AdServiceDialogListener? = null
     lateinit var edt_service_name : TextInputLayout
     lateinit var edt_service_description : TextInputLayout
     lateinit var edt_service_charge : TextInputLayout
@@ -90,7 +90,7 @@ class AddServiceDialog(private val calledFrom: String) : AppCompatDialogFragment
         } else {
             true
         }
-    }
+    }*/
 
     interface AdServiceDialogListener {
         fun dialogText(service_name: String?, service_description: String?, service_charge: String?)

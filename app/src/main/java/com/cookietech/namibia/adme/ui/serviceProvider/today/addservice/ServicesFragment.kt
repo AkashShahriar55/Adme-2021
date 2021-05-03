@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -19,7 +20,7 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 
-class ServicesFragment : Fragment(), AddServiceDialog.AdServiceDialogListener,
+class ServicesFragment : Fragment(),
     AddServiceAdapter.AddServiceAdapterListener {
     private lateinit var addServiceAdapter: AddServiceAdapter
 
@@ -27,9 +28,11 @@ class ServicesFragment : Fragment(), AddServiceDialog.AdServiceDialogListener,
     private var param1: String? = null
     private var param2: String? = null
     val viewmodel: AddServiceViewModel by activityViewModels()
+
     init {
 
         Log.d("akash_fragment_debug", "init: ServicesFragment")
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,14 +89,32 @@ class ServicesFragment : Fragment(), AddServiceDialog.AdServiceDialogListener,
                 addServiceAdapter.setServiceList(it1)
             }
         })
-
-
+        
     }
 
+
+
     private fun openDialogFromFragment() {
-        val dialog = AddServiceDialog("fragment")
+        /*val dialog = AddServiceDialog("fragment")
         dialog.setTargetFragment(this, 1)
-        dialog.show(parentFragmentManager, "Ad Service Dialog")
+        dialog.show(parentFragmentManager, "Ad Service Dialog")*/
+        val bottomSheet : AddServiceBottomSheetFragment = AddServiceBottomSheetFragment.newInstance()
+        bottomSheet.show(childFragmentManager,"add_service_bottom_sheet_fragment")
+
+        bottomSheet.attachSubServiceListener(object : AddServiceBottomSheetFragment.SubServiceListener{
+            override fun addSubService(subServicesPOJO: SubServicesPOJO) {
+                viewmodel.addSubService(subServicesPOJO)
+            }
+
+            override fun deleteSubService() {
+
+            }
+
+            override fun editSubService() {
+
+            }
+
+        })
     }
 
     companion object {
@@ -108,16 +129,9 @@ class ServicesFragment : Fragment(), AddServiceDialog.AdServiceDialogListener,
             }
     }
 
-    override fun dialogText(
-        service_name: String?,
-        service_description: String?,
-        service_charge: String?
-    ) {
-        val subService = SubServicesPOJO(service_name, service_description, service_charge)
-        viewmodel.addSubService(subService)
-    }
+
 
     override fun deleteService(position: Int) {
-
+        Toast.makeText(requireContext(),"clicked for delete",Toast.LENGTH_SHORT).show()
     }
 }

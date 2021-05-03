@@ -45,7 +45,7 @@ class AddServiceAdapter internal constructor(
                 position
             )
         })
-        serviceHolder.tv_service_button.setText("Delete")
+        serviceHolder.tv_service_button.text = "Delete"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             serviceHolder.tv_service_button.setTextColor(
                 context.resources.getColor(

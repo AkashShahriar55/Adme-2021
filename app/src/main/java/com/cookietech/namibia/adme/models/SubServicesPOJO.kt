@@ -10,22 +10,25 @@ class SubServicesPOJO():Parcelable {
     var service_name:String? = null
     var service_description:String? = null
     var service_charge:String? = null
+    var service_unit: String? = null
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readString()
         service_name = parcel.readString()
         service_description = parcel.readString()
         service_charge = parcel.readString()
+        service_unit = parcel.readString()
     }
 
-    constructor(service_name: String?, service_description: String?, service_charge: String?) : this() {
+    constructor(service_name: String?, service_description: String?, service_charge: String?, service_unit: String?) : this() {
         this.service_name = service_name
         this.service_description = service_description
         this.service_charge = service_charge
+        this.service_unit = service_unit
     }
 
     override fun toString(): String {
-        return "SubServicesPOJO(id=$id, service_name=$service_name, service_description=$service_description, service_charge=$service_charge)"
+        return "SubServicesPOJO(id=$id, service_name=$service_name, service_description=$service_description, service_charge=$service_charge, service_unit=$service_unit)"
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -33,6 +36,7 @@ class SubServicesPOJO():Parcelable {
         parcel.writeString(service_name)
         parcel.writeString(service_description)
         parcel.writeString(service_charge)
+        parcel.writeString(service_unit)
     }
 
     override fun describeContents(): Int {
