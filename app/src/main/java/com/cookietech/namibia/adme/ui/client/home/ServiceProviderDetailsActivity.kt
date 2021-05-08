@@ -270,18 +270,23 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         selectServiceAdapter = SelectServiceAdapter(this,
             object : SelectServiceAdapter.SelectServiceAdapterListener {
                 override fun onSelectServiceSelected(selectServiceItem: SubServicesPOJO) {
-                    if (!selectedServices.contains(selectServiceItem)) {
+                    if(selectedServices.contains(selectServiceItem)){
+                        if(selectServiceItem.quantity == 0){
+                            selectedServices.remove(selectServiceItem)
+                            Toast.makeText(
+                                applicationContext,
+                                selectServiceItem.service_name + " Removed",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }else{
+                            selectedServices[selectedServices.indexOf(selectServiceItem)] = selectServiceItem
+                        }
+
+                    }else{
                         selectedServices.add(selectServiceItem)
                         Toast.makeText(
                             applicationContext,
                             selectServiceItem.service_name + " Added",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        selectedServices.remove(selectServiceItem)
-                        Toast.makeText(
-                            applicationContext,
-                            selectServiceItem.service_name + " Removed",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -360,12 +365,12 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         var sum = 0f
         for (service in selectedServices.withIndex()){
             if(service.index == 0){
-                selected_service_text = "1. "+ service.value.service_name + " ($" + service.value.service_charge + ")"
+                selected_service_text = "1. "+ service.value.service_name + " ($" + service.value.service_charge + " x "+service.value.quantity +" "+service.value.service_unit+")"
             }else{
-                selected_service_text += "\n" + (service.index + 1).toString() + ". "+ service.value.service_name + " ($" + service.value.service_charge + ")"
+                selected_service_text += "\n" + (service.index + 1).toString() + ". "+ service.value.service_name + " ($" + service.value.service_charge + " x "+service.value.quantity+" "+service.value.service_unit+ ")"
             }
 
-            sum += service.value.service_charge?.toFloat() ?: 0f
+            sum += (service.value.service_charge?.toFloat() ?: 0f)*service.value.quantity
         }
 
         tv_service_added.setText(selected_service_text)

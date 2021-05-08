@@ -1,4 +1,4 @@
-package com.cookietech.namibia.adme.ui.serviceProvider.today.addservice
+package com.cookietech.namibia.adme.ui.invoice
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,7 +14,7 @@ import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.models.SubServicesPOJO
 
 
-class AddServiceAdapter internal constructor(
+class EditInvoiceServiceAdapter internal constructor(
     private val context: Context,
     private var serviceList: ArrayList<SubServicesPOJO>,
     private val listener: AddServiceAdapterListener
@@ -30,39 +30,30 @@ class AddServiceAdapter internal constructor(
         val view: View
         Log.d("akash-debug", "onCreateViewHolder: ")
         view = inflater.inflate(R.layout.add_service_item, parent, false)
-        return AddServiceViewHolder(view)
+        return EditInvoiceServiceViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val service = serviceList[position]
-        val serviceHolder = holder as AddServiceViewHolder
-        serviceHolder.tv_service_title.setText(service.service_name)
-        serviceHolder.tv_service_details.setText(service.service_description)
-        serviceHolder.tv_service_price.setText("$" + service.service_charge)
-        serviceHolder.tv_service_button.setOnClickListener(View.OnClickListener {
-            listener.deleteService(
+        val serviceHolder = holder as EditInvoiceServiceViewHolder
+        serviceHolder.tv_service_title.text = service.service_name
+        serviceHolder.tv_service_details.text = "$${service.service_charge} x ${service.quantity} ${service.service_unit}"
+        val totalPrice = (service.service_charge?.toFloat() ?: 0.0f) * service.quantity
+        serviceHolder.tv_service_price.text = "$$totalPrice"
+        serviceHolder.itemView.setOnClickListener(View.OnClickListener {
+            listener.editService(
                 position
             )
         })
-        serviceHolder.tv_service_button.text = "Delete"
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            serviceHolder.tv_service_button.setTextColor(
-                context.resources.getColor(
-                    R.color.color_negative,
-                    null
-                )
-            )
-        } else {
-            serviceHolder.tv_service_button.setTextColor(Color.RED)
-        }
+        serviceHolder.tv_service_button.text = "Edit"
     }
 
     override fun getItemCount(): Int {
         return serviceList.size
     }
 
-    internal class AddServiceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    internal class EditInvoiceServiceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var tv_service_title: TextView
         var tv_service_details: TextView
         var tv_service_price: TextView
@@ -77,6 +68,6 @@ class AddServiceAdapter internal constructor(
     }
 
     interface AddServiceAdapterListener {
-        fun deleteService(position: Int)
+        fun editService(position: Int)
     }
 }

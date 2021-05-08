@@ -29,7 +29,11 @@ data class AppointmentPOJO(var client_name:String,
                            , var state:String
                            , var client_profile_pic:String?
                            , var service_provider_pic:String?
-                           , var time_in_millis:String): Parcelable {
+                           , var time_in_millis:String
+                          /* , var completed:Boolean
+                           , var invoice_link:String
+//                            , var total_income:Float
+                            , var reviewed:Boolean */): Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(),
         parcel.readString().toString(),
@@ -54,7 +58,12 @@ data class AppointmentPOJO(var client_name:String,
         parcel.readString().toString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readString().toString()
+        parcel.readString().toString(),
+/*        parcel.readByte() != 0.toByte(),
+        parcel.readString().toString(),
+//        parcel.readFloat(),
+        parcel.readByte() != 0.toByte(),*/
+
     ) {
         id = parcel.readString().toString()
     }
@@ -63,7 +72,7 @@ data class AppointmentPOJO(var client_name:String,
     @Exclude var id:String? = null
 
 
-    constructor() : this("","","","","","","","","","","","","","","","","","","",false,"","","","")
+    constructor() : this("","","","","","","","","","","","","","","","","","","",false,"","","",""/*,false,"",false*/)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(client_name)
@@ -91,6 +100,10 @@ data class AppointmentPOJO(var client_name:String,
         parcel.writeString(service_provider_pic)
         parcel.writeString(time_in_millis)
         parcel.writeString(id)
+/*        parcel.writeByte(if (completed) 1 else 0)
+        parcel.writeString(invoice_link)
+//        parcel.writeFloat(total_income)
+        parcel.writeByte(if (reviewed) 1 else 0)*/
     }
 
     override fun describeContents(): Int {

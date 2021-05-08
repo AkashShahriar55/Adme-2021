@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/appointment_navigation"
+    app:startDestination="@id/appointmentDetailsFragment">
+
+    <fragment
+        android:id="@+id/appointmentDetailsFragment"
+        android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.appointment.AppointmentDetailsFragment"
+        android:label="fragment_appointment_details"
+        tools:layout="@layout/fragment_appointment_details" >
+        <action
+            android:id="@+id/appointment_to_create_invoice"
+            app:destination="@id/createInvoice"
+            app:launchSingleTop="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/createInvoice"
+        android:name="com.cookietech.namibia.adme.ui.invoice.CreateInvoice"
+        android:label="CreateInvoice" >
+        <action
+            android:id="@+id/create_invoice_to_invoice"
+            app:destination="@id/invoiceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/invoiceFragment"
+        android:name="com.cookietech.namibia.adme.ui.invoice.InvoiceFragment"
+        android:label="InvoiceFragment" />
+</navigation>

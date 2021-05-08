@@ -21,6 +21,7 @@ class ServiceProviderDetailsViewModel: ViewModel() {
                 val subServices = arrayListOf<SubServicesPOJO>()
                 for(document in it.result.documents){
                     val subService = document.toObject(SubServicesPOJO::class.java)
+                    subService?.quantity = 0
                     subService?.id = document.id
                     subService?.let { sService -> subServices.add(sService) }
                 }

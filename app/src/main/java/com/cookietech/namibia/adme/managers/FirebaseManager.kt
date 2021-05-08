@@ -16,7 +16,7 @@ object FirebaseManager {
     private const val APPOINTMENT_LIST= "Adme_Appointment_list"
 
     const val STORAGE_FOLDER_SERVICE_PORTFOLIO = "service_portfolio"
-
+    const val STORAGE_FOLDER_SERVICE_INVOICE = "service_invocice"
 
 
     val mDataBase: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -29,6 +29,7 @@ object FirebaseManager {
     var mFirebaseUser:FirebaseUser? = null
     var mCategoryReference:CollectionReference
     var mPortfolioImageReference: StorageReference = mStorage.reference.child(STORAGE_FOLDER_SERVICE_PORTFOLIO)
+    var mInvoiceImageReference: StorageReference = mStorage.reference.child(STORAGE_FOLDER_SERVICE_INVOICE)
     var mServiceListReference:CollectionReference
     var mAppointmentReference:CollectionReference
 

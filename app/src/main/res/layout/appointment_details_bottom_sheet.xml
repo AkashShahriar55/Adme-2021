@@ -350,7 +350,7 @@
                     app:layout_constraintTop_toBottomOf="@id/provider_send_button" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout51"
+                    android:id="@+id/til_service_name"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -383,7 +383,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout5"
+                    android:id="@+id/til_quantity"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -395,7 +395,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/textInputLayout2"
-                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout51">
+                    app:layout_constraintTop_toBottomOf="@+id/til_service_name">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/tv_service_date"
@@ -422,10 +422,10 @@
                     android:hint="Service Time"
                     android:visibility="gone"
                     app:errorEnabled="true"
-                    app:layout_constraintEnd_toStartOf="@+id/textInputLayout5"
+                    app:layout_constraintEnd_toStartOf="@+id/til_quantity"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout51">
+                    app:layout_constraintTop_toBottomOf="@+id/til_service_name">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/tv_service_time"

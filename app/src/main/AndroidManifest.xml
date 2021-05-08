@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.cookietech.namibia.adme">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -16,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.serviceProvider.today.appointment.AppointmentDetailsActivity"></activity>
+        <activity android:name=".ui.invoice.CreateInvoice"></activity>
+        <activity android:name=".ui.serviceProvider.today.appointment.AppointmentDetailsActivity" />
         <activity
             android:name=".ui.client.home.ServiceProviderDetailsActivity"
             android:theme="@style/AppTheme2" />
@@ -61,6 +63,17 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.cookietech.namibia.adme.provider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"
+                tools:replace="android:resource" />
+        </provider>
     </application>
 
 </manifest>

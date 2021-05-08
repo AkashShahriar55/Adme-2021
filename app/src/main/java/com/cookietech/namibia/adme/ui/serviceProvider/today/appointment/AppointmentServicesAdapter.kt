@@ -38,8 +38,9 @@ class AppointmentServicesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
         fun bind(subService:SubServicesPOJO){
-            tv_sub_service_name.text = subService.service_name
-            tv_sub_service_price.text = subService.service_charge
+            tv_sub_service_name.text = subService.service_name +" x "+subService.quantity+" "+subService.service_unit
+            val charge = (subService.service_charge?.toFloat() ?: 0f) * subService.quantity
+            tv_sub_service_price.text = charge.toString()
         }
     }
 

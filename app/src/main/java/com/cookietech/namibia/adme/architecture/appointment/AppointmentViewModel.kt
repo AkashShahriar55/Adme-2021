@@ -1,5 +1,7 @@
 package com.cookietech.namibia.adme.architecture.appointment
 
+import android.graphics.Bitmap
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.cookietech.namibia.adme.models.AppointmentPOJO
 import com.cookietech.namibia.adme.models.SubServicesPOJO
@@ -8,8 +10,9 @@ import com.google.android.gms.tasks.Task
 
 class AppointmentViewModel:ViewModel() {
     val repository = AppointmentRepository()
-    val observableServices = SingleLiveEvent<ArrayList<SubServicesPOJO>>()
-
+    val observableServices = MutableLiveData<ArrayList<SubServicesPOJO>>()
+    val observableAppointment = MutableLiveData<AppointmentPOJO>()
+    val observableFinalServices = MutableLiveData<ArrayList<SubServicesPOJO>>()
 
 
     fun fetchAppointmentServices(appointment_id:String){
@@ -31,6 +34,11 @@ class AppointmentViewModel:ViewModel() {
         return repository.updateAppointment(appointment)
     }
 
+    fun uploadInvoiceToStorage(name:String,invoice:Bitmap,callback: AppointmentRepository.UploadInvoiceCallback){
+        return repository.uploadInvoice(name,invoice,callback)
+    }
+
+
     fun approveServiceProviderResponse(appointment: AppointmentPOJO): Task<Void> {
         return repository.updateAppointment(appointment)
     }
@@ -41,5 +49,9 @@ class AppointmentViewModel:ViewModel() {
 
     fun approveProviderWorkCompletion(appointmentPOJO: AppointmentPOJO):  Task<Void> {
         return repository.updateAppointment(appointmentPOJO)
+    }
+
+    fun sendInvoiceAndFinish(appointment: AppointmentPOJO): Task<Void> {
+        return repository.updateAppointment(appointment)
     }
 }

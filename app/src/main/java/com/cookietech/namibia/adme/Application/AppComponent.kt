@@ -6,4 +6,5 @@ object AppComponent {
     const val MODE_CLIENT = "client"
     const val MODE_SERVICE_PROVIDER = "service_provider"
     const val MODE_BOTH = "both"
+    const val vat = 5.0f
 }

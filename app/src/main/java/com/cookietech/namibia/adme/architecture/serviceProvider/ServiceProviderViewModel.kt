@@ -39,6 +39,7 @@ class ServiceProviderViewModel: ViewModel() {
                         val appointment = document.toObject(AppointmentPOJO::class.java)
                         appointment.id = document.id
                         appointments.add(appointment)
+                        
                     }
                     observableAppointments.value = appointments
                 }

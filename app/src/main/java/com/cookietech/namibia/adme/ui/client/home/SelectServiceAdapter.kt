@@ -2,9 +2,11 @@ package com.cookietech.namibia.adme.ui.client.home
 
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.cookietech.namibia.adme.R
@@ -42,9 +44,10 @@ class SelectServiceAdapter : RecyclerView.Adapter<SelectServiceAdapter.SelectSer
 
     override fun onBindViewHolder(holder: SelectServiceViewHolder, position: Int) {
         val selectServiceItem = SelectServiceList[position]
+        Log.d("service_debug", "onBindViewHolder: " + selectServiceItem.quantity)
         holder.tv_service_title.setText(selectServiceItem.service_name)
         holder.tv_service_details.setText(selectServiceItem.service_description)
-        holder.tv_service_price.setText(selectServiceItem.service_charge)
+        holder.tv_service_price.text = selectServiceItem.service_charge+"/"+selectServiceItem.service_unit
     }
 
     override fun getItemCount(): Int {
@@ -56,21 +59,36 @@ class SelectServiceAdapter : RecyclerView.Adapter<SelectServiceAdapter.SelectSer
         var tv_service_title: TextView = view.findViewById(R.id.tv_service_title)
         var tv_service_details: TextView = view.findViewById(R.id.tv_service_details)
         var tv_service_price: TextView = view.findViewById(R.id.tv_service_price)
-        var tv_service_button: TextView = view.findViewById(R.id.tv_service_button)
+        var tv_plus_button: ImageView = view.findViewById(R.id.plus_service)
+        var tv_minus_button: ImageView = view.findViewById(R.id.minus_service)
 
         init {
 
 //            Typeface tf0 = Typeface.createFromAsset(context.getAssets(), "fonts/Sansation-Regular.ttf");
 //            current.setTypeface(tf0);
-            view.setOnClickListener {
-                listener!!.onSelectServiceSelected(SelectServiceList[adapterPosition])
-                if (tv_service_button.text == "Add Service") {
-                    tv_service_button.setTextColor(Color.RED)
-                    tv_service_button.text = "Remove Service"
-                } else {
-                    tv_service_button.setTextColor(Color.parseColor("#3F5AA6"))
-                    tv_service_button.setText("Add Service")
+
+            tv_minus_button.alpha = 0.5f
+            tv_minus_button.setOnClickListener {
+                val service = SelectServiceList[adapterPosition]
+                if(service.quantity == 0){
+                    return@setOnClickListener
                 }
+                service.quantity = service.quantity-1
+                if(service.quantity == 0){
+                    tv_minus_button.alpha = 0.5f
+                }
+                SelectServiceList[adapterPosition] = service
+                listener!!.onSelectServiceSelected(SelectServiceList[adapterPosition])
+            }
+
+            tv_plus_button.setOnClickListener {
+                val service = SelectServiceList[adapterPosition]
+                if(service.quantity == 0){
+                    tv_minus_button.alpha = 1f
+                }
+                service.quantity = service.quantity+1
+                SelectServiceList[adapterPosition] = service
+                listener!!.onSelectServiceSelected(SelectServiceList[adapterPosition])
             }
         }
     }
