@@ -58,7 +58,7 @@ class ServicesFragment : Fragment(),
         Log.d("akash_fragment_debug", "onViewCreated: ServicesFragment")
 
         ad_service_btn.setOnClickListener {
-            openDialogFromFragment()
+            openDialogFromFragment(null)
         }
 
 
@@ -82,35 +82,39 @@ class ServicesFragment : Fragment(),
             empty_recyclerview_layout.visibility = View.VISIBLE
         }
 
-        viewmodel.subServicesLiveData.observe(viewLifecycleOwner, Observer {services->
+        viewmodel.subServicesLiveData.observe(viewLifecycleOwner, { services->
             services?.let { it1 ->
                 ad_service_recyclerView.visibility = View.VISIBLE
                 empty_recyclerview_layout.visibility = View.GONE
                 addServiceAdapter.setServiceList(it1)
             }
         })
-        
+
     }
 
 
 
-    private fun openDialogFromFragment() {
+    private fun openDialogFromFragment(subServicesPOJO: SubServicesPOJO?) {
         /*val dialog = AddServiceDialog("fragment")
         dialog.setTargetFragment(this, 1)
         dialog.show(parentFragmentManager, "Ad Service Dialog")*/
-        val bottomSheet : AddServiceBottomSheetFragment = AddServiceBottomSheetFragment.newInstance()
+        val bottomSheet : AddServiceBottomSheetFragment = AddServiceBottomSheetFragment.newInstance(subServicesPOJO)
         bottomSheet.show(childFragmentManager,"add_service_bottom_sheet_fragment")
 
-        bottomSheet.attachSubServiceListener(object : AddServiceBottomSheetFragment.SubServiceListener{
+        bottomSheet.attachSubServiceListener(object :
+            AddServiceBottomSheetFragment.SubServiceListener {
             override fun addSubService(subServicesPOJO: SubServicesPOJO) {
                 viewmodel.addSubService(subServicesPOJO)
             }
 
-            override fun deleteSubService() {
+            override fun deleteSubService(subServicesPOJO: SubServicesPOJO?) {
 
+                subServicesPOJO?.let { viewmodel.subServicesLiveData.value?.remove(it) }
+                addServiceAdapter.notifyDataSetChanged()
             }
 
             override fun editSubService() {
+                addServiceAdapter.notifyDataSetChanged()
 
             }
 
@@ -131,7 +135,7 @@ class ServicesFragment : Fragment(),
 
 
 
-    override fun deleteService(position: Int) {
-        Toast.makeText(requireContext(),"clicked for delete",Toast.LENGTH_SHORT).show()
+    override fun deleteService(service: SubServicesPOJO?) {
+        openDialogFromFragment(service)
     }
 }

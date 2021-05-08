@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.add_service_dialog.*
 class AddServiceBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var subServiceListener : SubServiceListener? = null
+    private  var subServicesPOJO:  SubServicesPOJO? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,13 +42,26 @@ class AddServiceBottomSheetFragment : BottomSheetDialogFragment() {
                 return@setOnClickListener
             }
             else{
-                val subServicesPOJO = SubServicesPOJO(edt_service_tittle.text.toString().trim(),edt_service_description.text.toString().trim(), edt_price.text.toString().trim(), edt_unit.text.toString().trim())
-                subServiceListener?.addSubService(subServicesPOJO)
+               if (subServicesPOJO == null){
+                   val subServicesPOJO = SubServicesPOJO(edt_service_tittle.text.toString().trim(),edt_service_description.text.toString().trim(), edt_price.text.toString().trim(), edt_unit.text.toString().trim())
+                   subServiceListener?.addSubService(subServicesPOJO)
+               } else{
+                   subServicesPOJO!!.service_name = edt_service_tittle.text.toString().trim()
+                   subServicesPOJO!!.service_description = edt_service_description.text.toString().trim()
+                   subServicesPOJO!!.service_charge = edt_price.text.toString().trim()
+                   subServicesPOJO!!.service_unit =  edt_unit.text.toString().trim()
+                   subServiceListener?.editSubService()
+
+               }
                 dismiss()
             }
         }
 
         bt_delete.setOnClickListener {
+
+            if (subServicesPOJO != null){
+                subServiceListener?.deleteSubService(subServicesPOJO)
+            }
 
             dismiss()
         }
@@ -59,6 +73,15 @@ class AddServiceBottomSheetFragment : BottomSheetDialogFragment() {
         val units : Array<out String> = resources.getStringArray(R.array.units)
         val adapter: ArrayAdapter<String> = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1, units)
         edt_unit.setAdapter(adapter)*/
+
+        if (subServicesPOJO !=null){
+            edt_service_tittle.setText(subServicesPOJO!!.service_name)
+            edt_service_description.setText(subServicesPOJO!!.service_description)
+            edt_price.setText(subServicesPOJO!!.service_charge)
+            edt_unit.setText(subServicesPOJO!!.service_unit)
+            bt_ok.text = "Save"
+            bt_delete.text = "Delete"
+        }
     }
 
 
@@ -70,7 +93,7 @@ class AddServiceBottomSheetFragment : BottomSheetDialogFragment() {
         val bottomSheet = dialog.window?.findViewById(R.id.design_bottom_sheet) as FrameLayout
         val behaviour = BottomSheetBehavior.from(bottomSheet)
 
-        behaviour.state = BottomSheetBehavior.STATE_SETTLING
+        behaviour.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     fun attachSubServiceListener(subServiceListener: SubServiceListener){
@@ -79,10 +102,10 @@ class AddServiceBottomSheetFragment : BottomSheetDialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(): AddServiceBottomSheetFragment {
+        fun newInstance(subServicesPOJO: SubServicesPOJO?): AddServiceBottomSheetFragment {
             val fragment = AddServiceBottomSheetFragment()
-            /*fragment.comments = comments
-            fragment.postId = post_id
+            fragment.subServicesPOJO = subServicesPOJO
+            /*fragment.postId = post_id
             fragment.commentCount = commentCount*/
             return fragment
         }
@@ -90,7 +113,7 @@ class AddServiceBottomSheetFragment : BottomSheetDialogFragment() {
 
     interface SubServiceListener{
         fun addSubService(subServicesPOJO: SubServicesPOJO)
-        fun deleteSubService()
+        fun deleteSubService(subServicesPOJO: SubServicesPOJO?)
         fun editSubService()
     }
 }
