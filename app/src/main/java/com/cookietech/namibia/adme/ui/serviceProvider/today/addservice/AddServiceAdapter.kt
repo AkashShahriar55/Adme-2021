@@ -39,13 +39,13 @@ class AddServiceAdapter internal constructor(
         val serviceHolder = holder as AddServiceViewHolder
         serviceHolder.tv_service_title.setText(service.service_name)
         serviceHolder.tv_service_details.setText(service.service_description)
-        serviceHolder.tv_service_price.setText("$" + service.service_charge)
+        serviceHolder.tv_service_price.setText("$" + service.service_charge + "/" + service.service_unit)
         serviceHolder.tv_service_button.setOnClickListener(View.OnClickListener {
             listener.deleteService(
-                position
+                service
             )
         })
-        serviceHolder.tv_service_button.text = "Delete"
+        serviceHolder.tv_service_button.text = "Edit/Delete"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             serviceHolder.tv_service_button.setTextColor(
                 context.resources.getColor(
@@ -77,6 +77,6 @@ class AddServiceAdapter internal constructor(
     }
 
     interface AddServiceAdapterListener {
-        fun deleteService(position: Int)
+        fun deleteService(service: SubServicesPOJO?)
     }
 }
