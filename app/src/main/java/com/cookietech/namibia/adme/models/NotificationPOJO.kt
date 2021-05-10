@@ -11,6 +11,7 @@ class NotificationPOJO(var text: String? = null,
                        var type: String? = null,
                        var reference: String? = null,
                        var isSeen: Boolean? = false,
+                       var img_url: String? = null,
                        @Exclude
                        var id: String? = null) : Parcelable{
 
@@ -21,6 +22,7 @@ class NotificationPOJO(var text: String? = null,
         parcel.readString(),
         parcel.readString(),
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+        parcel.readString(),
         parcel.readString()
     )
 
@@ -31,6 +33,7 @@ class NotificationPOJO(var text: String? = null,
         parcel.writeString(type)
         parcel.writeString(reference)
         parcel.writeValue(isSeen)
+        parcel.writeString(img_url)
         parcel.writeString(id)
     }
 

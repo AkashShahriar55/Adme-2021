@@ -62,12 +62,14 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeObserver();
+        setUpMap()
+        initializeObserver()
     }
 
     private fun initializeObserver() {
         viewmodel.observableAppointment.observe(viewLifecycleOwner,{
             appointment = it
+            Log.d("notif_debug", "observer: id" + appointment?.id)
             viewmodel.fetchAppointmentServices(appointment?.id!!)
             setUpMap()
             updateAppointmentInfo()

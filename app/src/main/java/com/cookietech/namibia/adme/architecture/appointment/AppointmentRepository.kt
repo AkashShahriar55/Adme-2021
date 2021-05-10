@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.OnProgressListener
 import com.google.firebase.storage.StorageReference
@@ -26,6 +27,10 @@ class AppointmentRepository {
 
     fun updateAppointment(appointment: AppointmentPOJO): Task<Void> {
         return FirebaseManager.mAppointmentReference.document(appointment.id!!).set(appointment)
+    }
+
+    fun fetchAppointment(appointment_id:String): Task<DocumentSnapshot> {
+        return FirebaseManager.mAppointmentReference.document(appointment_id).get()
     }
 
     fun uploadInvoice(name:String,invoiceBitmap:Bitmap,callback: UploadInvoiceCallback){

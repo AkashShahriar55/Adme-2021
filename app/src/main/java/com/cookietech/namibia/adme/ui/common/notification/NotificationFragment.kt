@@ -1,6 +1,6 @@
 package com.cookietech.namibia.adme.ui.common.notification
 
-import android.app.Notification
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.common.notification.NotificationViewModel
+import com.cookietech.namibia.adme.ui.serviceProvider.today.appointment.AppointmentDetailsActivity
 import kotlinx.android.synthetic.main.fragment_notification.*
 
 
@@ -48,7 +49,7 @@ class NotificationFragment : Fragment() {
     private fun initializeObserver() {
         notificationViewModel.notificationList.observe(viewLifecycleOwner, { notifList ->
             adapter?.apply {
-               notificationList = notifList
+                notificationList = notifList
             }
         })
     }
@@ -59,11 +60,20 @@ class NotificationFragment : Fragment() {
 
     private fun initializeRV() {
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
-         adapter = NotificationAdapter(object : NotificationAdapter.NotificationClickListener{
-            override fun onNotificationClicked(notification: Notification) {
+         adapter = NotificationAdapter(object : NotificationAdapter.NotificationClickListener {
+             override fun onNotificationClicked(appointmentId: String) {
+                 //Log.d("notif_debug", "onNotificationClicked: $appointmentId")
 
-            }
-        })
+                 val bundle = Bundle()
+                 bundle.putParcelable("appointment", null)
+                 bundle.putString("appointment_id", appointmentId)
+                 //findNavController().navigate(R.id.my_deals_to_appointment_details,bundle)
+                 val intent = Intent(requireContext(), AppointmentDetailsActivity::class.java)
+                 intent.putExtras(bundle)
+                 startActivity(intent)
+             }
+
+         }, requireContext())
         notificationViewModel.notificationList.value?.apply {
             adapter?.notificationList = this
         }

@@ -70,6 +70,7 @@ class MyDealsFragment : Fragment() {
             override fun onAppointmentDetailsClicked(appointment: AppointmentPOJO) {
                 val bundle = Bundle()
                 bundle.putParcelable("appointment",appointment)
+                bundle.putString("appointment_id",null)
                 findNavController().navigate(R.id.my_deals_to_appointment_details,bundle)
             }
 

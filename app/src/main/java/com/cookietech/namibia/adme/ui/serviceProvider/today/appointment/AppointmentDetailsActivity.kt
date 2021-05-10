@@ -44,8 +44,14 @@ class AppointmentDetailsActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appointment_details)
-        intent.extras?.getParcelable<AppointmentPOJO>("appointment")?.let {
-            viewmodel.observableAppointment.value = it
+        val appointmentPOJO : AppointmentPOJO? = intent.extras?.getParcelable<AppointmentPOJO>("appointment")
+        val appointmentId: String? = intent.extras?.getString("appointment_id")
+        if (appointmentPOJO !=null){
+            Log.d("notif_debug", "onCreate: not null appointment pojo")
+            viewmodel.observableAppointment.value = appointmentPOJO
+        } else if (appointmentId != null){
+            Log.d("notif_debug", "onCreate: not null appointment id")
+            viewmodel.fetchAppointment(appointmentId)
         }
 
 

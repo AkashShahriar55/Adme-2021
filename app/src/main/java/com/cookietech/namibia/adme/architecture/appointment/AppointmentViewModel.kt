@@ -1,6 +1,7 @@
 package com.cookietech.namibia.adme.architecture.appointment
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.cookietech.namibia.adme.models.AppointmentPOJO
@@ -25,6 +26,21 @@ class AppointmentViewModel:ViewModel() {
                 }
                 observableServices.value = temp_services
             }
+        }.addOnFailureListener {
+
+        }
+    }
+
+    fun fetchAppointment(appointment_id:String){
+        repository.fetchAppointment(appointment_id).addOnSuccessListener { document ->
+            if (document != null) {
+                val appointmentPOJO =  document.toObject(AppointmentPOJO::class.java)
+                appointmentPOJO?.id = document.id
+                observableAppointment.value = appointmentPOJO
+            } else {
+            Log.d("appointment_debug", "No such document")
+        }
+
         }.addOnFailureListener {
 
         }

@@ -260,6 +260,7 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
             override fun onAppointmentDetailsClicked(appointment: AppointmentPOJO) {
                 val bundle = Bundle()
                 bundle.putParcelable("appointment",appointment)
+                bundle.putString("appointment_id",null)
                 findNavController().navigate(R.id.today_to_appointment_activity,bundle)
             }
         })
