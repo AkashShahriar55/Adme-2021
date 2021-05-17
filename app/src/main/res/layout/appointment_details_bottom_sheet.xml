@@ -32,6 +32,66 @@
             android:paddingBottom="16dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/rating_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/border_ash_today"
+                android:padding="10dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@id/guideline34"
+                app:layout_constraintStart_toStartOf="@id/guideline35"
+                app:layout_constraintTop_toBottomOf="@id/accept_decline_holder">
+
+                <TextView
+                    android:id="@+id/rating_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="3.30 PM, 12 Jan  2020"
+                    android:textColor="@color/txt_highlight"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/img1"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/img1"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/rating_time"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/rating_time"
+                    app:srcCompat="@drawable/ic_clock" />
+
+
+                <RatingBar
+                    android:id="@+id/rating_bar"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:rating="4.5"
+                    android:theme="@style/RatingBar"
+                    app:layout_constraintBottom_toBottomOf="@+id/rating_time"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/rating_time" />
+
+                <TextView
+                    android:id="@+id/rating_details"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:lineSpacingExtra="4dp"
+                    android:paddingBottom="8dp"
+                    android:text="My Television is now running. Your service is very good. The exerience that i had was incredible."
+                    android:textColor="@color/txt_Dark"
+                    android:textSize="15sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/img1" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/accept_decline_holder"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -40,9 +100,26 @@
                 app:layout_constraintStart_toStartOf="@+id/guideline35"
                 app:layout_constraintTop_toBottomOf="@+id/message_holder">
 
+                <ImageView
+                    android:id="@+id/invoice_show_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/oval_button"
+                    android:backgroundTint="@color/material_green"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:scaleType="centerInside"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/positive_button"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/positive_button"
+                    app:srcCompat="@drawable/ic_baseline_description_24"
+                    app:tint="@color/white" />
+
                 <Button
                     android:id="@+id/negative_button"
-                    android:layout_width="350dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/oval_button"
@@ -56,14 +133,14 @@
 
                 <Button
                     android:id="@+id/positive_button"
-                    android:layout_width="350dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/oval_button"
                     android:backgroundTint="@color/material_green"
                     android:elevation="0dp"
                     android:text="Approve"
                     android:textColor="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/invoice_show_btn"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>

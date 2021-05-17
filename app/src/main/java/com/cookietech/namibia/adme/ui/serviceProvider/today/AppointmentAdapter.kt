@@ -43,7 +43,7 @@ class AppointmentAdapter(var callback:AppointmentListCallback) : RecyclerView.Ad
         var tv_client_name = itemView.findViewById<TextView>(R.id.tv_clint_name)
         var tv_client_address = itemView.findViewById<TextView>(R.id.tv_clint_address)
         var tv_client_text = itemView.findViewById<TextView>(R.id.tv_clint_text)
-        var tv_time = itemView.findViewById<TextView>(R.id.tv_time)
+        var tv_time = itemView.findViewById<TextView>(R.id.rating_time)
         var tv_money = itemView.findViewById<TextView>(R.id.tv_money)
         var cl_details = itemView.findViewById<ConstraintLayout>(R.id.ct_details)
 

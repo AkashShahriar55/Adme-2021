@@ -69,7 +69,7 @@
                     android:text="Akash Shahriar"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    app:layout_constraintEnd_toStartOf="@+id/ratingBar"
+                    app:layout_constraintEnd_toStartOf="@+id/rating_bar"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toEndOf="@+id/circleImageView"
@@ -78,7 +78,7 @@
                 </TextView>
 
                 <RatingBar
-                    android:id="@+id/ratingBar"
+                    android:id="@+id/rating_bar"
                     style="@style/Widget.AppCompat.RatingBar.Small"
                     android:theme="@style/RatingBar"
                     android:layout_width="wrap_content"
@@ -126,7 +126,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/barrier3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/ratingBar"
+                    app:layout_constraintStart_toEndOf="@+id/rating_bar"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
@@ -194,7 +194,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="tv_username,tv_empty_recycleview_button,ratingBar"
+                    app:constraint_referenced_ids="tv_username,tv_empty_recycleview_button,rating_bar"
                     tools:layout_editor_absoluteX="16dp"
                     tools:layout_editor_absoluteY="165dp" />
 
@@ -203,7 +203,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="circleImageView,tv_username,tv_empty_recycleview_button,ratingBar,tv_catagory,tv_short_discription"
+                    app:constraint_referenced_ids="circleImageView,tv_username,tv_empty_recycleview_button,rating_bar,tv_catagory,tv_short_discription"
                     tools:layout_editor_absoluteX="16dp"
                     tools:layout_editor_absoluteY="165dp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
