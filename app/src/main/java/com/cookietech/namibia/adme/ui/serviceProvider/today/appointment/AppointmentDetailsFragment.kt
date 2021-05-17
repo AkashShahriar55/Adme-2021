@@ -1,18 +1,16 @@
 package com.cookietech.namibia.adme.ui.serviceProvider.today.appointment
 
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,11 +20,11 @@ import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.appointment.AppointmentViewModel
 import com.cookietech.namibia.adme.managers.SharedPreferenceManager
 import com.cookietech.namibia.adme.models.AppointmentPOJO
-import com.cookietech.namibia.adme.ui.invoice.CreateInvoice
 import com.cookietech.namibia.adme.utils.GoogleMapUtils
 import com.cookietech.namibia.adme.utils.UiHelper
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -62,14 +60,15 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUpMap()
+        Log.d("notif_debug", "onViewCreated: ")
         initializeObserver()
+
     }
 
     private fun initializeObserver() {
-        viewmodel.observableAppointment.observe(viewLifecycleOwner,{
+        viewmodel.observableAppointment.observe(viewLifecycleOwner, {
             appointment = it
-            Log.d("notif_debug", "observer: id" + appointment?.id)
+            Log.d("notif_debug", "observer: " + appointment?.id)
             viewmodel.fetchAppointmentServices(appointment?.id!!)
             setUpMap()
             updateAppointmentInfo()
@@ -172,7 +171,12 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                 null
             )
         )
-        pending_confirme_line.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.sv_primary))
+        pending_confirme_line.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.sv_primary
+            )
+        )
         iv_state_confirmed.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
@@ -180,7 +184,12 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                 null
             )
         )
-        confirm_complete_line.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.border_ash))
+        confirm_complete_line.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.border_ash
+            )
+        )
         iv_state_completed.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
@@ -188,7 +197,12 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                 null
             )
         )
-        complete_payment_line.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.border_ash))
+        complete_payment_line.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.border_ash
+            )
+        )
         iv_state_payment.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
@@ -206,7 +220,12 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                 null
             )
         )
-        pending_confirme_line.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.sv_primary))
+        pending_confirme_line.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.sv_primary
+            )
+        )
         iv_state_confirmed.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
@@ -214,7 +233,12 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                 null
             )
         )
-        confirm_complete_line.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.sv_primary))
+        confirm_complete_line.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.sv_primary
+            )
+        )
         iv_state_completed.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
@@ -222,7 +246,12 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                 null
             )
         )
-        complete_payment_line.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.border_ash))
+        complete_payment_line.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.border_ash
+            )
+        )
         iv_state_payment.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
@@ -240,7 +269,12 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                 null
             )
         )
-        pending_confirme_line.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.sv_primary))
+        pending_confirme_line.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.sv_primary
+            )
+        )
         iv_state_confirmed.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
@@ -248,7 +282,12 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                 null
             )
         )
-        confirm_complete_line.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.sv_primary))
+        confirm_complete_line.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.sv_primary
+            )
+        )
         iv_state_completed.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
@@ -256,7 +295,12 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                 null
             )
         )
-        complete_payment_line.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.sv_primary))
+        complete_payment_line.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.sv_primary
+            )
+        )
         iv_state_payment.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
@@ -274,7 +318,12 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                 null
             )
         )
-        pending_confirme_line.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.sv_primary))
+        pending_confirme_line.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.sv_primary
+            )
+        )
         iv_state_confirmed.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
@@ -282,7 +331,12 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                 null
             )
         )
-        confirm_complete_line.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.sv_primary))
+        confirm_complete_line.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.sv_primary
+            )
+        )
         iv_state_completed.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
@@ -290,7 +344,12 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                 null
             )
         )
-        complete_payment_line.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.sv_primary))
+        complete_payment_line.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.sv_primary
+            )
+        )
         iv_state_payment.setImageDrawable(
             ResourcesCompat.getDrawable(
                 resources,
@@ -541,6 +600,7 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
 
     private fun setUpMap() {
         mainScope.launch {
+            Log.d("notif_debug", "setUpMap: ")
             val mf = SupportMapFragment.newInstance()
             childFragmentManager.beginTransaction().add(R.id.map, mf).commitAllowingStateLoss()
             mf.getMapAsync(this@AppointmentDetailsFragment)
@@ -551,13 +611,17 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap?) {
         mMap = googleMap
 
-        Log.d("appointment_debug", "onMapReady: " + mMap + " " + appointment)
+        Log.d("notif_debug", "onMapReady: " + mMap + " " + appointment)
         appointment?.let {
-            updateMap()
+            mMap?.setOnMapLoadedCallback(OnMapLoadedCallback {
+                updateMap()
+            })
+
         }
     }
 
     private fun updateMap() {
+        Log.d("notif_debug", "updateMap: ")
         appointment?.apply {
             mMap?.clear()
             val clientLat = client_latitude.toDouble()
