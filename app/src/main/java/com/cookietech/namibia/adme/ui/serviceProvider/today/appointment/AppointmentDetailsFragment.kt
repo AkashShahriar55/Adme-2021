@@ -1,7 +1,9 @@
 package com.cookietech.namibia.adme.ui.serviceProvider.today.appointment
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,6 +22,11 @@ import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.appointment.AppointmentViewModel
 import com.cookietech.namibia.adme.managers.SharedPreferenceManager
 import com.cookietech.namibia.adme.models.AppointmentPOJO
+import com.cookietech.namibia.adme.models.ReviewPOJO
+import com.cookietech.namibia.adme.models.SubServicesPOJO
+import com.cookietech.namibia.adme.ui.invoice.RatingDialog
+import com.cookietech.namibia.adme.ui.serviceProvider.today.addservice.AddServiceBottomSheetFragment
+
 import com.cookietech.namibia.adme.utils.GoogleMapUtils
 import com.cookietech.namibia.adme.utils.UiHelper
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -32,6 +39,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.appointment_details_bottom_sheet.*
+import kotlinx.android.synthetic.main.fragment_appointment_details.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -81,6 +89,8 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                 }
             })
 
+
+
     }
 
     private fun updateAppointmentInfo() {
@@ -98,6 +108,45 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
         subServicesAdapter = AppointmentServicesAdapter()
         appointment_services_rv.layoutManager = LinearLayoutManager(requireContext())
         appointment_services_rv.adapter = subServicesAdapter
+
+
+        if(appointment?.approved == true){
+            if (SharedPreferenceManager.user_mode == AppComponent.MODE_SERVICE_PROVIDER) {
+                fab_call.visibility = View.VISIBLE
+                fab_call.setOnClickListener {
+                    val phone = appointment?.client_phone
+                    if (phone == "") {
+                        Toast.makeText(
+                            context,
+                            "Phone number not found",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null))
+                        startActivity(intent)
+                    }
+                }
+            } else {
+                fab_call.visibility = View.VISIBLE
+                fab_call.setOnClickListener {
+                    val phone = appointment?.service_provider_phone
+                    if (phone == "") {
+                        Toast.makeText(
+                            context,
+                            "Phone number not found",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null))
+                        startActivity(intent)
+                    }
+                }
+            }
+        }else{
+            fab_call.visibility = View.GONE
+        }
+
+
 
 
 //        if(SharedPreferenceManager.user_mode == AppComponent.MODE_CLIENT){
@@ -157,10 +206,186 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                     setUpUiForClientCompletionApprovedClient()
                 }
             }
+            Status.status_provider_receipt_sent->{
+                stateUiPaymentActive()
+                if (SharedPreferenceManager.user_mode == AppComponent.MODE_SERVICE_PROVIDER) {
+                    setUpUiForProviderInvoiceSentProvider()
+                } else {
+                    setUpUiForProviderInvoiceSentClient()
+                }
+            }
+            Status.status_payment_completed->{
+                stateUiPaymentCompleted()
+                if (SharedPreferenceManager.user_mode == AppComponent.MODE_SERVICE_PROVIDER) {
+                    setUpUiForPaymentCompletedProvider()
+                } else {
+                    setUpUiForPaymentCompletedClient()
+                }
+            }
         }
     }
 
+    private fun setUpUiForPaymentCompletedClient() {
+        service_provider_response_holder.visibility = View.GONE
+        service_provider_response.visibility = View.VISIBLE
+        message_holder.visibility = View.GONE
+        accept_decline_holder.visibility = View.VISIBLE
+        positive_button.visibility = View.VISIBLE
+        negative_button.visibility = View.GONE
+        invoice_show_btn.visibility = View.GONE
+        rating_container.visibility = View.GONE
 
+
+        tv_provider_text.text = appointment?.service_provider_quotation
+        tv_provider_price.text = "Needed Money: $${appointment?.service_provider_price}"
+        tv_clint_money.text = "$ ${appointment?.service_provider_price}"
+        positive_button.text = "Receipt"
+
+
+        positive_button.setOnClickListener {
+            findNavController().navigate(R.id.appointment_to_invoice_show)
+        }
+
+
+        if(appointment?.reviewed == false){
+            openRatingDialog()
+        }else{
+            setUpUiForReviewDone()
+        }
+
+
+    }
+
+    private fun setUpUiForReviewDone() {
+        appointment?.apply {
+            viewmodel.fetchReviewData(service_provider_ref,service_ref,review_ref).addOnSuccessListener {
+                if(it.exists()){
+                    val review = it.toObject(ReviewPOJO::class.java)
+                    rating_container.visibility = View.VISIBLE
+                    rating_time.text = UiHelper.getDate(review?.review_time?.toLong() ?:0,"dd MMM yyyy, hh:mm aa")
+                    rating_bar.rating = review?.rating ?: 0.0f
+                    rating_details.text = review?.review
+                }
+            }.addOnFailureListener {
+
+            }
+        }
+
+    }
+
+    private fun openRatingDialog() {
+        val ratingDialog = RatingDialog.newInstance(object :RatingDialog.ReviewCallback{
+            override fun onReviewed(rating: Float, review: String) {
+                appointment?.apply {
+                    val review = ReviewPOJO(client_name,client_ref,service_provider_name,service_provider_ref,rating,review,invoice_link,service_provider_price.toString(),System.currentTimeMillis().toString(),id.toString(),service_ref)
+                    viewmodel.reviewService(review).addOnSuccessListener {
+                        review_ref = it.id
+                        reviewed = true
+                        viewmodel.setReviewLinkInAppointment(this).addOnFailureListener {
+
+                        }.addOnSuccessListener {
+                            Toast.makeText(requireContext(),"Successfully reviewed",Toast.LENGTH_SHORT).show()
+                            setUpUiForReviewDone()
+                        }
+                    }.addOnFailureListener {
+
+                    }
+                }
+            }
+
+        })
+        ratingDialog.show(childFragmentManager,"rating_dialog")
+    }
+
+    private fun setUpUiForPaymentCompletedProvider() {
+        service_provider_response_holder.visibility = View.GONE
+        service_provider_response.visibility = View.VISIBLE
+        message_holder.visibility = View.GONE
+        accept_decline_holder.visibility = View.VISIBLE
+        positive_button.visibility = View.VISIBLE
+        negative_button.visibility = View.GONE
+        invoice_show_btn.visibility = View.GONE
+
+
+        tv_provider_text.text = appointment?.service_provider_quotation
+        tv_provider_price.text = "Needed Money: $${appointment?.service_provider_price}"
+        tv_clint_money.text = "$ ${appointment?.service_provider_price}"
+        positive_button.text = "Receipt"
+
+
+        positive_button.setOnClickListener {
+            findNavController().navigate(R.id.appointment_to_invoice_show)
+        }
+
+        if(appointment?.reviewed == true){
+            setUpUiForReviewDone()
+        }
+    }
+
+    private fun setUpUiForProviderInvoiceSentClient() {
+        service_provider_response_holder.visibility = View.GONE
+        service_provider_response.visibility = View.VISIBLE
+        message_holder.visibility = View.GONE
+        accept_decline_holder.visibility = View.VISIBLE
+        positive_button.visibility = View.VISIBLE
+        negative_button.visibility = View.GONE
+        invoice_show_btn.visibility = View.GONE
+
+
+        tv_provider_text.text = appointment?.service_provider_quotation
+        tv_provider_price.text = "Needed Money: $${appointment?.service_provider_price}"
+        tv_clint_money.text = "$ ${appointment?.service_provider_price}"
+        positive_button.text = "Receipt"
+
+
+        positive_button.setOnClickListener {
+            findNavController().navigate(R.id.appointment_to_invoice_show)
+        }
+    }
+
+    private fun setUpUiForProviderInvoiceSentProvider() {
+        service_provider_response_holder.visibility = View.GONE
+        service_provider_response.visibility = View.VISIBLE
+        message_holder.visibility = View.GONE
+        accept_decline_holder.visibility = View.VISIBLE
+        positive_button.visibility = View.VISIBLE
+        negative_button.visibility = View.VISIBLE
+        invoice_show_btn.visibility = View.VISIBLE
+
+
+        tv_provider_text.text = appointment?.service_provider_quotation
+        tv_provider_price.text = "Needed Money: $${appointment?.service_provider_price}"
+        tv_clint_money.text = "$ ${appointment?.service_provider_price}"
+        positive_button.text = "Payment Received"
+        negative_button.text = "Resend Receipt"
+
+
+        positive_button.setOnClickListener {
+            completePayment()
+        }
+
+        invoice_show_btn.setOnClickListener {
+            findNavController().navigate(R.id.appointment_to_invoice_show)
+        }
+
+        negative_button.setOnClickListener {
+            findNavController().navigate(R.id.appointment_to_create_invoice)
+        }
+    }
+
+    private fun completePayment() {
+        appointment?.apply {
+            total_income = service_provider_price?.toFloat() ?: 0.0f
+            completed = true
+            state = Status.status_payment_completed
+            viewmodel.completePayment(this).addOnSuccessListener {
+                stateUiPaymentCompleted()
+                setUpUiForPaymentCompletedProvider()
+            }.addOnFailureListener {
+
+            }
+        }
+    }
 
 
     private fun stateUiConfirmedActive() {
@@ -496,6 +721,21 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
         tv_clint_money.text = "$ ${appointment?.service_provider_price}"
         tv_status_message.text = "You can cancel this request before time"
         negative_button.text = "Cancel"
+
+        fab_call.visibility = View.VISIBLE
+        fab_call.setOnClickListener {
+            val phone = appointment?.service_provider_phone
+            if (phone == "") {
+                Toast.makeText(
+                    context,
+                    "Phone number not found",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null))
+                startActivity(intent)
+            }
+        }
     }
 
     private fun setUpUiForProviderResponseApproveProvider() {
@@ -512,6 +752,21 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
         tv_provider_text.text = appointment?.service_provider_quotation
         tv_provider_price.text = "Needed Money: $${appointment?.service_provider_price}"
         tv_clint_money.text = "$ ${appointment?.service_provider_price}"
+
+        fab_call.visibility = View.VISIBLE
+        fab_call.setOnClickListener {
+            val phone = appointment?.client_phone
+            if (phone == "") {
+                Toast.makeText(
+                    context,
+                    "Phone number not found",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null))
+                startActivity(intent)
+            }
+        }
 
         positive_button.setOnClickListener {
             sendWorkCompleted()

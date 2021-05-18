@@ -33,7 +33,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <RatingBar
-        android:id="@+id/ratingBar"
+        android:id="@+id/rating_bar"
         style="@style/Widget.AppCompat.RatingBar.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,9 +57,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
-        app:layout_constraintStart_toEndOf="@+id/ratingBar"
-        app:layout_constraintTop_toTopOf="@+id/ratingBar"
+        app:layout_constraintBottom_toBottomOf="@+id/rating_bar"
+        app:layout_constraintStart_toEndOf="@+id/rating_bar"
+        app:layout_constraintTop_toTopOf="@+id/rating_bar"
         app:srcCompat="@drawable/ic_people" />
 
     <TextView
@@ -84,7 +84,7 @@
         android:text="1.2 miles away"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/tv_username"
-        app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+        app:layout_constraintTop_toBottomOf="@+id/rating_bar" />
 
     <Button
         android:id="@+id/btn_view_profile"

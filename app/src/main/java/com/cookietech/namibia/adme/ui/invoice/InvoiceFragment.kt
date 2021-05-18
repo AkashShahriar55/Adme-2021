@@ -9,6 +9,7 @@ import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfDocument.PageInfo
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -21,6 +22,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookietech.namibia.adme.Application.AppComponent
+import com.cookietech.namibia.adme.Application.Status
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.appointment.AppointmentRepository
 import com.cookietech.namibia.adme.architecture.appointment.AppointmentViewModel
@@ -116,16 +118,22 @@ class InvoiceFragment : Fragment() {
             btn_send_invoice.visibility = View.GONE
         }
 
+        Log.d("invoice_debug ", "onViewCreated: " + appointment?.invoice_link)
+
+
+        btn_send_invoice.text = "Send Invoice"
         btn_send_invoice.setOnClickListener {
             sendInvoiceAndFinish()
         }
+
+
     }
 
     private fun sendInvoiceAndFinish() {
         showDialog("Sending Invoice","Please wait...")
-        val totalHeight = root_scrollView.getChildAt(0).height
-        val totalWidth = root_scrollView.getChildAt(0).width
-        var bitmap = getBitmapFromView(root_scrollView, totalHeight, totalWidth)
+        val totalHeight = invoice_layout.height
+        val totalWidth = invoice_layout.width
+        var bitmap = getBitmapFromView(invoice_layout, totalHeight, totalWidth)
         bitmap?.let { invoice->
             viewModel.uploadInvoiceToStorage("invoice_${appointment?.id}.jpg",invoice,object :AppointmentRepository.UploadInvoiceCallback{
                 override fun onProgressUpdate(mb: String) {
@@ -139,10 +147,11 @@ class InvoiceFragment : Fragment() {
                 override fun onUploadSuccessful(url: String) {
                     appointment?.apply {
                         updateProgressUi("Please wait...")
-//                        invoice_link = url
-//                        completed = true
+                        invoice_link = url
+                        state = Status.status_provider_receipt_sent
                         viewModel.sendInvoiceAndFinish(this).addOnSuccessListener {
                             hideDialog()
+                            findNavController().navigateUp()
                         }.addOnFailureListener {
                             hideDialog()
                         }
@@ -154,6 +163,24 @@ class InvoiceFragment : Fragment() {
         }
 
 
+    }
+
+    private fun updateUiForInvoiceSent() {
+        toolbar.menu.getItem(0).isVisible = false
+        toolbar.menu.getItem(1).isVisible = false
+        btn_send_invoice.text = "Payment Received"
+        btn_send_invoice.setOnClickListener {
+            showDialog("Payment Received","Please wait...")
+            appointment?.apply {
+                completed = true
+                viewModel.paymentRecieved(this).addOnSuccessListener {
+                    hideDialog()
+                }.addOnFailureListener {
+                    hideDialog()
+                }
+            }
+
+        }
     }
 
     private fun updateProgressUi(mb: String) {
@@ -206,6 +233,7 @@ class InvoiceFragment : Fragment() {
             it?.let { value ->
                 appointment = value
                 updateBasicInfo()
+
             }
         })
 
@@ -244,6 +272,8 @@ class InvoiceFragment : Fragment() {
         customer_phone.setText(appointment?.client_phone)
         service_provider.text = appointment?.service_provider_name
         service_category.text = appointment?.service_name
+
+
     }
 
 
@@ -261,19 +291,9 @@ class InvoiceFragment : Fragment() {
     }
 
     private fun generatePdf() {
-        val totalHeight = root_scrollView.getChildAt(0).height
-        val totalWidth = root_scrollView.getChildAt(0).width
-        val btn_height = btn_send_invoice.height
-        var goneForBitmap = false
-        if(btn_send_invoice.visibility == View.VISIBLE){
-            btn_send_invoice.visibility = View.GONE
-            goneForBitmap =true
-        }
-
-        var bitmap = getBitmapFromView(root_scrollView, totalHeight, totalWidth)
-        if(goneForBitmap){
-            btn_send_invoice.visibility = View.VISIBLE
-        }
+        val totalHeight = invoice_layout.height
+        val totalWidth = invoice_layout.width
+        var bitmap = getBitmapFromView(invoice_layout, totalHeight, totalWidth)
         val displaymetrics = DisplayMetrics()
         requireActivity().windowManager.defaultDisplay.getMetrics(displaymetrics)
         val height = bitmap?.height ?: 0

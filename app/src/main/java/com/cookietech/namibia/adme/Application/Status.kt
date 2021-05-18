@@ -9,5 +9,7 @@ object Status {
     const val status_provider_request_cancel = "provider_request_cancel"
     const val status_client_completion_approve = "client_completion_approve"
     const val status_client_completion_denied = "client_completion_denied"
+    const val status_provider_receipt_sent = "provider_receipt_sent"
+    const val status_payment_completed = "payment_completed"
 
 }

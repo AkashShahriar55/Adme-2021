@@ -5,11 +5,14 @@ import android.net.Uri
 import android.util.Log
 import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.models.AppointmentPOJO
+import com.cookietech.namibia.adme.models.ReviewPOJO
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
+
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.OnProgressListener
@@ -70,6 +73,14 @@ class AppointmentRepository {
                 val mb = String.format("%.2f", taskSnapshot.bytesTransferred / 125000.0)
                 callback.onProgressUpdate(mb)
             })
+    }
+
+    fun reviewService(review: ReviewPOJO): Task<DocumentReference> {
+        return FirebaseManager.mUserRef.document(review.provider_ref).collection("data").document("service_provider").collection("services").document(review.service_ref).collection("reviews").add(review)
+    }
+
+    fun fetchReviewData(providerRef:String,serviceRef:String,reviewRef:String): Task<DocumentSnapshot> {
+        return FirebaseManager.mUserRef.document(providerRef).collection("data").document("service_provider").collection("services").document(serviceRef).collection("reviews").document(reviewRef).get()
     }
 
     interface UploadInvoiceCallback{
