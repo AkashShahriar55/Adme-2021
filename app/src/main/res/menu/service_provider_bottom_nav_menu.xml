@@ -8,8 +8,8 @@
 
     <item
         android:id="@+id/leaderBoardFragment"
-        android:title="@string/leaderboard"
-        android:icon="@drawable/ic_leaderboard"/>
+        android:title="@string/title_inbox"
+        android:icon="@drawable/ic_inbox"/>
 
     <item
         android:id="@+id/incomeFragment"

@@ -3,6 +3,7 @@ package com.cookietech.namibia.adme.ui.loginRegistration
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.database.Observable
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
@@ -14,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.cookietech.namibia.adme.Application.AppComponent
@@ -21,6 +23,7 @@ import com.cookietech.namibia.adme.BuildConfig
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.loginRegistration.RegistrationViewModel
 import com.cookietech.namibia.adme.architecture.loginRegistration.UserInfoViewModel
+import com.cookietech.namibia.adme.chatmodule.view.FirebaseViewModel
 import com.cookietech.namibia.adme.interfaces.ImageUploadCallback
 import com.cookietech.namibia.adme.interfaces.UpdateDataCallback
 import com.cookietech.namibia.adme.managers.FirebaseManager
@@ -41,6 +44,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_service_provider_details.*
 import kotlinx.android.synthetic.main.fragment_user_info.*
 import kotlinx.coroutines.CoroutineScope
@@ -50,7 +54,7 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
 
-
+@AndroidEntryPoint
 class UserInfoFragment : Fragment(), OnMapReadyCallback{
     private var lng: Double = 0.0
     private var lat: Double = 0.0
@@ -64,6 +68,7 @@ class UserInfoFragment : Fragment(), OnMapReadyCallback{
     val userInfoViewModel: UserInfoViewModel by viewModels()
     val registrationViewModel: RegistrationViewModel by viewModels()
     var mMap: GoogleMap? = null
+    private val firebaseVm: FirebaseViewModel by viewModels({ requireActivity() })
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -218,8 +223,11 @@ class UserInfoFragment : Fragment(), OnMapReadyCallback{
         val name = edt_profile_username.editText?.text.toString()
         val phone_number = ccp.fullNumberWithPlus.toString()
         val address = edt_profile_address.editText?.text.toString()
+
         name.let { name->
             phone_number.let { phone_number->
+                firebaseVm.addUsername(name)
+
                 userInfoViewModel.updateUserInfo(name,phone_number,lat.toString(),lng.toString(),imageDownloadUrl,object : UpdateDataCallback{
                     override fun updateSuccessful() {
                         dialog.dismiss()
@@ -293,7 +301,9 @@ class UserInfoFragment : Fragment(), OnMapReadyCallback{
 
     private fun initializeObserver() {
 
-
+        firebaseVm.usernameStatus.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            Log.d("akash_chat_debug", "initializeObserver: "+it)
+        })
     }
 
     private fun fetchCurrentLocation() {

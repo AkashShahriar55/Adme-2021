@@ -16,9 +16,11 @@ import androidx.navigation.ui.setupWithNavController
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.serviceProvider.ServiceProviderViewModel
 import com.cookietech.namibia.adme.interfaces.ServiceProviderDataCallback
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_service_provider.*
 import java.lang.Exception
 
+@AndroidEntryPoint
 class ServiceProviderActivity : AppCompatActivity() {
 
     val serviceProviderViewModel: ServiceProviderViewModel by viewModels()

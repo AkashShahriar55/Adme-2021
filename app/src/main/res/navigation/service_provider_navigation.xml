@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/leaderBoardFragment"
-        android:name="com.cookietech.namibia.adme.ui.serviceProvider.leaderboard.LeaderBoardFragment"
+        android:name="com.cookietech.namibia.adme.chatmodule.view.chatRooms.StartFragment"
         android:label="LeaderBoardFragment" />
     <fragment
         android:id="@+id/incomeFragment"

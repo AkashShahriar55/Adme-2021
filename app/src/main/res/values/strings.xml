@@ -66,6 +66,7 @@
     <string name="reviews">Reviews</string>
     <string name="title_home">Home</string>
     <string name="title_service_history">Service history</string>
+    <string name="title_inbox">Inbox</string>
     <string name="services_available_in_your_area">Services available in your area</string>
 
     <string-array name="service_category">
@@ -143,6 +144,21 @@
         <item>item</item>
         <item>cloth</item>
     </string-array>
+
+
+    <string name="sign_out">Sign Out</string>
+    <string name="send_button_label">Send</string>
+    <string name="change_username">Change username</string>
+    <string name="enter_username">Enter username</string>
+    <string name="next">Next</string>
+    <string name="search">Search</string>
+    <string name="usernameError">This username is not available.</string>
+    <string name="usernameHint">Use 4 or more characters.</string>
+    <string name="usernameInfo">Pick username for your account. You can always change it later.</string>
+    <string name="no_results">No results</string>
+    <string name="change_a_bit_your_query">Change a bit your query</string>
+    <string name="type_a_message">Type a message</string>
+    <string name="record_failed">You can\'t record a voice message while you\'re recording in another app</string>
 
 
 </resources>
