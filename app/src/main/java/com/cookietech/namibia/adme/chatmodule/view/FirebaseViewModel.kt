@@ -29,6 +29,7 @@ class FirebaseViewModel @ViewModelInject constructor(
 
     private var isUsernameAvailableJob: Job? = null
     private var searchForUserJob: Job? = null
+    private var getUserDataJob:Job? = null
 
     private val _userList = MutableLiveData<List<User>>()
     val userList: LiveData<List<User>> = _userList
@@ -81,6 +82,7 @@ class FirebaseViewModel @ViewModelInject constructor(
     }
 
     fun setReceiver(user: User?) {
+        user?.let { _userData.value = it }
         user?.userId?.let { _msgList.receiverId = it }
     }
 
@@ -98,6 +100,23 @@ class FirebaseViewModel @ViewModelInject constructor(
             repository.searchForUser(newText) { networkState, userList ->
                 _userList.value = userList
                 _userSearchStatus.value = networkState
+            }
+        }
+    }
+
+    private val _userData = MutableLiveData<User>()
+    val userData:LiveData<User> = _userData
+
+    private val _userDataStatus = MutableLiveData<NetworkState>()
+    val userDataStatus:LiveData<NetworkState> = _userDataStatus
+
+    fun getUser(userId:String){
+
+        getUserDataJob?.cancel()
+        getUserDataJob = viewModelScope.launch {
+            repository.getUser(userId){ networkState, user ->
+                _userData.value  = user
+                _userDataStatus.value = networkState
             }
         }
     }

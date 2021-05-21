@@ -6,11 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.cookietech.namibia.adme.Application.AppComponent
+import com.cookietech.namibia.adme.R
 
 import com.cookietech.namibia.adme.chatmodule.view.FirebaseViewModel
 import com.cookietech.namibia.adme.chatmodule.utils.states.FragmentState
-import com.cookietech.namibia.adme.chatmodule.view.chatRooms.ChatListAdapter
 import com.cookietech.namibia.adme.databinding.FragmentStartBinding
+import com.cookietech.namibia.adme.managers.SharedPreferenceManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,7 +39,12 @@ open class StartFragment : Fragment() {
     private fun getOnRoomClickListener(): ChatListAdapter.OnClickListener {
         return ChatListAdapter.OnClickListener { user ->
             firebaseVm.setReceiver(user.user?.value)
-            firebaseVm.setFragmentState(FragmentState.CHAT)
+            if (SharedPreferenceManager.user_mode == AppComponent.MODE_SERVICE_PROVIDER) {
+                findNavController().navigate(R.id.inbox_to_chat_provider)
+            } else {
+                findNavController().navigate(R.id.inbox_to_chat_client)
+            }
+
         }
     }
 }

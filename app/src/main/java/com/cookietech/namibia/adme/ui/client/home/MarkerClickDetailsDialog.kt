@@ -6,16 +6,25 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.cookietech.namibia.adme.R
+import com.cookietech.namibia.adme.chatmodule.view.FirebaseViewModel
 import com.cookietech.namibia.adme.models.ServicesPOJO
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.layout_marker_click_details.*
 import kotlinx.android.synthetic.main.layout_marker_click_details.tv_category
 
+@AndroidEntryPoint
 class MarkerClickDetailsDialog(): BottomSheetDialogFragment() {
 
+    private var messageClicked: Boolean = false
     var service:ServicesPOJO? = null
+
+    private val firebaseVm: FirebaseViewModel by viewModels({ requireActivity() })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +61,29 @@ class MarkerClickDetailsDialog(): BottomSheetDialogFragment() {
             intent.putExtras(bundle)
             startActivity(intent)
         }
+
+
+        btn_message.setOnClickListener {
+            Log.d("akash_chat_debug", "setUpClicks: "+service?.user_ref)
+            messageClicked = true
+            service?.user_ref?.let { userId -> firebaseVm.getUser(userId) }
+        }
+
+        firebaseVm.userData.observe(viewLifecycleOwner, Observer{
+            it?.let { user->
+                if(messageClicked){
+                    firebaseVm.setReceiver(user)
+                    findNavController().navigate(R.id.dialog_to_chat)
+                    messageClicked = false
+                }
+
+            }
+        })
+
+        firebaseVm.userDataStatus.observe(viewLifecycleOwner, Observer {
+            Log.d("akash_chat_debug", "setUpClicks: "+it)
+        })
+
     }
 
     private fun setUpViews() {

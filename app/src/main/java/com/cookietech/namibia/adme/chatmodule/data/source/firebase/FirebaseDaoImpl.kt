@@ -115,6 +115,19 @@ class FirebaseDaoImpl {
         }
     }
 
+    suspend fun getUserData(userId:String,callback:(networkState:NetworkState,user:User?)->Unit){
+        try{
+            callback(NetworkState.LOADING,null)
+            val documentSnapshot = dbRefUsers.document(userId).get().await()
+            val user = documentSnapshot.toObject(User::class.java)
+            val networkState = if(user == null) NetworkState.FAILED else NetworkState.LOADED
+            callback(networkState,user)
+        }catch (e:FirebaseFirestoreException){
+            Log.d("akash_chat_debug", "setUpClicks: "+e)
+            callback(NetworkState.FAILED,null)
+        }
+    }
+
     suspend fun isUsernameAvailable(
         username: String,
         callBack: (networkState: NetworkState) -> Unit

@@ -24,9 +24,12 @@
     </fragment>
     <fragment
         android:id="@+id/serviceHistoryFragment"
-        android:name="com.cookietech.namibia.adme.ui.client.serviceHistory.ServiceHistoryFragment"
-        android:label="fragment_service_history"
-        tools:layout="@layout/fragment_service_history" />
+        android:name="com.cookietech.namibia.adme.chatmodule.view.chatRooms.StartFragment"
+        android:label="fragment_service_history" >
+        <action
+            android:id="@+id/inbox_to_chat_client"
+            app:destination="@id/chatFragment" />
+    </fragment>
     <fragment
         android:id="@+id/myDealsFragment"
         android:name="com.cookietech.namibia.adme.ui.client.myDeals.MyDealsFragment"
@@ -51,6 +54,9 @@
         <action
             android:id="@+id/marker_dialog_to_sp_activity"
             app:destination="@id/serviceProviderDetailsActivity" />
+        <action
+            android:id="@+id/dialog_to_chat"
+            app:destination="@id/chatFragment" />
     </dialog>
     <activity
         android:id="@+id/serviceProviderDetailsActivity"
@@ -75,5 +81,9 @@
         android:id="@+id/appointmentDetailsActivity2"
         android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.appointment.AppointmentDetailsActivity"
         android:label="AppointmentDetailsActivity" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.cookietech.namibia.adme.chatmodule.view.chatRoom.ChatFragment"
+        android:label="ChatFragment" />
 
 </navigation>

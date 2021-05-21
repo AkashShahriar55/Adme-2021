@@ -25,6 +25,8 @@ interface Repository {
         callBack: (networkState: NetworkState, userList: MutableList<User>) -> Unit
     )
 
+    suspend fun getUser(userId:String,callback:(networkState:NetworkState,user:User?)->Unit)
+
     fun addUsername(
         username: String,
         callBack: (usernameStatus: NetworkState) -> Unit

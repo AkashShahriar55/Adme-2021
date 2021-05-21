@@ -42,6 +42,13 @@ class RepositoryImpl @Inject constructor(
         firebaseDaoImpl.searchForUser(username, callBack)
     }
 
+    override suspend fun getUser(
+        userId: String,
+        callback: (networkState: NetworkState, user: User?) -> Unit
+    ) {
+        firebaseDaoImpl.getUserData(userId, callback)
+    }
+
     override fun addUsername(
         username: String,
         callBack: (usernameStatus: NetworkState) -> Unit

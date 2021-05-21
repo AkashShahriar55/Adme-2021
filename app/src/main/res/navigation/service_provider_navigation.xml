@@ -22,7 +22,11 @@
     <fragment
         android:id="@+id/leaderBoardFragment"
         android:name="com.cookietech.namibia.adme.chatmodule.view.chatRooms.StartFragment"
-        android:label="LeaderBoardFragment" />
+        android:label="LeaderBoardFragment" >
+        <action
+            android:id="@+id/inbox_to_chat_provider"
+            app:destination="@id/chatFragment2" />
+    </fragment>
     <fragment
         android:id="@+id/incomeFragment"
         android:name="com.cookietech.namibia.adme.ui.serviceProvider.income.IncomeFragment"
@@ -49,4 +53,8 @@
         android:id="@+id/appointmentDetailsActivity"
         android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.appointment.AppointmentDetailsActivity"
         android:label="AppointmentDetailsActivity" />
+    <fragment
+        android:id="@+id/chatFragment2"
+        android:name="com.cookietech.namibia.adme.chatmodule.view.chatRoom.ChatFragment"
+        android:label="ChatFragment" />
 </navigation>

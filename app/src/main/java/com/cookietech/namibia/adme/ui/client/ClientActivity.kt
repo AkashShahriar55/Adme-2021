@@ -10,10 +10,11 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.cookietech.namibia.adme.R
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_client.*
 import kotlinx.android.synthetic.main.activity_service_provider.*
 
-
+@AndroidEntryPoint
 class ClientActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
