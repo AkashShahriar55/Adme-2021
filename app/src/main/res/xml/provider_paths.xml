@@ -1,3 +1,10 @@
 <paths>
     <files-path path="." name="adme-files" />
+
+    <external-path
+        name="media"
+        path="Android/media/com.cookietech.namibia.adme/Adme" />
+    <external-path
+        name="data"
+        path="Android/data/com.cookietech.namibia.adme/Adme" />
 </paths>

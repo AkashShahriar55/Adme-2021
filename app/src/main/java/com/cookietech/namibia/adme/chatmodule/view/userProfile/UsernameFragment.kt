@@ -31,7 +31,7 @@ open class UsernameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentUsernameBinding.inflate(LayoutInflater.from(context))
-        binding.usernameButton.setOnClickListener { firebaseVm.addUsername(binding.usernameEditText.text.toString()) }
+//        binding.usernameButton.setOnClickListener { firebaseVm.addUsername(binding.usernameEditText.text.toString()) }
 
         observeUsernameEditText(binding)
         observeUsernameStatus(binding)

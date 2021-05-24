@@ -1,12 +1,17 @@
 package com.cookietech.namibia.adme.chatmodule.view.chatRoom
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
+import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
@@ -25,12 +30,19 @@ import com.cookietech.namibia.adme.chatmodule.utils.bindingFakeAudioProgress
 import com.cookietech.namibia.adme.chatmodule.utils.extension.afterTextChanged
 import com.cookietech.namibia.adme.chatmodule.utils.states.NetworkState
 import com.cookietech.namibia.adme.databinding.FragmentChatBinding
+import com.cookietech.namibia.adme.managers.PermissionManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_user_info.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
 open class ChatFragment : Fragment() {
-
+    var mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     companion object {
         val TAG = ChatFragment::class.java.simpleName
         const val LOADING = "loading"
@@ -80,7 +92,9 @@ open class ChatFragment : Fragment() {
             binding.sendButton.isActivated = text.isNotBlank()
         }
 
-        binding.photoPickerButton.setOnClickListener { onPhotoPickerClick() }
+        binding.photoPickerButton.setOnClickListener {
+            onPhotoPickerClick()
+        }
         binding.sendButton.setOnTouchListener(onSendButtonTouch())
 
         binding.sendButton.isActivated = false
@@ -89,18 +103,58 @@ open class ChatFragment : Fragment() {
     }
 
     private fun onPhotoPickerClick() {
-        val intentGallery = Intent(Intent.ACTION_PICK)
-        intentGallery.type = "image/jpeg, image/png"
-        intentGallery.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+        PermissionManager.checkStoragePermission(
+            requireContext(),
+            object : PermissionManager.SimplePermissionCallback {
+                override fun onPermissionGranted() {
+                    Log.d("permission_debug", "finally onPermissionGranted: ")
+                    mainScope.launch {
+                        val intentGallery = Intent(Intent.ACTION_PICK)
+                        intentGallery.type = "image/jpeg, image/png"
+                        intentGallery.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
 
-        val chooserIntent = Intent.createChooser(intentGallery, "Select picture")
-        fileHelper.createPhotoMediaFile()?.let { photoFile ->
-            val cameraIntent = Utility.getCameraIntent(requireContext(), photoFile)
-            FileHelper.currentPhotoPath = photoFile.absolutePath
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(cameraIntent))
+                        val chooserIntent = Intent.createChooser(intentGallery, "Select picture")
+                        fileHelper.createPhotoMediaFile()?.let { photoFile ->
+                            val cameraIntent = Utility.getCameraIntent(requireContext(), photoFile)
+                            FileHelper.currentPhotoPath = photoFile.absolutePath
+                            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(cameraIntent))
+                        }
+
+                        startActivityForResult(chooserIntent, FirebaseDaoImpl.RC_PHOTO_PICKER)
+                    }
+
+                }
+
+                override fun onPermissionDenied() {
+                    Log.d("permission_debug", "finally onPermissionGranted: ")
+                }
+
+            },
+            binding.mainLayout
+        )
+
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.d("akash_chat_debug", "onActivityResult: ")
+        if (requestCode == FirebaseDaoImpl.RC_PHOTO_PICKER && resultCode == Activity.RESULT_OK) {
+            val picUri = if (data != null) data.data!! else galleryAddPic()
+            picUri?.let { firebaseVm.pushPicture(picUri) }
         }
+    }
 
-        requireActivity().startActivityForResult(chooserIntent, FirebaseDaoImpl.RC_PHOTO_PICKER)
+    private fun galleryAddPic(): Uri? {
+        val photoFile = File(FileHelper.currentPhotoPath)
+        val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(photoFile.extension)
+        MediaScannerConnection.scanFile(
+            requireContext(),
+            arrayOf(photoFile.absolutePath),
+            arrayOf(mimeType),
+            null
+        )
+        return Uri.fromFile(photoFile)
     }
 
     private fun onSendButtonTouch() = object : View.OnTouchListener {
@@ -132,15 +186,25 @@ open class ChatFragment : Fragment() {
     }
 
     private fun onMicButtonClick(motionEvent: MotionEvent): Boolean {
-        when (motionEvent.action) {
-            MotionEvent.ACTION_DOWN -> audioHelper.startRecording()
-            MotionEvent.ACTION_UP -> {
-                audioHelper.stopRecording()
-                val recordFileName = audioHelper.recordFileName ?: return false
-                val recorderDuration = audioHelper.recorderDuration ?: 0
-                if (recorderDuration > 1000) pushAudio(recordFileName, recorderDuration)
+        PermissionManager.checkRecordPermission(requireContext(),object :PermissionManager.SimplePermissionCallback{
+            override fun onPermissionGranted() {
+                when (motionEvent.action) {
+                    MotionEvent.ACTION_DOWN -> audioHelper.startRecording()
+                    MotionEvent.ACTION_UP -> {
+                        audioHelper.stopRecording()
+                        val recordFileName = audioHelper.recordFileName ?: return
+                        val recorderDuration = audioHelper.recorderDuration ?: 0
+                        if (recorderDuration > 1000) pushAudio(recordFileName, recorderDuration)
+                    }
+                }
             }
-        }
+
+            override fun onPermissionDenied() {
+
+            }
+
+        })
+
         return false
     }
 

@@ -82,12 +82,14 @@ class FirebaseDaoImpl {
 
     fun addUsername(
         username: String,
+        photoUrl:String,
         callBack: (usernameStatus: NetworkState) -> Unit
     ) {
         val user = User()
         callBack(NetworkState.LOADING)
         val usernameLowerCase = username.toLowerCase(Locale.ROOT)
         user.username = usernameLowerCase
+        user.photoUrl = photoUrl
         user.usernameList = User.nameToArray(usernameLowerCase)
         user.fcmTokenList = arrayListOf()
         dbRefUsernames.document(usernameLowerCase).set(user)

@@ -85,7 +85,7 @@
     <color name="colorMsgTimeRight">#E0E0E0</color>
 
     <color name="colorMsgLeft">#FFFFFF</color>
-    <color name="colorMsgRight">#009688</color>
+    <color name="colorMsgRight">#3F5AA6</color>
 
     //Online status
     <color name="onlineOn">#64DD17</color>

@@ -226,7 +226,7 @@ class UserInfoFragment : Fragment(), OnMapReadyCallback{
 
         name.let { name->
             phone_number.let { phone_number->
-                firebaseVm.addUsername(name)
+                firebaseVm.addUsername(name,imageDownloadUrl?:"")
 
                 userInfoViewModel.updateUserInfo(name,phone_number,lat.toString(),lng.toString(),imageDownloadUrl,object : UpdateDataCallback{
                     override fun updateSuccessful() {

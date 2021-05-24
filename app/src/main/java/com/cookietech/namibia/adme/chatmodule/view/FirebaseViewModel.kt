@@ -130,8 +130,8 @@ class FirebaseViewModel @ViewModelInject constructor(
         }
     }
 
-    fun addUsername(username: String) {
-        repository.addUsername(username) {
+    fun addUsername(username: String,photoUrl:String) {
+        repository.addUsername(username,photoUrl) {
 
             _usernameStatus.value = it
             if (it == NetworkState.LOADED) setFragmentState(FragmentState.START)

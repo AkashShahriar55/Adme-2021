@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookietech.namibia.adme.Application.AppComponent
@@ -74,21 +75,21 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun initializeObserver() {
-        viewmodel.observableAppointment.observe(viewLifecycleOwner, {
+        viewmodel.observableAppointment.observe(viewLifecycleOwner) {
             appointment = it
             Log.d("notif_debug", "observer: " + appointment?.id)
             viewmodel.fetchAppointmentServices(appointment?.id!!)
             setUpMap()
             updateAppointmentInfo()
-        })
+        }
 
-        viewmodel.observableServices.observe(viewLifecycleOwner,
-            { value ->
-                value?.let {
-                    subServicesAdapter.subServices = it
-                }
-            })
+        viewmodel.observableServices.observe(viewLifecycleOwner
+        ) { value ->
+            value?.let {
 
+                subServicesAdapter.subServices = it
+            }
+        }
 
 
     }

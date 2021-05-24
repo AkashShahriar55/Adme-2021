@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.observe
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -57,13 +58,13 @@ class InvoiceShow : Fragment() {
     }
 
     private fun initializeObservers() {
-        viewModel.observableAppointment.observe(viewLifecycleOwner, {
+        viewModel.observableAppointment.observe(viewLifecycleOwner) {
             it?.let { value ->
                 appointment = value
                 updateUi()
 
             }
-        })
+        }
     }
 
 

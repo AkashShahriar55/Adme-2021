@@ -19,6 +19,7 @@ import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookietech.namibia.adme.Application.AppComponent
@@ -205,6 +206,13 @@ class InvoiceFragment : Fragment() {
 
     private fun updateIncome() {
         discountAmount = et_discount_amount.text?.toString()?.toFloat()?:0.0f
+        if(discountAmount < viewModel.minimumDiscount){
+            et_discount_amount.setText("-$ ${viewModel.minimumDiscount}")
+            val discountTotal = total
+            total_amount.text =  "$ $discountTotal"
+            invoice_total.text =  "$ $discountTotal"
+            return
+        }
         et_discount_amount.setText("-$ $discountAmount")
         val discountTotal = total - discountAmount
         total_amount.text =  "$ $discountTotal"
@@ -229,20 +237,20 @@ class InvoiceFragment : Fragment() {
     }
 
     private fun initializeObservers() {
-        viewModel.observableAppointment.observe(viewLifecycleOwner, {
+        viewModel.observableAppointment.observe(viewLifecycleOwner) {
             it?.let { value ->
                 appointment = value
                 updateBasicInfo()
 
             }
-        })
+        }
 
-        viewModel.observableFinalServices.observe(viewLifecycleOwner, {
+        viewModel.observableFinalServices.observe(viewLifecycleOwner) {
             it?.let { value ->
                 services = value
                 updateServicesInfo()
             }
-        })
+        }
     }
 
     private fun updateServicesInfo() {
@@ -252,6 +260,8 @@ class InvoiceFragment : Fragment() {
             total+=cost
         }
 
+
+
         subtotal.text = "$ $total"
 
         txt_vat.text = "Vat(${AppComponent.vat}%)"
@@ -259,9 +269,10 @@ class InvoiceFragment : Fragment() {
         total_vat.text = "+$ $vat"
 
         total += vat
-
+        total -= viewModel.minimumDiscount
         total_amount.text = "$ $total"
         invoice_total.text = "$ $total"
+        et_discount_amount.setText("-$ ${viewModel.minimumDiscount}")
 
         issue_date.text = UiHelper.getDate(System.currentTimeMillis(), "dd MMM yyyy")
     }

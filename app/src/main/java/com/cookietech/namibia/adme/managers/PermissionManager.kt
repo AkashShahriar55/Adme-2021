@@ -101,6 +101,129 @@ object PermissionManager {
         }
     }
 
+    fun checkStoragePermission(
+        context: Context,
+        callback: SimplePermissionCallback,
+        contentView: View
+    ){
+        workerScope.launch {
+            val feedbackViewPermissionListener = object : MultiplePermissionsListener{
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                    report?.let {
+
+                        if (report.grantedPermissionResponses.size>0) {
+                            Log.d("permission_debug", "onPermissionGranted: ")
+                            callback.onPermissionGranted()
+                        }else{
+                            Log.d("permission_debug", " areAllPermissionsGranted false: ")
+                        }
+                    }
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    p0: MutableList<PermissionRequest>?,
+                    token: PermissionToken?
+                ) {
+                    Log.d("permission_debug", "onPermissionRationaleShouldBeShown: ")
+                    AlertDialog.Builder(context).setTitle("We need this permission!")
+                        .setMessage("The permission is needed to access your images")
+                        .setNegativeButton(R.string.cancel
+                        ) { dialog, which ->
+                            dialog.dismiss()
+                            token?.cancelPermissionRequest()
+                        }
+                        .setPositiveButton(android.R.string.ok
+                        ) { dialog, which ->
+                            dialog.dismiss()
+                            token?.continuePermissionRequest()
+                        }
+                        .setOnDismissListener(DialogInterface.OnDismissListener { token?.cancelPermissionRequest() })
+                        .show()
+                }
+
+            }
+            val locationPermissionListener = CompositeMultiplePermissionsListener(
+                feedbackViewPermissionListener,
+                SnackbarOnAnyDeniedMultiplePermissionsListener.Builder.with(
+                    contentView,
+                    "Storage permission is needed to get your photos"
+                )
+                    .withOpenSettingsButton("Settings")
+                    .withCallback(object : Snackbar.Callback() {
+                        override fun onShown(snackbar: Snackbar) {
+                            super.onShown(snackbar)
+                        }
+
+                        override fun onDismissed(snackbar: Snackbar, event: Int) {
+                            super.onDismissed(snackbar, event)
+                        }
+                    })
+                    .build(),
+            )
+            Dexter.withContext(AdmeApplication.APP_CONTEXT)
+                .withPermissions(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.CAMERA
+                )
+                .withListener(locationPermissionListener)
+                .withErrorListener {
+                    Log.d("permission_debug", "withErrorListener: " + it?.name)
+                }
+                .onSameThread()
+                .check()
+        }
+    }
+
+    fun checkRecordPermission(
+        context: Context,
+        callback: SimplePermissionCallback
+    ){
+        val feedbackViewPermissionListener = object : MultiplePermissionsListener{
+            override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                report?.let {
+
+                    if (report.grantedPermissionResponses.size>0) {
+                        Log.d("permission_debug", "onPermissionGranted: ")
+                        callback.onPermissionGranted()
+                    }else{
+                        Log.d("permission_debug", " areAllPermissionsGranted false: ")
+                    }
+                }
+            }
+
+            override fun onPermissionRationaleShouldBeShown(
+                p0: MutableList<PermissionRequest>?,
+                token: PermissionToken?
+            ) {
+                Log.d("permission_debug", "onPermissionRationaleShouldBeShown: ")
+                AlertDialog.Builder(context).setTitle("We need this permission!")
+                    .setMessage("The permission is needed to record your voice")
+                    .setNegativeButton(R.string.cancel
+                    ) { dialog, which ->
+                        dialog.dismiss()
+                        token?.cancelPermissionRequest()
+                    }
+                    .setPositiveButton(android.R.string.ok
+                    ) { dialog, which ->
+                        dialog.dismiss()
+                        token?.continuePermissionRequest()
+                    }
+                    .setOnDismissListener(DialogInterface.OnDismissListener { token?.cancelPermissionRequest() })
+                    .show()
+            }
+
+        }
+        Dexter.withContext(AdmeApplication.APP_CONTEXT)
+            .withPermissions(
+                Manifest.permission.RECORD_AUDIO
+            )
+            .withListener(feedbackViewPermissionListener)
+            .withErrorListener {
+                Log.d("permission_debug", "withErrorListener: " + it?.name)
+            }
+            .check()
+    }
+
 
     interface SimplePermissionCallback{
         fun onPermissionGranted()

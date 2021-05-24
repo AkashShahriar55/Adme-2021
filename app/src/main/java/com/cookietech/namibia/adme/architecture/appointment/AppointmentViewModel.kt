@@ -18,6 +18,7 @@ class AppointmentViewModel:ViewModel() {
     val observableServices = MutableLiveData<ArrayList<SubServicesPOJO>>()
     val observableAppointment = MutableLiveData<AppointmentPOJO>()
     val observableFinalServices = MutableLiveData<ArrayList<SubServicesPOJO>>()
+    var minimumDiscount = 0.0f
 
 
     fun fetchAppointmentServices(appointment_id:String){

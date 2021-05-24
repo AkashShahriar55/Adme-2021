@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookietech.namibia.adme.R
@@ -68,13 +69,28 @@ class CreateInvoice : Fragment(),AddOrEditServiceInvoiceModalDialog.EditServiceC
     }
 
     private fun initializeObservers() {
-        viewModel.observableServices.observe(viewLifecycleOwner,{
+        viewModel.observableServices.observe(viewLifecycleOwner) {
             it?.let{services->
 
                 itemOrServices = services
                 itemAdapter?.setServiceList(services)
+                calculateDiscountValue()
             }
-        })
+        }
+    }
+
+    private fun calculateDiscountValue() {
+        var mainPrice = 0.0f;
+        for (service in itemOrServices){
+            mainPrice += service.quantity * (service.service_charge?.toFloat()?:0.0f)
+        }
+
+        viewModel.observableAppointment.value?.let {
+            if(it.approved){
+                val discountPrice = mainPrice - (it.service_provider_price?.toFloat() ?: 0.0f)
+                viewModel.minimumDiscount = discountPrice
+            }
+        }
     }
 
     private fun setUpItemRecyclerView() {

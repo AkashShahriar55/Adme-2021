@@ -29,6 +29,7 @@ interface Repository {
 
     fun addUsername(
         username: String,
+        photoUrl:String,
         callBack: (usernameStatus: NetworkState) -> Unit
     )
 

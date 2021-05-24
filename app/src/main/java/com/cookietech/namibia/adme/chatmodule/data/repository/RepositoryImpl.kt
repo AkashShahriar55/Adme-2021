@@ -51,9 +51,10 @@ class RepositoryImpl @Inject constructor(
 
     override fun addUsername(
         username: String,
+        photoUrl:String,
         callBack: (usernameStatus: NetworkState) -> Unit
     ) {
-        firebaseDaoImpl.addUsername(username, callBack)
+        firebaseDaoImpl.addUsername(username,photoUrl, callBack)
     }
 
     override fun fetchConfigMsgLength(callBack: (msgLengh: Int) -> Unit) {
