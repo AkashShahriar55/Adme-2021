@@ -52,18 +52,18 @@ android {
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
-def lottieVersion = '3.4.0'
+def lottieVersion = '3.7.0'
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.firebase:firebase-database-ktx:20.0.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'com.google.firebase:firebase-database-ktx:20.0.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
@@ -73,13 +73,13 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation "androidx.cardview:cardview:1.0.0"
 
-    def lifecycle_version = "2.3.0"
+    def lifecycle_version = "2.3.1"
     def arch_version = "2.1.0"
 
     // ViewModel
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     // LiveData
-    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
 
 
@@ -89,7 +89,7 @@ dependencies {
     //multidex
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'com.google.android.material:material:1.4.0'
 
     // for different density screen
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
@@ -115,13 +115,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore'
 
     //For Room Component
-    def room_version = "2.2.6"
+    def room_version = "2.3.0"
 
     implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
     //for facebookAnalytics
-    implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
+    implementation 'com.facebook.android:facebook-android-sdk:8.1.0'
 
 
 
@@ -131,7 +131,7 @@ dependencies {
 
     //glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    kapt 'com.github.bumptech.glide:compiler:4.12.0'
 
     //rxbinding
     implementation 'com.jakewharton.rxbinding4:rxbinding:4.0.0'
@@ -140,25 +140,25 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.3.0'
 
     //For Paging Library
-    def paging_version = "2.1.2"
-    implementation "androidx.paging:paging-runtime:$paging_version" // For Kotlin use paging-runtime-ktx
+    def paging_version = "3.0.1"
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version" // For Kotlin use paging-runtime-ktx
 
     implementation 'org.apache.commons:commons-io:1.3.2'
 
     implementation 'com.google.firebase:firebase-storage'
 
     def nav_version = "2.3.4"
-    def nav_version_ktx = "2.3.4"
+    def nav_version_ktx = "2.3.5"
     // For Java
-    implementation "androidx.navigation:navigation-fragment:$nav_version"
-    implementation "androidx.navigation:navigation-ui:$nav_version"
+    /*implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"*/
     // For Kotlin
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version_ktx"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version_ktx"
 
     //coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.2"
 
     // hilt
@@ -170,11 +170,11 @@ dependencies {
     androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
 
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
     //noinspection GradleCompatible
     implementation 'com.android.support:design:28.0.0'
-    implementation 'androidx.navigation:navigation-fragment:2.3.0'
-    implementation 'androidx.navigation:navigation-ui:2.3.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
 
 
 
@@ -185,7 +185,7 @@ dependencies {
 
 
     //For google
-    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'com.google.android.gms:play-services-auth:19.2.0'
 
     //For picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
@@ -202,8 +202,8 @@ dependencies {
     //Google Maps
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.google.android.libraries.places:places:2.4.0'
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.maps.android:android-maps-utils:0.5+'
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
+    implementation 'com.google.maps.android:android-maps-utils:2.2.5'
 
     //image slider
     implementation 'com.github.smarteist:autoimageslider:1.3.7'
