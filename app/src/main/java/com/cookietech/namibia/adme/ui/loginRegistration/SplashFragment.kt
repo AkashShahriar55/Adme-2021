@@ -73,6 +73,7 @@ class SplashFragment : Fragment() {
 
 
                 initializationDone = true
+                Log.d("login_debug", "onViewCreated: ")
                 navigateToLoginScreen()
 
             }

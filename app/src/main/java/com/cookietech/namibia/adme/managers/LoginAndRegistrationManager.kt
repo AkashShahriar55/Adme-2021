@@ -20,6 +20,11 @@ class LoginAndRegistrationManager() {
 
 
     fun checkIfAlreadyLoggedIn(callback: UserCreationCallback): Boolean {
+        if(FirebaseManager.mFirebaseUser == null){
+            Log.d("login_debug", "checkIfAlreadyLoggedIn: null")
+        } else{
+            Log.d("login_debug", "checkIfAlreadyLoggedIn: not null")
+        }
         FirebaseManager.mFirebaseUser?.let {
             createOrFetchUser(it,callback)
             return true
