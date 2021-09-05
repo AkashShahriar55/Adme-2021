@@ -137,7 +137,8 @@ class LoginViewModel : ViewModel() {
                 firebaseAuthWithGoogle(account.idToken)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
-                Log.d("google_login_debug", "Google sign in failed", e)
+                Log.d("google_login_debug", "Google sign in failed"+ e.status)
+
                 // ...
             }
         } else {

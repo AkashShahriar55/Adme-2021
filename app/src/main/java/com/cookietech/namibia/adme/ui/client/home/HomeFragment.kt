@@ -193,6 +193,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
     private fun setUpMap() {
+        Log.d("marker_debug", "setUpMap: " + isMarkerSet)
+        isMarkerSet = false
         mainScope.launch {
             val mf = SupportMapFragment.newInstance()
             childFragmentManager.beginTransaction().add(R.id.map, mf).commitAllowingStateLoss()
@@ -259,6 +261,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
 
         viewModel.services.value?.apply {
+            Log.d("marker_debug", "initializeObservers: service asche $size $isMarkerSet")
             if(!isMarkerSet)
                 updateMapMarkers(this)
         }
