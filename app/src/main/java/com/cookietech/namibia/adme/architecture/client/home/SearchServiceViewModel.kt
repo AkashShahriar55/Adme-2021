@@ -20,8 +20,11 @@ class SearchServiceViewModel:ViewModel() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { charSequence ->
                 Log.d("debounce_debug", "accept: $charSequence")
-                if (!TextUtils.isEmpty(charSequence))
+                if (!TextUtils.isEmpty(charSequence)){
+                    searchCallback.onFetchStarted()
                     searchServiceRepository.getSearchResults(charSequence.toString(),searchCallback)
+                }
+
             }
     }
 }

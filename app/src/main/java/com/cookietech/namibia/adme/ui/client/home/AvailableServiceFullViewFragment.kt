@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookietech.namibia.adme.R
@@ -51,6 +52,10 @@ class AvailableServiceFullViewFragment : Fragment() {
 
     private fun initializeViews() {
         initializeServicesRecyclerView()
+
+        back_button_detais.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun initializeServicesRecyclerView() {
