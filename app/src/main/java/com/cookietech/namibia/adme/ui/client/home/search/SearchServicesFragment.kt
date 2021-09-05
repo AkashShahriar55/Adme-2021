@@ -52,7 +52,8 @@ class SearchServicesFragment : Fragment() {
             searchView,
             object : SearchServiceRepository.SearchCallback {
                 override fun onInvalidData() {
-
+                    cl_no_data_found.visibility = View.VISIBLE
+                    cl_empty_search_holder.visibility = View.GONE
                 }
 
                 override fun onError() {
@@ -61,7 +62,13 @@ class SearchServicesFragment : Fragment() {
 
                 override fun onFetchedSearchResult(allData: ArrayList<SearchData>) {
                     Log.d("search_debug", "onFetchedSearchResult: " + allData)
+                    cl_empty_search_holder.visibility = View.GONE
+                    cl_no_data_found.visibility = View.GONE
                     adapter!!.resetSearchData(allData)
+
+                }
+
+                override fun onFetchStarted() {
 
                 }
 

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -18,8 +19,10 @@ import com.cookietech.namibia.adme.Application.AppComponent
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.loginRegistration.LoginRegistrationMainViewModel
 import com.cookietech.namibia.adme.architecture.loginRegistration.RegistrationViewModel
+import com.cookietech.namibia.adme.managers.ConnectionManager
 import com.cookietech.namibia.adme.managers.LoginAndRegistrationManager
 import com.cookietech.namibia.adme.managers.SharedPreferenceManager
+import com.cookietech.namibia.adme.views.CustomToast
 import com.cookietech.namibia.adme.views.LoadingDialog
 import kotlinx.android.synthetic.main.fragment_registration.*
 import java.lang.Exception
@@ -90,6 +93,21 @@ class RegistrationFragment : Fragment(),RegistrationViewModel.RegistrationCallba
             }
         }
 
+        ConnectionManager.networkAvailability.observe(viewLifecycleOwner,{
+            if(it == false){
+                showNetworkErrorMessage()
+            }else{
+
+            }
+        })
+
+    }
+
+
+
+    fun showNetworkErrorMessage(){
+        CustomToast.makeErrorToast(requireContext(),"No internet! Please check your internet connection",
+            Toast.LENGTH_LONG).show()
     }
 
     private fun setUpViews() {
@@ -108,8 +126,13 @@ class RegistrationFragment : Fragment(),RegistrationViewModel.RegistrationCallba
         editText2.addTextChangedListener(LoginOTPTextListener(editText2))
 
         reg_join_btn.setOnClickListener { v: View? ->
-           sendVerificationCode()
-            dialog.show()
+            if(ConnectionManager.isOnline(requireContext())){
+                sendVerificationCode()
+                dialog.show()
+            }else{
+                showNetworkErrorMessage()
+            }
+
         }
 
         resend_code_btn.setOnClickListener { v: View? ->

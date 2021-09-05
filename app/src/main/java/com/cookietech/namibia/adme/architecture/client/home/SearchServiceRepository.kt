@@ -73,5 +73,6 @@ class SearchServiceRepository {
         fun onInvalidData()
         fun onError()
         fun onFetchedSearchResult(allData: ArrayList<SearchData>)
+        fun onFetchStarted()
     }
 }

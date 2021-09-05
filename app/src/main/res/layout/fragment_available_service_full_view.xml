@@ -61,7 +61,7 @@
             </androidx.cardview.widget.CardView>
 
             <ImageView
-                android:id="@+id/bottom_details_button"
+                android:id="@+id/back_button_detais"
                 android:layout_width="60dp"
                 android:layout_height="0dp"
                 android:rotation="-90"

@@ -135,7 +135,8 @@ class UserInfoFragment : Fragment(), OnMapReadyCallback{
             return
         }
 
-        if(!ccp.isValidFullNumber){
+        Log.d("user_info_debug", "verifyAndLogin: "+ ccp.isValidFullNumber)
+        if(!ccp.isValidFullNumber && !isPhoneVerifyed){
             edt_phone_number.error = "Fill this properly"
             edt_phone_number.findFocus()
             return

@@ -18,8 +18,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import com.cookietech.namibia.adme.Application.AppComponent
 import com.cookietech.namibia.adme.architecture.loginRegistration.LoginRegistrationMainViewModel
+import com.cookietech.namibia.adme.managers.ConnectionManager
 import com.cookietech.namibia.adme.managers.LoginAndRegistrationManager
 import com.cookietech.namibia.adme.managers.SharedPreferenceManager
+import com.cookietech.namibia.adme.views.CustomToast
 import com.cookietech.namibia.adme.views.LoadingDialog
 import java.lang.Exception
 
@@ -58,6 +60,18 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initializeVariables()
         initializeClicks()
+
+        ConnectionManager.networkAvailability.observe(viewLifecycleOwner,{
+            if(it == false){
+              showNetworkErrorMessage()
+            }else{
+
+            }
+        })
+    }
+
+    fun showNetworkErrorMessage(){
+        CustomToast.makeErrorToast(requireContext(),"No internet! Please check your internet connection",Toast.LENGTH_LONG).show()
     }
 
     private fun initializeVariables() {
@@ -122,12 +136,20 @@ class LoginFragment : Fragment() {
         /**Google Login**/
         login_google_btn.setOnClickListener{
             //Toast.makeText(requireContext(),"Clicked",Toast.LENGTH_SHORT).show()
-            signInWithGoogle()
+            if(ConnectionManager.isOnline(requireContext()))
+                signInWithGoogle()
+            else
+                showNetworkErrorMessage()
+
         }
 
         /**Facebook Login**/
         login_facebook_btn.setOnClickListener{
-            signInWithFacebook()
+            if(ConnectionManager.isOnline(requireContext()))
+                signInWithFacebook()
+            else
+                showNetworkErrorMessage()
+
         }
 
 
