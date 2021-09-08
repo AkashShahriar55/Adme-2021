@@ -5,13 +5,12 @@ import android.util.Log
 import com.cookietech.namibia.adme.models.UserPOJO
 import com.facebook.AccessToken
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseException
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.*
 import com.google.firebase.firestore.DocumentSnapshot
+import org.json.JSONObject
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
@@ -116,6 +115,31 @@ class LoginAndRegistrationManager() {
     fun updateUserInfo(user:UserPOJO
     ): Task<Void> {
         return FirebaseManager.mUserRef.document(user.user_id).set(user)
+    }
+
+    fun updateFCMToken(token: String?, uid: String) {
+        val data = hashMapOf(
+            "token" to token,
+            "user_id" to uid
+        )
+        Log.d("FCM_debug", "updateFCMToken: data: $data")
+        FirebaseManager.mFunctions.getHttpsCallable("updateFCMToken").call(data).addOnCompleteListener { task->
+            if(task.isSuccessful){
+                val jsonString = task.result.data.toString()
+                Log.d("FCM_debug", "updateFCMToken result: ${task.result?.data.toString()}")
+                //val jsonObject = JSONObject(jsonString)
+                //Log.d("FCM_debug", "updateFCMToken: messgae: $jsonObject}")
+
+                Log.d("z z", "updateFCMToken: task successful: " + task.exception)
+
+
+            }else{
+                Log.d("FCM_debug", "updateFCMToken: task not successful: " + task.exception)
+            }
+        }.addOnFailureListener {
+            Log.d("FCM_debug", "updateFCMToken: Failure: " + it.message)
+
+        }
     }
 
 

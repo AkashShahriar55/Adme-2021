@@ -100,12 +100,14 @@ class LoginFragment : Fragment() {
                 val login = mainViewModel.tryToLogin(object : LoginAndRegistrationManager.UserCreationCallback {
                     override fun onUserCreationSuccessful() {
                         Log.d("login_debug", "onUserCreationSuccessful: ")
+                        mainViewModel.updateFCMToken()
                         dialog.dismiss()
                         findNavController().navigate(R.id.login_to_user_info)
                     }
 
                     override fun onUserFetchSuccessful() {
                         Log.d("login_debug", "onUserFetchSuccessful: ")
+                        mainViewModel.updateFCMToken()
                         dialog.dismiss()
                         when (SharedPreferenceManager.user_mode) {
                             AppComponent.MODE_CLIENT -> findNavController().navigate(R.id.login_to_client_activity)

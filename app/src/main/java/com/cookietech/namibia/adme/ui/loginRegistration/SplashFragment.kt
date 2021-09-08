@@ -68,7 +68,7 @@ class SplashFragment : Fragment() {
         })
 
         if(!alreadyLoggedIn){
-            val job =  workerScope.launch {
+            val job =  mainScope.launch {
                 delay(1000)
 
 
@@ -107,7 +107,7 @@ class SplashFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-      /*  if(initializationDone){
+        /*  if(initializationDone){
             navigateToLoginScreen()
         }*/
     }
@@ -130,4 +130,5 @@ class SplashFragment : Fragment() {
                     }
                 }
     }
+
 }

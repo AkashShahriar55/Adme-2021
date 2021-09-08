@@ -15,6 +15,7 @@ class SearchServiceRepository {
                // Log.d("search_debug", "getSearchResults: " + task.result.data)
                 val allData: ArrayList<SearchData> = ArrayList<SearchData>()
                 val jsonString = task.result.data.toString()
+                Log.d("bishal_debug", "getSearchResults: $jsonString")
 
                 try {
                     val jsonObject = JSONObject(jsonString)
