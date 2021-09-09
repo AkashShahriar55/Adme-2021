@@ -52,13 +52,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         if (remoteMessage.data.isNotEmpty()) {
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
 
-            if (/* Check if data needs to be processed by long running job */ true) {
+            /*if (*//* Check if data needs to be processed by long running job *//* true) {
                 // For long-running tasks (10 seconds or more) use WorkManager.
                 scheduleJob()
             } else {
                 // Handle message within 10 seconds
                 handleNow()
-            }
+            }*/
+            sendNotification(remoteMessage.data)
         }
 
         // Check if message contains a notification payload.
@@ -122,21 +123,23 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      *
      * @param messageBody FCM message body received.
      */
-    private fun sendNotification(messageBody: String) {
-        val intent = Intent(this, MainActivity::class.java)
+    private fun sendNotification(data: MutableMap<String, String>) {
+        /*val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-            PendingIntent.FLAG_ONE_SHOT)
+        val pendingIntent = PendingIntent.getActivity(this, 0 *//* Request code *//*, intent,
+            PendingIntent.FLAG_ONE_SHOT)*/
 
         val channelId = getString(R.string.default_notification_channel_id)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
            /* .setSmallIcon(R.drawable.ic_stat_ic_notification)
             .setContentTitle(getString(R.string.fcm_message))*/
-            .setContentText(messageBody)
+            .setSmallIcon(R.drawable.logo)
+            .setContentTitle(data["title"])
+            .setContentText(data["body"])
             .setAutoCancel(true)
             .setSound(defaultSoundUri)
-            .setContentIntent(pendingIntent)
+            /*.setContentIntent(pendingIntent)*/
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 

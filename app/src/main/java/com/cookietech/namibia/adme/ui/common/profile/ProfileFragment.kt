@@ -17,7 +17,14 @@ import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.managers.SharedPreferenceManager
 import com.cookietech.namibia.adme.ui.client.ClientActivity
 import com.cookietech.namibia.adme.ui.serviceProvider.ServiceProviderActivity
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.installations.FirebaseInstallations
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,6 +41,7 @@ private const val ARG_PARAM2 = "param2"
 class ProfileFragment : Fragment() {
 
     val profileViewModel : ProfileViewModel by viewModels()
+    var workerScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     init {
 
@@ -97,6 +105,9 @@ class ProfileFragment : Fragment() {
     private fun logout() {
 
         profileViewModel.logout(requireContext())
+        workerScope.launch {
+            FirebaseMessaging.getInstance().deleteToken()
+        }
 
     }
 
