@@ -92,11 +92,12 @@
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:id="@+id/bottom_details_button"
+                        android:id="@+id/bottom_details_back"
                         android:layout_width="60dp"
                         android:layout_height="0dp"
-                        android:rotation="-90"
                         android:scaleType="center"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackground"
                         android:src="@drawable/ic_up_icon"
                         android:transitionName="bottom_details_back"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -108,6 +109,8 @@
                         android:layout_width="60dp"
                         android:layout_height="0dp"
                         android:scaleType="center"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackground"
                         android:src="@drawable/ic_notification_bell"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -123,10 +126,10 @@
                         android:textColor="@color/color_not_active"
                         android:textStyle="bold"
                         android:transitionName="todayStatusSwitch"
-                        app:layout_constraintBottom_toBottomOf="@+id/bottom_details_button"
+                        app:layout_constraintBottom_toBottomOf="@+id/bottom_details_back"
                         app:layout_constraintEnd_toStartOf="@+id/client_notification_btn"
-                        app:layout_constraintStart_toEndOf="@+id/bottom_details_button"
-                        app:layout_constraintTop_toTopOf="@+id/bottom_details_button" />
+                        app:layout_constraintStart_toEndOf="@+id/bottom_details_back"
+                        app:layout_constraintTop_toTopOf="@+id/bottom_details_back" />
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/today_notification_badge"
@@ -134,7 +137,7 @@
                         android:layout_height="6dp"
                         android:layout_marginStart="20dp"
                         android:layout_marginBottom="20dp"
-                        app:cardBackgroundColor="@color/colorPrimary"
+                        app:cardBackgroundColor="@color/service_provider_primary"
                         app:cardCornerRadius="3dp"
                         app:layout_constraintBottom_toBottomOf="@+id/client_notification_btn"
                         app:layout_constraintEnd_toEndOf="@+id/client_notification_btn"
@@ -498,6 +501,24 @@
 
                         <include layout="@layout/layout_empty_recycleview" />
 
+                        <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/service_shimmer_holder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical"
+                        app:duration="800">
+
+                        <!-- Adding 7 rows of placeholders -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <include layout="@layout/services_holder_layout" />
+                        </LinearLayout>
+
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
                     </LinearLayout>
 
                     <TextView
@@ -558,6 +579,7 @@
                             android:id="@+id/empty_recyclerview_appointment"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:visibility="gone"
                             android:background="@color/default_background">
 
                             <ImageView
@@ -584,6 +606,24 @@
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/imageView34" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <com.facebook.shimmer.ShimmerFrameLayout
+                            android:id="@+id/appointment_shimmer_holder"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical"
+                            app:duration="800">
+
+                            <!-- Adding 7 rows of placeholders -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <include layout="@layout/appointment_holder_item" />
+                            </LinearLayout>
+
+                        </com.facebook.shimmer.ShimmerFrameLayout>
 
                     </LinearLayout>
 

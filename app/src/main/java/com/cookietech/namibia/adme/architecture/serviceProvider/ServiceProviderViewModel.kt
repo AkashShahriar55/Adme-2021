@@ -1,5 +1,7 @@
 package com.cookietech.namibia.adme.architecture.serviceProvider
 
+import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,17 +11,15 @@ import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.models.AppointmentPOJO
 import com.cookietech.namibia.adme.models.ServiceProviderPOJO
 import com.cookietech.namibia.adme.models.ServicesPOJO
-import com.cookietech.namibia.adme.utils.SingleLiveEvent
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.QuerySnapshot
+import com.cookietech.namibia.adme.utils.GoogleMapUtils
 import java.lang.Exception
 
 class ServiceProviderViewModel: ViewModel() {
     val TAG = "service_debug"
-    val service_provider_data = SingleLiveEvent<ServiceProviderPOJO?>()
+    val service_provider_data = MutableLiveData<ServiceProviderPOJO?>()
     val repository = ServiceProviderRepository()
     val services = MutableLiveData<ArrayList<ServicesPOJO>>()
-    val observableAppointments = SingleLiveEvent<ArrayList<AppointmentPOJO>>()
+    val observableAppointments = MutableLiveData<ArrayList<AppointmentPOJO>>()
 
     init {
         Log.d(TAG, " view model initiated : ")
@@ -30,23 +30,7 @@ class ServiceProviderViewModel: ViewModel() {
 
     private fun fetchAllAppointments() {
         FirebaseManager.mFirebaseUser?.apply {
-            repository.fetchAllAppointments(uid).addOnSuccessListener { documents->
-                if(documents.isEmpty){
-
-                }else{
-                    val appointments = ArrayList<AppointmentPOJO>()
-                    for (document in documents){
-                        val appointment = document.toObject(AppointmentPOJO::class.java)
-                        appointment.id = document.id
-                        appointments.add(appointment)
-                        
-                    }
-                    observableAppointments.value = appointments
-                }
-
-            }.addOnFailureListener {
-
-            }
+            repository.fetchAllAppointments(uid,observableAppointments)
         }
     }
 
@@ -70,6 +54,16 @@ class ServiceProviderViewModel: ViewModel() {
             }
 
         })
+    }
+
+    fun generateMarkerBitmap(requireContext: Context, decodeResource: Bitmap): Bitmap? {
+        return GoogleMapUtils.generateMarkerBitmap(requireContext,decodeResource)
+    }
+
+
+    override fun onCleared() {
+        super.onCleared()
+        repository.removeListeners()
     }
 
 

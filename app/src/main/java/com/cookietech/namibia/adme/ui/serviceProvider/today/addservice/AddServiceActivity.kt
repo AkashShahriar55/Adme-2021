@@ -34,7 +34,7 @@ class AddServiceActivity : AppCompatActivity() {
         navController = navHostFragment.findNavController()
         navOptions = NavOptions.Builder()
             .setLaunchSingleTop(true)
-            .setPopUpTo(navController.graph.startDestination, false)
+            .setPopUpTo(navController.graph.startDestinationId, false)
             .build()
 
         add_service_overview_text.setOnClickListener {

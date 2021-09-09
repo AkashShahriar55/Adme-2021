@@ -1,5 +1,9 @@
 package com.cookietech.namibia.adme.ui.serviceProvider.today
 
+import android.animation.ObjectAnimator
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +14,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.request.transition.Transition
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.serviceProvider.ServiceProviderViewModel
 import com.cookietech.namibia.adme.interfaces.ServiceProviderDataCallback
@@ -24,6 +35,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
@@ -34,12 +46,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 class TodayFragment : Fragment(), OnMapReadyCallback {
+    private var isMarkerSet: Boolean = false
     private lateinit var appointmentAdapter: AppointmentAdapter
     var workerScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     var mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
@@ -51,47 +66,63 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
     private var param2: String? = null
     var mMap: GoogleMap? = null
 
+    var closestMarker:Marker? = null
+
     val serviceProviderViewModel:ServiceProviderViewModel by activityViewModels()
     var serviceProviderPOJO:ServiceProviderPOJO? = null
+
+    val serviceDataObserver =  Observer<ServiceProviderPOJO?> { data ->
+        serviceProviderPOJO = data
+        updateView()
+        startPostponedEnterTransition()
+    }
+
+    val servicesObserver = Observer<ArrayList<ServicesPOJO>> { services ->
+        Log.d("database_debug", "initializeObservers:  ${services.size}")
+        if (!services.isNullOrEmpty()) {
+            servicesAdapter.services = services
+            service_recyclerview.visibility = View.VISIBLE
+            empty_recyclerview.visibility = View.GONE
+            service_shimmer_holder.stopShimmerAnimation()
+            service_shimmer_holder.visibility = View.GONE
+        } else {
+            service_recyclerview.visibility = View.GONE
+            empty_recyclerview.visibility = View.VISIBLE
+            service_shimmer_holder.stopShimmerAnimation()
+            service_shimmer_holder.visibility = View.GONE
+        }
+    }
+
+    val appointmentsObserver = Observer<ArrayList<AppointmentPOJO>> { appointments->
+        if (!appointments.isNullOrEmpty()) {
+            appointmentAdapter.appointments = appointments
+            appointment_container.visibility = View.VISIBLE
+            empty_recyclerview_appointment.visibility = View.GONE
+            updateAppointmentMarkers(appointments)
+            appointment_shimmer_holder.stopShimmerAnimation()
+            appointment_shimmer_holder.visibility = View.GONE
+        } else {
+            appointment_container.visibility = View.GONE
+            empty_recyclerview_appointment.visibility = View.VISIBLE
+            appointment_shimmer_holder.stopShimmerAnimation()
+            appointment_shimmer_holder.visibility = View.GONE
+        }
+    }
+
+
+
     lateinit var servicesAdapter: ServiceAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("life_cycle", "onCreate: $savedInstanceState")
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_today, container, false)
-    }
+        setUpMap()
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initializeViews()
-        initializeObservers()
-        initializeClicks()
-    }
-
-    private fun initializeClicks() {
-
-        client_notification_btn.setOnClickListener{
-            findNavController().navigate(R.id.today_to_notification)
-        }
-
-        today_add_service.setOnClickListener {
-            val action = TodayFragmentDirections.todayToAddService(null)
-            findNavController().navigate(action)
-        }
-    }
-
-    private fun initializeObservers() {
         serviceProviderViewModel.createOrFetchServiceData(object : ServiceProviderDataCallback {
             override fun onCreateSuccessful() {
 
@@ -107,47 +138,194 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
 
         })
 
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        Log.d("life_cycle", "onCreateView: ")
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_today, container, false)
+    }
 
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d("life_cycle", "onViewCreated: " + savedInstanceState)
+        initializeViews()
+        initializeClicks()
+        postponeEnterTransition()
+    }
 
 
+    private fun initializeClicks() {
+
+        client_notification_btn.setOnClickListener{
+            findNavController().navigate(R.id.today_to_notification)
+        }
+
+        today_add_service.setOnClickListener {
+            val action = TodayFragmentDirections.todayToAddService(null)
+            findNavController().navigate(action)
+        }
+    }
 
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("life_cycle", "onStart: ")
+        initializeObservers()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("life_cycle", "onPause: ")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        removeObservers()
+        Log.d("life_cycle", "onStop: ")
+    }
+
+    private fun removeObservers() {
+        serviceProviderViewModel.service_provider_data.removeObserver(
+            serviceDataObserver)
+        serviceProviderViewModel.services.removeObserver( servicesObserver)
+        serviceProviderViewModel.observableAppointments.removeObserver(appointmentsObserver)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("life_cycle", "onDestroy: ")
+    }
+    private fun initializeObservers() {
         serviceProviderViewModel.service_provider_data.observe(viewLifecycleOwner,
-            { data ->
-                serviceProviderPOJO = data
-                updateView()
-                serviceProviderViewModel.services.observe(viewLifecycleOwner, { services ->
-                    Log.d("database_debug", "initializeObservers:  ${services.size}")
-                    if (!services.isNullOrEmpty()) {
-                        servicesAdapter.services = services
-                        service_recyclerview.visibility = View.VISIBLE
-                        empty_recyclerview.visibility = View.GONE
-                    } else {
-                        service_recyclerview.visibility = View.GONE
-                        empty_recyclerview.visibility = View.VISIBLE
+            serviceDataObserver)
+
+    }
+
+
+    private val markers = arrayListOf<Marker?>()
+    private val markerMaps = hashMapOf<Marker?,AppointmentPOJO?>()
+    private fun updateAppointmentMarkers(appointments: ArrayList<AppointmentPOJO>) {
+
+        var closestTime = Long.MAX_VALUE
+        var isNewClosest = false
+
+        for (appointment in appointments) {
+
+            if(markerMaps.values.contains(appointment)){
+                Log.d("marker_debug", "updateAppointmentMarkers: " + appointment.client_quotation)
+                continue
+            }
+
+
+            val latitude= appointment.client_latitude?.toDouble()
+            val longitude = appointment.client_longitude?.toDouble()
+
+            val timeDistance = appointment.client_time.toLong() - System.currentTimeMillis();
+            Log.d("time_debug", "updateMapMarkers: $timeDistance")
+
+            if( closestTime > timeDistance){
+                closestTime = timeDistance
+                isNewClosest = true
+            }else{
+                isNewClosest = false
+            }
+
+            val position = latitude?.let { lat->
+                longitude?.let { lng ->
+                    LatLng(
+                        lat, lng
+                    )
+                }
+            }
+
+            Glide.with(requireContext())
+                .asBitmap()
+                .load(appointment.client_profile_pic)
+                .addListener(object : RequestListener<Bitmap> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Bitmap>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        Log.d("bitmap_debug", "onLoadFailed: ${appointment.client_profile_pic}")
+                        val markerBitmap = serviceProviderViewModel.generateMarkerBitmap(requireContext(),
+                            BitmapFactory.decodeResource(
+                            resources, R.drawable.profile
+                        ))
+                        addMarker(markerBitmap,position,appointment,isNewClosest)
+                        return false
                     }
+
+                    override fun onResourceReady(
+                        resource: Bitmap?,
+                        model: Any?,
+                        target: Target<Bitmap>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        Log.d("bitmap_debug", "onResourceReady: ${appointment.client_profile_pic}")
+                        val markerBitmap = if (resource != null) {
+                            serviceProviderViewModel.generateMarkerBitmap(requireContext(), resource)
+                        } else {
+                            serviceProviderViewModel.generateMarkerBitmap(requireContext(), BitmapFactory.decodeResource(
+                                resources, R.drawable.profile
+                            ))
+
+                        }
+                        addMarker(markerBitmap, position, appointment, isNewClosest)
+
+                        return false
+                    }
+
+                })
+                .into(object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        Log.d("marker_debug", "onLoadCleared: image asheni ")
+                    }
+
                 })
 
 
-                serviceProviderViewModel.observableAppointments.observe(viewLifecycleOwner,{ appointments->
-                    if (!appointments.isNullOrEmpty()) {
-                        appointmentAdapter.appointments = appointments
-                        appointment_container.visibility = View.VISIBLE
-                        empty_recyclerview_appointment.visibility = View.GONE
-                    } else {
-                        appointment_container.visibility = View.GONE
-                        empty_recyclerview_appointment.visibility = View.VISIBLE
-                    }
-                })
-            })
-
+        }
 
 
 
     }
 
+    fun addMarker(
+        markerBitmap: Bitmap?,
+        position: LatLng?,
+        id: AppointmentPOJO?,
+        isNewClosest: Boolean
+    ){
+        val marker = mMap?.addMarker(
+            MarkerOptions().position(position!!).icon(
+                BitmapDescriptorFactory.fromBitmap(
+                    markerBitmap
+                )
+            )
+        )
+        markers.add(marker)
+        markerMaps[marker] = id
+        if(isNewClosest)
+            closestMarker = marker;
+    }
+
     private fun setUpMap() {
+        isMarkerSet = false
         mainScope.launch {
             val mf = SupportMapFragment.newInstance()
             childFragmentManager.beginTransaction().add(R.id.map, mf).commitAllowingStateLoss()
@@ -181,13 +359,30 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
                             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                         }
                     }
+                    BottomSheetBehavior.STATE_EXPANDED->{
+                        serviceProviderViewModel.services.observe(viewLifecycleOwner, servicesObserver)
+                        serviceProviderViewModel.observableAppointments.observe(viewLifecycleOwner,appointmentsObserver)
+                        ObjectAnimator.ofFloat(bottom_details_back, View.ROTATION, bottom_details_back.rotation, -90f).setDuration(100).start();
+                        bottom_details_back.setOnClickListener {
+                            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                        }
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED->{
+                        ObjectAnimator.ofFloat(bottom_details_back, View.ROTATION, bottom_details_back.rotation, 0f).setDuration(100).start();
+                        bottom_details_back.setOnClickListener {
+                            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                        }
+                    }
+
                 }
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
         })
 
-        setUpMap()
+
     }
 
     companion object {
@@ -205,6 +400,11 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(map: GoogleMap?) {
         mMap = map
         updateMarkers()
+        serviceProviderViewModel.observableAppointments.value?.apply {
+            Log.d("marker_debug", "initializeObservers: service asche $size $isMarkerSet")
+            if(!isMarkerSet)
+                updateAppointmentMarkers(this)
+        }
     }
 
     private fun updateMarkers() {
@@ -228,33 +428,50 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 20f));
 
         }
+
+
+
     }
+
+
+
 
     private fun updateView() {
         mainScope.launch {
             UiHelper(requireContext()).setMargins(today_location_button, 0, 0, 0, 180)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             isbottomSheetVisible = true
+
+            serviceProviderPOJO?.apply {
+                tv_total_income.text = total_income.toString()
+                tv_income_today.text = monthly_income.toString()
+                tv_due.text = monthly_due.toString()
+                tv_pressed_today.text = pressed.toString()
+                tv_requested_today.text = requested.toString()
+                tv_completed_today.text = completed.toString()
+            }
+
+
+            service_recyclerview.layoutManager = LinearLayoutManager(context)
+            service_recyclerview.adapter = servicesAdapter
+
+
+
+            appointment_container.layoutManager= LinearLayoutManager(context)
+            appointment_container.adapter = appointmentAdapter
         }
 
-        serviceProviderPOJO?.apply {
-            tv_total_income.text = total_income.toString()
-            tv_income_today.text = monthly_income.toString()
-            tv_due.text = monthly_due.toString()
-            tv_pressed_today.text = pressed.toString()
-            tv_requested_today.text = requested.toString()
-            tv_completed_today.text = completed.toString()
-        }
 
+
+    }
+
+    init {
         servicesAdapter = ServiceAdapter(object : ServiceAdapter.OnServiceItemClickListener{
             override fun onItemClicked(servicesPOJO: ServicesPOJO) {
                 val action = TodayFragmentDirections.todayToAddService(servicesPOJO)
                 findNavController().navigate(action)
             }
         })
-        service_recyclerview.layoutManager = LinearLayoutManager(context)
-        service_recyclerview.adapter = servicesAdapter
-
 
         appointmentAdapter = AppointmentAdapter(object :AppointmentAdapter.AppointmentListCallback{
             override fun onAppointmentDetailsClicked(appointment: AppointmentPOJO) {
@@ -264,8 +481,5 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
                 findNavController().navigate(R.id.today_to_appointment_activity,bundle)
             }
         })
-        appointment_container.layoutManager= LinearLayoutManager(context)
-        appointment_container.adapter = appointmentAdapter
-
     }
 }

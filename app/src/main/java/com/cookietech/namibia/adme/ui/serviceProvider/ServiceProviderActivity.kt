@@ -43,6 +43,7 @@ class ServiceProviderActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.service_provider_nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
         service_provider_bottom_nav.setupWithNavController(navController)
+
     }
 
     override fun onNavigateUp(): Boolean {

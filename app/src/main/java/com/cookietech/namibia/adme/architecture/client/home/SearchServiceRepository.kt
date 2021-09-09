@@ -28,7 +28,7 @@ class SearchServiceRepository {
                                 DatabaseResponse.Response.Invalid_data
                             )
                         )*/
-
+0
                         searchCallback.onInvalidData()
                     } else {
                         for (i in 0 until jsonArray.length()) {

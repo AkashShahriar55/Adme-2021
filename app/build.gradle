@@ -7,10 +7,10 @@ plugins {
 
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
-apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: "androidx.navigation.safeargs"
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.2"
 
     defaultConfig {
@@ -151,7 +151,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage'
 
     def nav_version = "2.3.4"
-    def nav_version_ktx = "2.3.5"
+    def nav_version_ktx = "2.4.0-alpha08"
     // For Java
     /*implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"*/
@@ -237,6 +237,9 @@ dependencies {
     implementation "com.firebaseui:firebase-ui-auth:$firebase_ui_auth"
 
     kapt "com.android.databinding:compiler:4.1.2"
+
+    //Shimmer effect
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
 
 
 }

@@ -11,13 +11,22 @@
         android:label="HomeFragment" >
         <action
             android:id="@+id/today_to_notification"
-            app:destination="@id/notificationFragment" />
+            app:destination="@id/notificationFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/empty"
+            app:launchSingleTop="true"
+            app:popExitAnim="@anim/exit_to_right" />
         <action
             android:id="@+id/today_to_add_service"
             app:destination="@id/addServiceActivity" />
         <action
             android:id="@+id/today_to_appointment_activity"
             app:destination="@id/appointmentDetailsActivity" />
+        <action
+            android:id="@+id/action_todayFragment_to_leaderBoardFragment"
+            app:destination="@id/leaderBoardFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:launchSingleTop="true" />
     </fragment>
     <fragment
         android:id="@+id/leaderBoardFragment"
@@ -26,6 +35,11 @@
         <action
             android:id="@+id/inbox_to_chat_provider"
             app:destination="@id/chatFragment2" />
+        <action
+            android:id="@+id/action_leaderBoardFragment_to_incomeFragment"
+            app:destination="@id/incomeFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:launchSingleTop="true" />
     </fragment>
     <fragment
         android:id="@+id/incomeFragment"

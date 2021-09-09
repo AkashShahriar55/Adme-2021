@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.models.ServicesPOJO
@@ -17,8 +18,9 @@ class ServiceAdapter(var itemClickListener: OnServiceItemClickListener) : Recycl
 
     var services = ArrayList<ServicesPOJO>()
     set(value) {
+        val callback = ServiceDiffUtilsCallback(services,value)
+        DiffUtil.calculateDiff(callback).dispatchUpdatesTo(this)
         field =value
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

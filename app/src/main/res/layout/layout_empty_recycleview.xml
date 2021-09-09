@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:layout_marginBottom="20dp"
+    android:visibility="gone"
     android:background="@drawable/border_ash_today"
     tools:layout_editor_absoluteY="25dp">
 

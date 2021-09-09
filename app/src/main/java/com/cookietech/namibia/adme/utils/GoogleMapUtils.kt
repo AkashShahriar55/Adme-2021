@@ -1,10 +1,13 @@
 package com.cookietech.namibia.adme.utils
 
-import android.graphics.Color
+import android.content.Context
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
 import android.location.Location
 import android.os.AsyncTask
 import android.util.Log
 import android.widget.Toast
+import com.cookietech.namibia.adme.R
 import com.facebook.FacebookSdk
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
@@ -180,6 +183,38 @@ object GoogleMapUtils {
             }
         }
     }
+
+
+
+    fun generateMarkerBitmap(context: Context, profile_photo: Bitmap): Bitmap? {
+        var profile_photo = profile_photo
+        val background = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
+        val mainCanvas = Canvas(background)
+        var markerImage = BitmapFactory.decodeResource(context.resources, R.drawable.marker_with_photo)
+        markerImage = Bitmap.createScaledBitmap(markerImage, 100, 100, false)
+        mainCanvas.drawBitmap(markerImage, 0f, 0f, null)
+        val roundedImage = Bitmap.createBitmap(
+            66,
+            66, Bitmap.Config.ARGB_8888
+        )
+        val profileImageCanvas = Canvas(roundedImage)
+        //Bitmap mainProfileImage = BitmapFactory.decodeResource(getResources(),R.drawable.test_image);
+        profile_photo = Bitmap.createScaledBitmap(profile_photo, 65, 65, false)
+        val color = -0xbdbdbe
+        val paint = Paint()
+        val rect = Rect(0, 0, 66, 66)
+        paint.isAntiAlias = true
+        profileImageCanvas.drawARGB(0, 0, 0, 0)
+        paint.color = color
+        // canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+        profileImageCanvas.drawCircle(33f, 33f, 33f, paint)
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+        profileImageCanvas.drawBitmap(profile_photo, rect, rect, paint)
+        mainCanvas.drawBitmap(roundedImage, 18f, 4f, null)
+        val bitmapDrawable = BitmapDrawable(background)
+        return bitmapDrawable.bitmap
+    }
+
 
 
     /** Receives a JSONObject and returns a list of lists containing latitude and longitude  */

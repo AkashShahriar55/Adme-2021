@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +29,7 @@ class NotificationFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }*/
+        getNotifications()
     }
 
     override fun onCreateView(
@@ -40,10 +42,14 @@ class NotificationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        postponeEnterTransition()
         initializeRV()
         initializeObserver()
-        getNotifications()
+
+
+        back_button.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun initializeObserver() {
@@ -51,6 +57,7 @@ class NotificationFragment : Fragment() {
             adapter?.apply {
                 notificationList = notifList
             }
+            startPostponedEnterTransition()
         })
     }
 

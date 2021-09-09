@@ -110,7 +110,7 @@
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:id="@+id/bottom_details_button"
+                        android:id="@+id/bottom_details_back"
                         android:layout_width="60dp"
                         android:layout_height="0dp"
                         android:clickable="true"
@@ -143,10 +143,10 @@
                         android:text="@string/services_available_in_your_area"
                         android:textColor="@color/color_not_active"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/bottom_details_button"
+                        app:layout_constraintBottom_toBottomOf="@+id/bottom_details_back"
                         app:layout_constraintEnd_toStartOf="@+id/client_notification_btn"
-                        app:layout_constraintStart_toEndOf="@+id/bottom_details_button"
-                        app:layout_constraintTop_toTopOf="@+id/bottom_details_button" />
+                        app:layout_constraintStart_toEndOf="@+id/bottom_details_back"
+                        app:layout_constraintTop_toTopOf="@+id/bottom_details_back" />
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/today_notification_badge"
