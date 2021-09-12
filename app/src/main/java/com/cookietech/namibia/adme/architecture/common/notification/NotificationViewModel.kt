@@ -28,13 +28,15 @@ class NotificationViewModel : ViewModel() {
                val list = arrayListOf<NotificationPOJO>()
 
                for (document in documents){
+                   Log.d("notif_debug", "getNotifications: ${document.id}")
                    val notification = document.toObject(NotificationPOJO::class.java)
                    notification.id = document.id
+                   //Log.d("notif_debug", "getNotifications: ${notification.id}")
                    notification.let { list.add(it) }
 
                }
                notificationList.value = list
-               Log.d("notfif_debug", "notification: ${list.size}")
+               Log.d("notif_debug", "notification: ${list.size}")
            }
 
 
