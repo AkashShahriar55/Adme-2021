@@ -15,12 +15,17 @@ import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.common.notification.NotificationViewModel
 import com.cookietech.namibia.adme.ui.serviceProvider.today.appointment.AppointmentDetailsActivity
 import kotlinx.android.synthetic.main.fragment_notification.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 
 class NotificationFragment : Fragment() {
 
     private val notificationViewModel : NotificationViewModel by viewModels()
     private var adapter: NotificationAdapter? = null
+    var workerScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +73,7 @@ class NotificationFragment : Fragment() {
     private fun initializeRV() {
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
          adapter = NotificationAdapter(object : NotificationAdapter.NotificationClickListener {
-             override fun onNotificationClicked(appointmentId: String) {
+             override fun onNotificationClicked(appointmentId: String, notificationId: String?) {
                  //Log.d("notif_debug", "onNotificationClicked: $appointmentId")
 
                  val bundle = Bundle()
@@ -78,6 +83,10 @@ class NotificationFragment : Fragment() {
                  val intent = Intent(requireContext(), AppointmentDetailsActivity::class.java)
                  intent.putExtras(bundle)
                  startActivity(intent)
+                 //notificationViewModel.updateIssenStatus(notificationId)
+                 workerScope.launch {
+                     notificationViewModel.updateIssenStatus(notificationId)
+                 }
              }
 
          }, requireContext())

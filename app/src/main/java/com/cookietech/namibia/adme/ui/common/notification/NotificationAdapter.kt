@@ -2,6 +2,7 @@ package com.cookietech.namibia.adme.ui.common.notification
 
 import android.app.Notification
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +13,11 @@ import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.cookietech.namibia.adme.Application.AppComponent.MODE_CLIENT
+import com.cookietech.namibia.adme.Application.AppComponent.MODE_SERVICE_PROVIDER
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.helper.TimeHelper
+import com.cookietech.namibia.adme.managers.SharedPreferenceManager
 import com.cookietech.namibia.adme.models.NotificationPOJO
 
 class NotificationAdapter(
@@ -55,11 +59,35 @@ class NotificationAdapter(
             .load(notification.img_url)
             .into(holder.mv_icon)
 
+        if (notification.isSeen == false && SharedPreferenceManager.user_mode.equals(MODE_CLIENT)){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                holder.cl_view.setBackgroundColor(context.resources.getColor(R.color.client_notif_unseen,null))
+            } else{
+                holder.cl_view.setBackgroundColor(context.resources.getColor(R.color.client_notif_unseen))
+            }
+        }
+        else if (notification.isSeen == false && SharedPreferenceManager.user_mode.equals(MODE_SERVICE_PROVIDER)){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                holder.cl_view.setBackgroundColor(context.resources.getColor(R.color.sp_notif_unseen,null))
+            } else{
+                holder.cl_view.setBackgroundColor(context.resources.getColor(R.color.sp_notif_unseen))
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                holder.cl_view.setBackgroundColor(context.resources.getColor(R.color.white,null))
+            } else{
+                holder.cl_view.setBackgroundColor(context.resources.getColor(R.color.white))
+            }
+        }
+
         holder.cl_view.setOnClickListener{
             if (notification.type.equals("quotation")){
+
+                //perform click callback
                 notification.reference?.let { it1 ->
-                    notificationClickListener.onNotificationClicked(it1)
+                    notificationClickListener.onNotificationClicked(it1, notification.id)
                 }
+
             }
         }
        
@@ -71,6 +99,6 @@ class NotificationAdapter(
 
     interface NotificationClickListener{
 
-        fun onNotificationClicked(appointmentId: String)
+        fun onNotificationClicked(appointmentId: String, notificationId: String?)
     }
 }

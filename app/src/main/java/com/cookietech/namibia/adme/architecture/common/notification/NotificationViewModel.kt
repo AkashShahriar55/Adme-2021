@@ -28,10 +28,11 @@ class NotificationViewModel : ViewModel() {
                val list = arrayListOf<NotificationPOJO>()
 
                for (document in documents){
-                   Log.d("notif_debug", "getNotifications: ${document.id}")
+                   Log.d("notif_debug", "getNotifications doc: ${document.id} ${document.get("isSeen")}")
                    val notification = document.toObject(NotificationPOJO::class.java)
                    notification.id = document.id
-                   //Log.d("notif_debug", "getNotifications: ${notification.id}")
+                   notification.isSeen = document.get("isSeen") as Boolean?
+                   Log.d("notif_debug", "getNotifications: ${notification.id} ${notification.isSeen}")
                    notification.let { list.add(it) }
 
                }
@@ -47,5 +48,18 @@ class NotificationViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         notificationListenerRegistration.remove()
+    }
+
+    fun updateIssenStatus(notificationId: String?) {
+        Log.d("isSeen_debug", "updateIssenStatus: called")
+        notificationId?.let {
+            notificationRepository.updateIssenStatus(it)
+                .addOnSuccessListener {
+                    Log.d("isSeen_debug", "updateIssenStatus: success")
+                }
+                .addOnFailureListener {
+                    Log.d("isSeen_debug", "updateIssenStatus: failure")
+                }
+        }
     }
 }

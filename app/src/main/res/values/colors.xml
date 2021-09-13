@@ -16,6 +16,8 @@
     <color name="client_primary">#3F5AA6</color>
     <color name="service_provider_primary">#FA6D01</color>
     <color name="bottom_icon_inactive">#7E7E7E</color>
+    <color name="client_notif_unseen">#CDD0D8</color>
+    <color name="sp_notif_unseen">#F6E3D4</color>
 
 
 

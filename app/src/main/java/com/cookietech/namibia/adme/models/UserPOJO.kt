@@ -19,7 +19,9 @@ class UserPOJO(@Exclude var user_id: String,
                var isServiceProvider: Boolean = false,
                var isActive: Boolean = true,
                var user_permission: String = "user",
-                var user_info_updated:Boolean = false) : Parcelable {
+               var user_info_updated:Boolean = false,
+               var hasUnreadNotifSP: Boolean = false,
+               var hasUnreadNotifClient: Boolean = false) : Parcelable {
 
     constructor() : this(
         "null",
@@ -36,6 +38,8 @@ class UserPOJO(@Exclude var user_id: String,
         false,
         true,
         "user",
+        false,
+        false,
         false)
 
     constructor(parcel: Parcel) : this(
@@ -53,7 +57,9 @@ class UserPOJO(@Exclude var user_id: String,
         parcel.readByte() != 0.toByte(),
         parcel.readByte() != 0.toByte(),
         parcel.readString() ?: "user",
-            parcel.readByte() != 0.toByte()
+        parcel.readByte() != 0.toByte(),
+        parcel.readByte() != 0.toByte(),
+        parcel.readByte() != 0.toByte()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -72,6 +78,8 @@ class UserPOJO(@Exclude var user_id: String,
         parcel.writeByte(if (isActive) 1 else 0)
         parcel.writeString(user_permission)
         parcel.writeByte(if(user_info_updated) 1 else 0)
+        parcel.writeByte(if(hasUnreadNotifSP) 1 else 0)
+        parcel.writeByte(if(hasUnreadNotifClient) 1 else 0)
     }
 
     override fun describeContents(): Int {
