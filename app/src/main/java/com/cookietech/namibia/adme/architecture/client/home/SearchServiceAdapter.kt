@@ -15,8 +15,9 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 
 import java.util.ArrayList
 
-class SearchServiceAdapter(var searchDataList : ArrayList<SearchData>, val context: Context) : RecyclerView.Adapter<SearchServiceAdapter.SearchServiceViewHolder>() {
-
+class SearchServiceAdapter(var searchDataList : ArrayList<SearchData>,
+                           val context: Context,
+                           val searchItemCallback : SearchItemCallback) : RecyclerView.Adapter<SearchServiceAdapter.SearchServiceViewHolder>() {
 
 
     class SearchServiceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -68,5 +69,12 @@ class SearchServiceAdapter(var searchDataList : ArrayList<SearchData>, val conte
         searchDataList.addAll(newSearchDataList)
         notifyDataSetChanged()
 
+    }
+    fun clearData(){
+        searchDataList.clear()
+        notifyDataSetChanged()
+    }
+    interface SearchItemCallback{
+        fun onSearchItemClicked(user_ref : String?)
     }
 }

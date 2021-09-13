@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -52,11 +53,15 @@ class SearchServicesFragment : Fragment() {
             searchView,
             object : SearchServiceRepository.SearchCallback {
                 override fun onInvalidData() {
+                    adapter!!.clearData()
                     cl_no_data_found.visibility = View.VISIBLE
                     cl_empty_search_holder.visibility = View.GONE
+                    searchLoading.visibility = View.GONE
                 }
 
                 override fun onError() {
+                    searchLoading.visibility = View.GONE
+                    Toast.makeText(requireContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show()
 
                 }
 
@@ -65,10 +70,12 @@ class SearchServicesFragment : Fragment() {
                     cl_empty_search_holder.visibility = View.GONE
                     cl_no_data_found.visibility = View.GONE
                     adapter!!.resetSearchData(allData)
+                    searchLoading.visibility = View.GONE
 
                 }
 
                 override fun onFetchStarted() {
+                    searchLoading.visibility = View.VISIBLE
 
                 }
 
@@ -87,7 +94,14 @@ class SearchServicesFragment : Fragment() {
     private fun initializeRV() {
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
 
-        adapter = SearchServiceAdapter(ArrayList<SearchData>(), requireContext())
+        adapter = SearchServiceAdapter(ArrayList<SearchData>(),
+            requireContext(),
+        object : SearchServiceAdapter.SearchItemCallback{
+            override fun onSearchItemClicked(user_ref: String?) {
+
+            }
+
+        })
         rv_service_result.layoutManager = mLayoutManager
         rv_service_result.itemAnimator = DefaultItemAnimator()
         rv_service_result.adapter = adapter

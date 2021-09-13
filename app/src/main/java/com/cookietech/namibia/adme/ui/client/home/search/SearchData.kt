@@ -17,9 +17,11 @@ class SearchData(
     var pic_url: String? = null,
     var rating: String? = null,
     var reviews: String? = null,
-    var user_name: String? = null
+    var user_name: String? = null,
+    var user_ref: String? = null
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readString(),
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
@@ -47,10 +49,15 @@ class SearchData(
         parcel.writeString(rating)
         parcel.writeString(reviews)
         parcel.writeString(user_name)
+        parcel.writeString(user_ref)
     }
 
     override fun describeContents(): Int {
         return 0
+    }
+
+    override fun toString(): String {
+        return "SearchData(id=$id, category=$category, categoryId=$categoryId, description=$description, latitude=$latitude, longitude=$longitude, max_charge=$max_charge, min_charge=$min_charge, pic_url=$pic_url, rating=$rating, reviews=$reviews, user_name=$user_name, user_ref=$user_ref)"
     }
 
     companion object CREATOR : Parcelable.Creator<SearchData> {
@@ -81,6 +88,7 @@ class SearchData(
                 searchData.rating = jsonObject.getString("rating")
                 searchData.reviews = jsonObject.getString("reviews")
                 searchData.user_name = jsonObject.getString("user_name")
+                searchData.user_ref = jsonObject.getString("user_ref")
 
                 searchData
             } catch (e: JSONException) {
@@ -90,22 +98,7 @@ class SearchData(
         }
     }
 
-    override fun toString(): String {
-        return "SearchData{" +
-                "id='" + id + '\'' +
-                ", category='" + category + '\'' +
-                ", categoryId='" + categoryId + '\'' +
-                ", description='" + description + '\'' +
-                ", latitude='" + latitude + '\'' +
-                ", longitude='" + longitude + '\'' +
-                ", max_charge='" + max_charge + '\'' +
-                ", min_charge='" + min_charge + '\'' +
-                ", pic_url='" + pic_url + '\'' +
-                ", rating='" + rating + '\'' +
-                ", reviews='" + reviews + '\'' +
-                ", user_name=" + user_name +
-                '}'
-    }
+
 
 
 
