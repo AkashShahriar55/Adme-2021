@@ -73,6 +73,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
     private fun initializeClicksAndViews() {
+
+        if(FirebaseManager.currentUser?.hasUnreadNotifClient == true){
+            today_notification_badge.visibility = View.VISIBLE
+        }
         cv_search.setOnClickListener {
             findNavController().navigate(R.id.home_to_search_service)
         }

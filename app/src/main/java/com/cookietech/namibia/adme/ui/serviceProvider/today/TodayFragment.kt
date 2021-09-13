@@ -39,7 +39,13 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_today.*
+import kotlinx.android.synthetic.main.fragment_today.bottom_details
+import kotlinx.android.synthetic.main.fragment_today.bottom_details_back
+import kotlinx.android.synthetic.main.fragment_today.bottom_details_toolbar
+import kotlinx.android.synthetic.main.fragment_today.client_notification_btn
+import kotlinx.android.synthetic.main.fragment_today.today_notification_badge
 import kotlinx.android.synthetic.main.layout_empty_recycleview.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -336,6 +342,10 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun initializeViews() {
+
+        if(FirebaseManager.currentUser?.hasUnreadNotifSP == true){
+            today_notification_badge.visibility = View.VISIBLE
+        }
         bottomSheetBehavior = BottomSheetBehavior.from(bottom_details)
         oldPeekHeight = bottomSheetBehavior.peekHeight
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN

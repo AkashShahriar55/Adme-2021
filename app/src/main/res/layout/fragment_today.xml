@@ -142,7 +142,8 @@
                         app:layout_constraintBottom_toBottomOf="@+id/client_notification_btn"
                         app:layout_constraintEnd_toEndOf="@+id/client_notification_btn"
                         app:layout_constraintStart_toStartOf="@+id/client_notification_btn"
-                        app:layout_constraintTop_toTopOf="@+id/client_notification_btn" />
+                        app:layout_constraintTop_toTopOf="@+id/client_notification_btn"
+                        android:visibility="invisible"/>
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

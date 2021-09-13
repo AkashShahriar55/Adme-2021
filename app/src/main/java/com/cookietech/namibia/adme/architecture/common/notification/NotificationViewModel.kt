@@ -2,6 +2,9 @@ package com.cookietech.namibia.adme.architecture.common.notification
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.cookietech.namibia.adme.Application.AppComponent
+import com.cookietech.namibia.adme.managers.FirebaseManager
+import com.cookietech.namibia.adme.managers.SharedPreferenceManager
 import com.cookietech.namibia.adme.models.NotificationPOJO
 import com.cookietech.namibia.adme.models.ServicesPOJO
 import com.cookietech.namibia.adme.utils.SingleLiveEvent
@@ -60,6 +63,28 @@ class NotificationViewModel : ViewModel() {
                 .addOnFailureListener {
                     Log.d("isSeen_debug", "updateIssenStatus: failure")
                 }
+        }
+    }
+
+    fun updateUnreadNotificationStatus() {
+
+        if (SharedPreferenceManager.user_mode.equals(AppComponent.MODE_CLIENT) && FirebaseManager.currentUser?.hasUnreadNotifClient == true){
+            notificationRepository.updateUnreadNotificationStatus("hasUnreadNotifClient")
+                .addOnSuccessListener {
+                    Log.d("unread_notif_debug", "updateUnreadNotificationStatus: success")
+                }
+                .addOnFailureListener {
+                    Log.d("unread_notif_debug", "updateUnreadNotificationStatus: failed")
+                }
+
+        } else if(SharedPreferenceManager.user_mode.equals(AppComponent.MODE_SERVICE_PROVIDER) && FirebaseManager.currentUser?.hasUnreadNotifSP == true){
+            notificationRepository.updateUnreadNotificationStatus("hasUnreadNotifSP")
+                .addOnSuccessListener {
+                    Log.d("unread_notif_debug", "updateUnreadNotificationStatus: success")
+                }
+                .addOnFailureListener {
+                Log.d("unread_notif_debug", "updateUnreadNotificationStatus: failed")
+            }
         }
     }
 }

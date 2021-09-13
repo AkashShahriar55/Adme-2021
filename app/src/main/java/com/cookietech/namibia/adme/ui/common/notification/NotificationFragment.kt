@@ -34,7 +34,17 @@ class NotificationFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }*/
+        callApis()
+
+    }
+
+    private fun callApis() {
         getNotifications()
+        updateUnreadNotificationStatus()
+    }
+
+    private fun updateUnreadNotificationStatus() {
+        notificationViewModel.updateUnreadNotificationStatus()
     }
 
     override fun onCreateView(

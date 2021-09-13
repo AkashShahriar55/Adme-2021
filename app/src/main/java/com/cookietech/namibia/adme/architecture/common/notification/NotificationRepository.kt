@@ -5,10 +5,7 @@ import com.cookietech.namibia.adme.Application.AppComponent
 import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.managers.SharedPreferenceManager
 import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.*
 
 class NotificationRepository {
 
@@ -28,5 +25,12 @@ class NotificationRepository {
             .document(FirebaseManager.currentUser!!.user_id)
             .collection("notification_list").document(notificationId)
             .update("isSeen", true)
+    }
+
+    fun updateUnreadNotificationStatus(key: String): Task<Void> {
+        val data = hashMapOf(key to false)
+        return FirebaseManager.mUserRef
+            .document(FirebaseManager.currentUser!!.user_id)
+            .set(data, SetOptions.merge())
     }
 }
