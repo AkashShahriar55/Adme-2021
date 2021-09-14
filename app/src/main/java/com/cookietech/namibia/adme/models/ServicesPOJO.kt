@@ -2,7 +2,10 @@ package com.cookietech.namibia.adme.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.cookietech.namibia.adme.ui.client.home.search.SearchData
 import com.google.firebase.firestore.Exclude
+import org.json.JSONException
+import org.json.JSONObject
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -80,7 +83,36 @@ class ServicesPOJO():Parcelable {
         override fun newArray(size: Int): Array<ServicesPOJO?> {
             return arrayOfNulls(size)
         }
+
+        fun fromJson(jsonObject: JSONObject): ServicesPOJO? {
+            //val searchData: SearchData =  SearchData()
+            val servicesPOJO : ServicesPOJO = ServicesPOJO()
+            return try {
+                servicesPOJO.mServiceId = jsonObject.getString("id")
+                servicesPOJO.category = jsonObject.getString("category")
+                servicesPOJO.categoryId = jsonObject.getString("categoryId")
+                servicesPOJO.description = jsonObject.getString("description")
+
+                servicesPOJO.latitude = jsonObject.getString("latitude")
+                servicesPOJO.longitude = jsonObject.getString("longitude")
+                /*servicesPOJO.max_charge = jsonObject.getString("max_charge")
+                servicesPOJO.min_charge = jsonObject.getString("min_charge")*/
+
+                servicesPOJO.pic_url = jsonObject.getString("pic_url")
+                servicesPOJO.rating = jsonObject.getString("rating").toDouble()
+                servicesPOJO.reviews = jsonObject.getString("reviews")
+                servicesPOJO.user_name = jsonObject.getString("user_name")
+                servicesPOJO.user_ref = jsonObject.getString("user_ref")
+
+                servicesPOJO
+            } catch (e: JSONException) {
+                e.printStackTrace()
+                null
+            }
+        }
     }
+
+
 
 
 }

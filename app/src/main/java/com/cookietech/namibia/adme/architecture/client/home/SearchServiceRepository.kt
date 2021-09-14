@@ -2,6 +2,7 @@ package com.cookietech.namibia.adme.architecture.client.home
 
 import android.util.Log
 import com.cookietech.namibia.adme.managers.FirebaseManager
+import com.cookietech.namibia.adme.models.ServicesPOJO
 import com.cookietech.namibia.adme.ui.client.home.search.SearchData
 import org.json.JSONException
 import org.json.JSONObject
@@ -13,7 +14,7 @@ class SearchServiceRepository {
         FirebaseManager.mFunctions.getHttpsCallable("getServiceSearchResults").call(searchQuery).addOnCompleteListener { task->
             if(task.isSuccessful){
                // Log.d("search_debug", "getSearchResults: " + task.result.data)
-                val allData: ArrayList<SearchData> = ArrayList<SearchData>()
+                val allData: ArrayList<ServicesPOJO> = ArrayList<ServicesPOJO>()
                 val jsonString = task.result.data.toString()
                 Log.d("bishal_debug", "getSearchResults: $jsonString")
 
@@ -33,7 +34,7 @@ class SearchServiceRepository {
                     } else {
                         for (i in 0 until jsonArray.length()) {
                             val `object` = jsonArray.getJSONObject(i)
-                            val singleData: SearchData? = SearchData.fromJson(`object`)
+                            val singleData: ServicesPOJO? = ServicesPOJO.fromJson(`object`)
                             if (singleData != null) allData.add(singleData)
                             Log.d("search_result", "onComplete: $singleData")
                         }
@@ -73,7 +74,7 @@ class SearchServiceRepository {
     interface SearchCallback {
         fun onInvalidData()
         fun onError()
-        fun onFetchedSearchResult(allData: ArrayList<SearchData>)
+        fun onFetchedSearchResult(allData: ArrayList<ServicesPOJO>)
         fun onFetchStarted()
     }
 }

@@ -1,5 +1,6 @@
 package com.cookietech.namibia.adme.ui.client.home.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,9 +16,11 @@ import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.client.home.SearchServiceAdapter
 import com.cookietech.namibia.adme.architecture.client.home.SearchServiceRepository
 import com.cookietech.namibia.adme.architecture.client.home.SearchServiceViewModel
+import com.cookietech.namibia.adme.models.ServicesPOJO
+import com.cookietech.namibia.adme.ui.client.home.ServiceProviderDetailsActivity
 import kotlinx.android.synthetic.main.fragment_search_services.*
 import java.util.ArrayList
-import kotlin.math.log
+
 
 
 class SearchServicesFragment : Fragment() {
@@ -65,7 +68,7 @@ class SearchServicesFragment : Fragment() {
 
                 }
 
-                override fun onFetchedSearchResult(allData: ArrayList<SearchData>) {
+                override fun onFetchedSearchResult(allData: ArrayList<ServicesPOJO>) {
                     Log.d("search_debug", "onFetchedSearchResult: " + allData)
                     cl_empty_search_holder.visibility = View.GONE
                     cl_no_data_found.visibility = View.GONE
@@ -94,11 +97,21 @@ class SearchServicesFragment : Fragment() {
     private fun initializeRV() {
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
 
-        adapter = SearchServiceAdapter(ArrayList<SearchData>(),
+        adapter = SearchServiceAdapter(ArrayList<ServicesPOJO>(),
             requireContext(),
         object : SearchServiceAdapter.SearchItemCallback{
-            override fun onSearchItemClicked(user_ref: String?) {
+            override fun onSearchItemClicked(service: ServicesPOJO) {
+                val bundle = Bundle()
+                bundle.putParcelable("service", service)
 
+                //findNavController().navigate(R.id.marker_dialog_to_sp_activity,bundle)
+                val intent = Intent(context, ServiceProviderDetailsActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+
+                }
+
+                intent.putExtras(bundle)
+                startActivity(intent)
             }
 
         })

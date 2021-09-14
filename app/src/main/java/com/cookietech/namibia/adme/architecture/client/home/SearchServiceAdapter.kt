@@ -7,15 +7,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cookietech.namibia.adme.R
-import com.cookietech.namibia.adme.ui.client.home.search.SearchData
-import kotlinx.android.synthetic.main.fragment_profile.*
+import com.cookietech.namibia.adme.models.ServicesPOJO
 
 import java.util.ArrayList
 
-class SearchServiceAdapter(var searchDataList : ArrayList<SearchData>,
+class SearchServiceAdapter(var searchDataList : ArrayList<ServicesPOJO>,
                            val context: Context,
                            val searchItemCallback : SearchItemCallback) : RecyclerView.Adapter<SearchServiceAdapter.SearchServiceViewHolder>() {
 
@@ -29,6 +29,7 @@ class SearchServiceAdapter(var searchDataList : ArrayList<SearchData>,
         var tv_service_category : TextView = itemView.findViewById(R.id.tv_service_category)
         var tv_distance : TextView = itemView.findViewById(R.id.tv_distance)
         var service_description : TextView = itemView.findViewById(R.id.service_description)
+        var root_card_view : CardView = itemView.findViewById(R.id.root_card_view)
 
 
 
@@ -47,7 +48,7 @@ class SearchServiceAdapter(var searchDataList : ArrayList<SearchData>,
         //iv_profile_pic
         holder.tv_service_provider_name.text = searchData.user_name
         holder.service_rating.rating = searchData.rating?.toFloat() ?: 0.0f
-        holder.tv_rating.text = searchData.rating
+        holder.tv_rating.text = searchData.rating.toString()
         holder.tv_service_category.text = searchData.category
         //holder.tv_distance.text =
         holder.service_description.text = searchData.description
@@ -57,13 +58,18 @@ class SearchServiceAdapter(var searchDataList : ArrayList<SearchData>,
             .placeholder(R.mipmap.default_user_photo)
             .into(holder.iv_profile_pic)
 
+        //click event
+        holder.root_card_view.setOnClickListener {
+            searchItemCallback.onSearchItemClicked(searchData)
+        }
+
     }
 
     override fun getItemCount(): Int {
         return searchDataList.size
     }
 
-    fun resetSearchData( newSearchDataList: ArrayList<SearchData>){
+    fun resetSearchData( newSearchDataList: ArrayList<ServicesPOJO>){
 
         searchDataList.clear()
         searchDataList.addAll(newSearchDataList)
@@ -75,6 +81,6 @@ class SearchServiceAdapter(var searchDataList : ArrayList<SearchData>,
         notifyDataSetChanged()
     }
     interface SearchItemCallback{
-        fun onSearchItemClicked(user_ref : String?)
+        fun onSearchItemClicked(servicesPOJO: ServicesPOJO)
     }
 }
