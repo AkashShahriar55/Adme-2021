@@ -3,72 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/service_provider_navigation"
-    app:startDestination="@id/todayFragment">
+    app:startDestination="@id/today_navigation">
 
-    <fragment
-        android:id="@+id/todayFragment"
-        android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.TodayFragment"
-        android:label="HomeFragment" >
-        <action
-            android:id="@+id/today_to_notification"
-            app:destination="@id/notificationFragment"
-            app:enterAnim="@anim/enter_from_right"
-            app:exitAnim="@anim/empty"
-            app:launchSingleTop="true"
-            app:popExitAnim="@anim/exit_to_right" />
-        <action
-            android:id="@+id/today_to_add_service"
-            app:destination="@id/addServiceActivity" />
-        <action
-            android:id="@+id/today_to_appointment_activity"
-            app:destination="@id/appointmentDetailsActivity" />
-        <action
-            android:id="@+id/action_todayFragment_to_leaderBoardFragment"
-            app:destination="@id/leaderBoardFragment"
-            app:enterAnim="@anim/enter_from_right"
-            app:launchSingleTop="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/leaderBoardFragment"
-        android:name="com.cookietech.namibia.adme.chatmodule.view.chatRooms.StartFragment"
-        android:label="LeaderBoardFragment" >
-        <action
-            android:id="@+id/inbox_to_chat_provider"
-            app:destination="@id/chatFragment2" />
-        <action
-            android:id="@+id/action_leaderBoardFragment_to_incomeFragment"
-            app:destination="@id/incomeFragment"
-            app:enterAnim="@anim/enter_from_right"
-            app:launchSingleTop="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/incomeFragment"
-        android:name="com.cookietech.namibia.adme.ui.serviceProvider.income.IncomeFragment"
-        android:label="IncomeFragment" />
-    <fragment
-        android:id="@+id/service_provider_profileFragment"
-        android:name="com.cookietech.namibia.adme.ui.common.profile.ProfileFragment"
-        android:label="ProfileFragment" />
-    <fragment
-        android:id="@+id/notificationFragment"
-        android:name="com.cookietech.namibia.adme.ui.common.notification.NotificationFragment"
-        android:label="fragment_notification"
-        tools:layout="@layout/fragment_notification" />
-    <activity
-        android:id="@+id/addServiceActivity"
-        android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.addservice.AddServiceActivity"
-        android:label="AddServiceActivity" >
-        <argument
-            android:name="services"
-            app:argType="com.cookietech.namibia.adme.models.ServicesPOJO"
-            app:nullable="true" />
-    </activity>
-    <activity
-        android:id="@+id/appointmentDetailsActivity"
-        android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.appointment.AppointmentDetailsActivity"
-        android:label="AppointmentDetailsActivity" />
-    <fragment
-        android:id="@+id/chatFragment2"
-        android:name="com.cookietech.namibia.adme.chatmodule.view.chatRoom.ChatFragment"
-        android:label="ChatFragment" />
+
+    <include app:graph="@navigation/today_navigation"/>
+    <include app:graph="@navigation/chat_navigation"/>
+    <include app:graph="@navigation/income_navigation"/>
+    <include app:graph="@navigation/profile_navigation"/>
+
+
+
+
 </navigation>

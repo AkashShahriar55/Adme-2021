@@ -5,6 +5,8 @@ import android.os.Parcelable
 import org.json.JSONException
 import org.json.JSONObject
 
+
+
 class SearchData(
     var id: String? = null,
     var category: String? = null,
@@ -65,7 +67,8 @@ class SearchData(
             return SearchData(parcel)
         }
 
-        override fun newArray(size: Int): Array<SearchData?> {
+        override fun newArray(size: Int
+        ): Array<SearchData?> {
             return arrayOfNulls(size)
         }
 

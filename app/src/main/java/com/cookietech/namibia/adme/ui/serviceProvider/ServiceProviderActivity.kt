@@ -1,11 +1,14 @@
 package com.cookietech.namibia.adme.ui.serviceProvider
 
+import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.addCallback
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NavUtils
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -31,14 +34,20 @@ class ServiceProviderActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_service_provider)
         // This callback will only be called when MyFragment is at least Started.
-        val callback = onBackPressedDispatcher.addCallback(this) {
-            Log.d("navigation_debug", "onBackPressedDispatcher: ${service_provider_bottom_nav.selectedItemId}")
-            if(service_provider_bottom_nav.selectedItemId == R.id.todayFragment){
-                finishAffinity()
-            }else{
-                service_provider_bottom_nav.selectedItemId = R.id.todayFragment
-            }
-        }
+//        val callback = onBackPressedDispatcher.addCallback(this) {
+//            Log.d("navigation_debug", "onBackPressedDispatcher: ${service_provider_bottom_nav.selectedItemId}")
+//            if(service_provider_bottom_nav.selectedItemId == R.id.todayFragment){
+//                Log.d("navigation_debug", "onCreate: "+   navController.currentBackStackEntry?.id)
+//
+//                AlertDialog.Builder(this@ServiceProviderActivity).setMessage("Do you want to exit?")
+//                    .setPositiveButton("Yes"
+//                    ) { p0, p1 -> finishAffinity() }.setNegativeButton("No"
+//                    ) { p0, p1 -> p0?.dismiss() }.create().show()
+//
+//            }else{
+//                service_provider_bottom_nav.selectedItemId = R.id.todayFragment
+//            }
+//        }
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.service_provider_nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
@@ -60,7 +69,7 @@ class ServiceProviderActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         val value = super.onSupportNavigateUp()
-        Log.d("navigation_debug", "onBackPressed: $value" )
+        Log.d("navigation_debug", "onSupportNavigateUp: $value" )
         return value
     }
 }

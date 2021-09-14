@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -17,6 +18,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.layout_marker_click_details.*
 import kotlinx.android.synthetic.main.layout_marker_click_details.tv_category
+import androidx.navigation.fragment.NavHostFragment
+
+import androidx.navigation.NavDeepLinkRequest
+
+
+
 
 @AndroidEntryPoint
 class MarkerClickDetailsDialog(): BottomSheetDialogFragment() {
@@ -66,14 +73,22 @@ class MarkerClickDetailsDialog(): BottomSheetDialogFragment() {
         btn_message.setOnClickListener {
             Log.d("akash_chat_debug", "setUpClicks: "+service?.user_ref)
             messageClicked = true
-            service?.user_ref?.let { userId -> firebaseVm.getUser(userId) }
+            service?.user_ref?.let { userId ->
+
+
+                firebaseVm.getUser(userId)
+            }
         }
 
-        firebaseVm.userData.observe(viewLifecycleOwner, Observer{
+        firebaseVm.particularUserData.observe(viewLifecycleOwner, Observer{
             it?.let { user->
                 if(messageClicked){
                     firebaseVm.setReceiver(user)
-                    findNavController().navigate(R.id.dialog_to_chat)
+                    val request = NavDeepLinkRequest.Builder
+                        .fromUri("android-app://example.google.app/chat_fragment".toUri())
+                        .build()
+                    findNavController().navigate(request)
+
                     messageClicked = false
                 }
 

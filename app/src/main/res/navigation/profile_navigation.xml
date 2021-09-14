@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/profile_navigation"
+    app:startDestination="@id/service_provider_profileFragment">
+    <fragment
+        android:id="@+id/service_provider_profileFragment"
+        android:name="com.cookietech.namibia.adme.ui.common.profile.ProfileFragment"
+        android:label="ProfileFragment" />
+
+</navigation>

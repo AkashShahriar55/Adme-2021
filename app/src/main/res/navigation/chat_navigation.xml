@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chat_navigation"
+    app:startDestination="@id/leaderBoardFragment">
+    <fragment
+        android:id="@+id/leaderBoardFragment"
+        android:name="com.cookietech.namibia.adme.chatmodule.view.chatRooms.StartFragment"
+        android:label="LeaderBoardFragment" >
+        <action
+            android:id="@+id/inbox_to_chat_provider"
+            app:destination="@id/chatFragment2" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/chatFragment2"
+        android:name="com.cookietech.namibia.adme.chatmodule.view.chatRoom.ChatFragment"
+        android:label="ChatFragment" >
+        <deepLink
+            app:uri="android-app://example.google.app/chat_fragment" />
+    </fragment>
+</navigation>

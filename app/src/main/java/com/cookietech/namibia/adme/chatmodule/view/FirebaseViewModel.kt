@@ -107,6 +107,13 @@ class FirebaseViewModel @ViewModelInject constructor(
     private val _userData = MutableLiveData<User>()
     val userData:LiveData<User> = _userData
 
+
+    private val _particularUserData = MutableLiveData<User>()
+    val particularUserData:LiveData<User> = _particularUserData
+
+    private val _particularUserDataStatus = MutableLiveData<NetworkState>()
+    val particularUserDataStatus:LiveData<NetworkState> = _particularUserDataStatus
+
     private val _userDataStatus = MutableLiveData<NetworkState>()
     val userDataStatus:LiveData<NetworkState> = _userDataStatus
 
@@ -115,8 +122,8 @@ class FirebaseViewModel @ViewModelInject constructor(
         getUserDataJob?.cancel()
         getUserDataJob = viewModelScope.launch {
             repository.getUser(userId){ networkState, user ->
-                _userData.value  = user
-                _userDataStatus.value = networkState
+                _particularUserData.value  = user
+                _particularUserDataStatus.value = networkState
             }
         }
     }

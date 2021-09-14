@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mydeals_navigation"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@+id/myDealsFragment">
+    <fragment
+        android:id="@+id/myDealsFragment"
+        android:name="com.cookietech.namibia.adme.ui.client.myDeals.MyDealsFragment"
+        android:label="fragment_my_deals"
+        tools:layout="@layout/fragment_my_deals" >
+        <action
+            android:id="@+id/my_deals_to_appointment_details"
+            app:destination="@id/appointmentDetailsActivity2" />
+    </fragment>
+
+    <activity
+        android:id="@+id/appointmentDetailsActivity2"
+        android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.appointment.AppointmentDetailsActivity"
+        android:label="AppointmentDetailsActivity" />
+</navigation>

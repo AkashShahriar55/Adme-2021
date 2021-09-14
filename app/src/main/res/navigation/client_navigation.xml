@@ -3,88 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/client_navigation"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/home_navigation">
 
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.cookietech.namibia.adme.ui.client.home.HomeFragment"
-        android:label="HomeFragment" >
-        <action
-            android:id="@+id/home_to_search_service"
-            app:destination="@id/searchServicesFragment" />
-        <action
-            android:id="@+id/home_to_marker_details"
-            app:destination="@id/markerClickDetailsDialog2" />
-        <action
-            android:id="@+id/home_to_bottom_details"
-            app:destination="@id/availableServiceFullViewFragment"
-            app:launchSingleTop="true" />
-        <action
-            android:id="@+id/home_to_notification"
-            app:destination="@id/notificationFragment2" />
-    </fragment>
-    <fragment
-        android:id="@+id/serviceHistoryFragment"
-        android:name="com.cookietech.namibia.adme.chatmodule.view.chatRooms.StartFragment"
-        android:label="fragment_service_history" >
-        <action
-            android:id="@+id/inbox_to_chat_client"
-            app:destination="@id/chatFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/myDealsFragment"
-        android:name="com.cookietech.namibia.adme.ui.client.myDeals.MyDealsFragment"
-        android:label="fragment_my_deals"
-        tools:layout="@layout/fragment_my_deals" >
-        <action
-            android:id="@+id/my_deals_to_appointment_details"
-            app:destination="@id/appointmentDetailsActivity2" />
-    </fragment>
-    <fragment
-        android:id="@+id/client_profileFragment"
-        android:name="com.cookietech.namibia.adme.ui.common.profile.ProfileFragment"
-        android:label="ProfileFragment" />
-    <fragment
-        android:id="@+id/searchServicesFragment"
-        android:name="com.cookietech.namibia.adme.ui.client.home.search.SearchServicesFragment"
-        android:label="SearchServicesFragment" />
-    <dialog
-        android:id="@+id/markerClickDetailsDialog2"
-        android:name="com.cookietech.namibia.adme.ui.client.home.MarkerClickDetailsDialog"
-        android:label="MarkerClickDetailsDialog" >
-        <action
-            android:id="@+id/marker_dialog_to_sp_activity"
-            app:destination="@id/serviceProviderDetailsActivity" />
-        <action
-            android:id="@+id/dialog_to_chat"
-            app:destination="@id/chatFragment" />
-    </dialog>
-    <activity
-        android:id="@+id/serviceProviderDetailsActivity"
-        android:name="com.cookietech.namibia.adme.ui.client.home.ServiceProviderDetailsActivity"
-        android:label="activity_service_provider_details"
-        tools:layout="@layout/activity_service_provider_details">
-        <argument
-            android:name="serviceProviderDetailsActivityArgs"
-             />
-    </activity>
 
-    <fragment
-        android:id="@+id/availableServiceFullViewFragment"
-        android:name="com.cookietech.namibia.adme.ui.client.home.AvailableServiceFullViewFragment"
-        android:label="AvailableServiceFullViewFragment" />
-    <fragment
-        android:id="@+id/notificationFragment2"
-        android:name="com.cookietech.namibia.adme.ui.common.notification.NotificationFragment"
-        android:label="fragment_notification"
-        tools:layout="@layout/fragment_notification" />
-    <activity
-        android:id="@+id/appointmentDetailsActivity2"
-        android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.appointment.AppointmentDetailsActivity"
-        android:label="AppointmentDetailsActivity" />
-    <fragment
-        android:id="@+id/chatFragment"
-        android:name="com.cookietech.namibia.adme.chatmodule.view.chatRoom.ChatFragment"
-        android:label="ChatFragment" />
+    <include app:graph="@navigation/home_navigation"/>
+    <include app:graph="@navigation/chat_navigation"/>
+    <include app:graph="@navigation/mydeals_navigation"/>
+    <include app:graph="@navigation/profile_navigation"/>
+
 
 </navigation>

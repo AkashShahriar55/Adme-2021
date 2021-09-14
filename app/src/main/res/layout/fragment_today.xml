@@ -152,7 +152,7 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginTop="20dp"
+
                 android:fillViewport="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -433,7 +433,7 @@
                         android:id="@+id/cardView2"
                         android:layout_width="0dp"
                         android:layout_height="80dp"
-                        android:layout_marginTop="0dp"
+                        android:layout_marginTop="20dp"
                         app:layout_constraintEnd_toStartOf="@+id/guideline12"
                         app:layout_constraintStart_toStartOf="@+id/guideline11"
                         app:layout_constraintTop_toTopOf="parent">

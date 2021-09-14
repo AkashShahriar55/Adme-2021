@@ -1,6 +1,7 @@
 package com.cookietech.namibia.adme.ui.serviceProvider.today
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
@@ -9,6 +10,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -175,6 +178,21 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
             val action = TodayFragmentDirections.todayToAddService(null)
             findNavController().navigate(action)
         }
+
+        today_location_button.setOnClickListener{
+            FirebaseManager.currentUser?.let { user->
+                mMap?.apply {
+                    val lat = user.lattitude?.toDoubleOrNull()
+                    val lng = user.longitude?.toDoubleOrNull()
+                    val currentLocation = lat?.let { latitude-> lng?.let { longitude -> LatLng(
+                        latitude,
+                        longitude
+                    ) } }
+                    mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 20f))
+                }
+            }
+        }
+
     }
 
 
@@ -409,6 +427,52 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap?) {
         mMap = map
+
+        mMap?.setOnInfoWindowClickListener {
+            val appointment = markerMaps.get(it)
+            appointment?.let {
+                val bundle = Bundle()
+                bundle.putParcelable("appointment",appointment)
+                bundle.putString("appointment_id",null)
+                findNavController().navigate(R.id.today_to_appointment_activity,bundle)
+            }
+        }
+        mMap?.setInfoWindowAdapter(object :GoogleMap.InfoWindowAdapter{
+            @SuppressLint("PotentialBehaviorOverride")
+            override fun getInfoWindow(p0: Marker): View? {
+                val view =  layoutInflater.inflate(R.layout.appointment_map_info,null)
+                val appointment = markerMaps.get(p0)
+                appointment?.let {
+                    val category = view.findViewById<TextView>(R.id.tv_appointment_service)
+                    val client_name = view.findViewById<TextView>(R.id.tv_clint_name)
+                    val client_address = view.findViewById<TextView>(R.id.tv_clint_address)
+                    val price = view.findViewById<TextView>(R.id.tv_money)
+                    val container = view.findViewById<ConstraintLayout>(R.id.appointment_main_layout)
+                    category.text = it.service_name
+                    client_name.text = it.client_name
+                    client_address.text = it.client_address
+
+                    it.client_price?.let {money->
+                        price.text = "$$money"
+                    }
+
+                    it.service_provider_price?.let {money->
+                        price.text = "$$money"
+                    }
+                    
+
+
+
+
+                }
+                return view
+            }
+
+            override fun getInfoContents(p0: Marker): View? {
+               return null
+            }
+
+        })
         updateMarkers()
         serviceProviderViewModel.observableAppointments.value?.apply {
             Log.d("marker_debug", "initializeObservers: service asche $size $isMarkerSet")

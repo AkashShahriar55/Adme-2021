@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/home_navigation"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@+id/homeFragment">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.cookietech.namibia.adme.ui.client.home.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/home_to_search_service"
+            app:destination="@id/searchServicesFragment" />
+        <action
+            android:id="@+id/home_to_marker_details"
+            app:destination="@id/markerClickDetailsDialog2" />
+        <action
+            android:id="@+id/home_to_bottom_details"
+            app:destination="@id/availableServiceFullViewFragment"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/home_to_notification"
+            app:destination="@id/notificationFragment2" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchServicesFragment"
+        android:name="com.cookietech.namibia.adme.ui.client.home.search.SearchServicesFragment"
+        android:label="SearchServicesFragment" />
+
+    <dialog
+        android:id="@+id/markerClickDetailsDialog2"
+        android:name="com.cookietech.namibia.adme.ui.client.home.MarkerClickDetailsDialog"
+        android:label="MarkerClickDetailsDialog" >
+        <action
+            android:id="@+id/marker_dialog_to_sp_activity"
+            app:destination="@id/serviceProviderDetailsActivity" />
+<!--        <action-->
+<!--            android:id="@+id/dialog_to_chat"-->
+<!--            app:destination="@id/chatFragment" />-->
+    </dialog>
+
+    <fragment
+        android:id="@+id/availableServiceFullViewFragment"
+        android:name="com.cookietech.namibia.adme.ui.client.home.AvailableServiceFullViewFragment"
+        android:label="AvailableServiceFullViewFragment" />
+
+    <fragment
+        android:id="@+id/notificationFragment2"
+        android:name="com.cookietech.namibia.adme.ui.common.notification.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
+
+
+    <activity
+        android:id="@+id/serviceProviderDetailsActivity"
+        android:name="com.cookietech.namibia.adme.ui.client.home.ServiceProviderDetailsActivity"
+        android:label="activity_service_provider_details"
+        tools:layout="@layout/activity_service_provider_details">
+        <argument
+            android:name="serviceProviderDetailsActivityArgs"
+            />
+    </activity>
+
+</navigation>

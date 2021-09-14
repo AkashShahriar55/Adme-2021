@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/today_navigation"
+    app:startDestination="@id/todayFragment">
+
+    <fragment
+        android:id="@+id/todayFragment"
+        android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.TodayFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/today_to_notification"
+            app:destination="@id/notificationFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/empty"
+            app:launchSingleTop="true"
+            app:popExitAnim="@anim/exit_to_right" />
+        <action
+            android:id="@+id/today_to_add_service"
+            app:destination="@id/addServiceActivity" />
+        <action
+            android:id="@+id/today_to_appointment_activity"
+            app:destination="@id/appointmentDetailsActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.cookietech.namibia.adme.ui.common.notification.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
+    <activity
+        android:id="@+id/addServiceActivity"
+        android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.addservice.AddServiceActivity"
+        android:label="AddServiceActivity" >
+        <argument
+            android:name="services"
+            app:argType="com.cookietech.namibia.adme.models.ServicesPOJO"
+            app:nullable="true" />
+    </activity>
+    <activity
+        android:id="@+id/appointmentDetailsActivity"
+        android:name="com.cookietech.namibia.adme.ui.serviceProvider.today.appointment.AppointmentDetailsActivity"
+        android:label="AppointmentDetailsActivity" />
+</navigation>

@@ -53,6 +53,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         arguments?.let {
 
         }
+
+        setUpMap()
     }
 
     override fun onCreateView(
@@ -64,11 +66,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
 
+
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeObservers()
         initializeServicesRecyclerView()
-        setUpMap()
         initializeClicksAndViews()
     }
 
