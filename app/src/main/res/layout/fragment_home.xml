@@ -60,6 +60,42 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_optimizationLevel="standard" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/map_loader"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            android:padding="@dimen/_10sdp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/rounded_corner_white"
+            android:backgroundTint="#80FFFFFF"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/progressBar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="loading_star_popup.json"
+                app:lottie_loop="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Fetching Data..."
+                app:layout_constraintEnd_toEndOf="@+id/progressBar"
+                app:layout_constraintStart_toStartOf="@+id/progressBar"
+                app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -81,10 +117,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_details"
         android:layout_width="match_parent"
-        android:layout_height="245dp"
+        android:layout_height="235dp"
         android:paddingTop="45dp"
         android:transitionName="bottom_details"
-        app:behavior_hideable="false"
+        app:behavior_hideable="true"
         app:behavior_peekHeight="95dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         app:layout_constraintTop_toTopOf="@+id/guideline18">
@@ -255,6 +291,9 @@
     <!--            app:layout_constraintTop_toBottomOf="@+id/constraintLayout18" />-->
 
     <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

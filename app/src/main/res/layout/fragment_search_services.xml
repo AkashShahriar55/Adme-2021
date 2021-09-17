@@ -30,6 +30,7 @@
             android:paddingStart="@dimen/_10sdp"
             android:drawablePadding="@dimen/_10sdp"
             android:hint="Search here"
+
             android:layout_height="match_parent"
             android:background="@color/white">
 
@@ -135,14 +136,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView4" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <ProgressBar
+
+
+    <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/searchLoading"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cv_search"/>
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:duration="800"
+        app:layout_constraintTop_toTopOf="@+id/rv_service_result">
+
+        <!-- Adding 7 rows of placeholders -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/search_service_item_shimmer" />
+        </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

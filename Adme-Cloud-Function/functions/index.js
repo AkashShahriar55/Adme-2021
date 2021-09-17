@@ -1,8 +1,10 @@
+/* eslint-disable require-jsdoc */
 const functions = require("firebase-functions");
 
 const admin = require("firebase-admin");
 admin.initializeApp();
 const db = admin.firestore();
+const GeoPoint = require("geopoint");
 
 const Fuse = require("fuse.js");
 const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -632,4 +634,74 @@ exports.triggerPush = functions.firestore
         return;
       }
     });
+
+exports.getNearbyServices = functions.https.onCall((data, context) => {
+  const serviceRef = db.collection("Adme_Service_list");
+  const docs = [];
+  const finalJson = [];
+  const lattitude = data.latitude;
+  const longitude = data.longitude;
+  // const fial_jsn = [];
+  console.log(data);
+  return serviceRef.get().then((snapshot) => {
+    if (snapshot.empty) {
+      console.log("No matching documents.");
+      throw new functions.https.HttpsError("Error", "Found Empty Data");
+    } else {
+      console.log("Found matching documents.");
+      snapshot.forEach((doc) => {
+        const obj = {
+          "id": doc.id,
+          "category": doc.data().category,
+          "categoryId": doc.data().categoryId,
+          "description": doc.data().description,
+          "latitude": doc.data().latitude,
+          "longitude": doc.data().longitude,
+          "max_charge": doc.data().max_charge,
+          "min_charge": doc.data().min_charge,
+          "pic_url": doc.data().pic_url,
+          "rating": doc.data().rating,
+          "reviews": doc.data().reviews,
+          "user_name": doc.data().user_name,
+          "tags": doc.data().tags,
+          "user_ref": doc.data().user_ref,
+        };
+        // var data = doc.id
+        console.log(doc.data().latitude);
+        console.log(doc.data().longitude);
+        const serviceLat = parseFloat(doc.data().latitude);
+        const serviceLong = parseFloat(doc.data().longitude);
+        if (isNearByService(lattitude,
+            longitude, serviceLat, serviceLong)) {
+          docs.push(obj);
+        }
+      });
+
+      const jsn = JSON.parse(JSON.stringify(docs));
+      console.log("Json : ");
+      console.log(jsn);
+      jsn.forEach((doc) => {
+        const res = doc;
+        delete res["tags"];
+        finalJson.push(res);
+      });
+
+
+      return {
+        data: JSON.stringify(docs),
+      };
+    }
+  });
+});
+
+
+function isNearByService(userLattitude,
+    userLongitude, serviceLattitude, serviceLongitude) {
+  const point1 = new GeoPoint(userLattitude, userLongitude);
+  const point2 = new GeoPoint(serviceLattitude, serviceLongitude);
+  const distance = point1.distanceTo(point2, true);
+  console.log(distance);
+  return distance < 5 ? true : false;
+}
+
 

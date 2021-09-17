@@ -7,11 +7,13 @@ import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.models.AppointmentPOJO
 import com.cookietech.namibia.adme.models.ServicesPOJO
 import com.cookietech.namibia.adme.utils.SingleLiveEvent
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.QuerySnapshot
 
 class MyDealsViewModel:ViewModel() {
 
     val repository = MyDealsRepository()
-    val observableAppointments = SingleLiveEvent<ArrayList<AppointmentPOJO>>()
+    val observableAppointments = MutableLiveData<ArrayList<AppointmentPOJO>>()
 
 
     init {
@@ -20,10 +22,12 @@ class MyDealsViewModel:ViewModel() {
 
     private fun fetchAllAppointments() {
         FirebaseManager.mFirebaseUser?.apply {
-            repository.fetchAllAppointments(uid).addOnSuccessListener { documents->
-                if(documents.isEmpty){
+            repository.fetchAllAppointments(uid).addSnapshotListener {documents, error ->
+                error?.let {
 
-                }else{
+                }
+
+                documents?.let {
                     val appointments = ArrayList<AppointmentPOJO>()
                     for (document in documents){
                         val appointment = document.toObject(AppointmentPOJO::class.java)
@@ -32,9 +36,6 @@ class MyDealsViewModel:ViewModel() {
                     }
                     observableAppointments.value = appointments
                 }
-
-            }.addOnFailureListener {
-
             }
         }
     }

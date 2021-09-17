@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.client.home.ClientHomeViewModel
 import com.cookietech.namibia.adme.architecture.client.home.SearchServiceAdapter
+import com.cookietech.namibia.adme.models.ServiceCategory
 import kotlinx.android.synthetic.main.fragment_available_service_full_view.*
 import kotlinx.android.synthetic.main.fragment_available_service_full_view.available_service_rv
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -60,7 +61,12 @@ class AvailableServiceFullViewFragment : Fragment() {
 
     private fun initializeServicesRecyclerView() {
         available_service_rv.layoutManager = GridLayoutManager(context,3,GridLayoutManager.VERTICAL,false)
-        availableServiceAdapter = AvailableServiceAdapter(context,true)
+        availableServiceAdapter = AvailableServiceAdapter(context,true,object :AvailableServiceAdapter.ItemClickListener{
+            override fun onCategorySelected(category: ServiceCategory?) {
+
+            }
+
+        })
         viewModel.categories.value?.apply {
             availableServiceAdapter?.categories = this
         }
