@@ -76,8 +76,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileImage_contact"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_100sdp"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
             android:src="@drawable/default_user_photo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -104,21 +104,21 @@
                 android:lineSpacingExtra="7dp"
                 android:maxLines="1"
                 android:padding="@dimen/_10sdp"
-                android:textSize="@dimen/_15sdp">
+                android:textSize="14sp">
 
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:id="@+id/tl_phone_number"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:enabled="false"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tl_user_name"
-            android:enabled="false">
+            app:layout_constraintTop_toBottomOf="@+id/tl_user_name">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edt_phone_number"
@@ -135,6 +135,25 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <Button
+            android:id="@+id/update_info_btn"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/login_btn"
+            android:backgroundTint="@color/login_btn_color"
+            android:text="@string/update_your_info"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tl_phone_number"
+            android:visibility="gone">
+
+        </Button>
+
         <RelativeLayout
             android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
@@ -145,7 +164,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tl_phone_number"
+            app:layout_constraintTop_toBottomOf="@+id/update_info_btn"
             app:layout_constraintVertical_chainStyle="packed">
 
             <TextView
@@ -181,13 +200,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
-            tools:layout_editor_absoluteX="10dp">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
             <Button
                 android:id="@+id/login_google_btn"
                 android:layout_width="0dp"
-                android:layout_height="45dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/login_btn"
                 android:backgroundTint="@color/continue_with_google"
                 android:clickable="true"
@@ -199,7 +221,8 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/login_facebook_btn"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -208,9 +231,8 @@
             <Button
                 android:id="@+id/login_facebook_btn"
                 android:layout_width="0dp"
-                android:layout_height="45dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/login_btn"
                 android:backgroundTint="@color/continue_with_facebook"
                 android:clickable="true"
@@ -222,11 +244,10 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/login_google_btn">
+                app:layout_constraintStart_toEndOf="@+id/login_google_btn"
+                app:layout_constraintTop_toTopOf="parent">
 
             </Button>
 
