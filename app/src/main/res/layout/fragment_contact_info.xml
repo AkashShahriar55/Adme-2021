@@ -206,7 +206,7 @@
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
             <Button
-                android:id="@+id/login_google_btn"
+                android:id="@+id/connect_google_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -217,11 +217,10 @@
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp"
-                android:text="@string/connect"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                app:layout_constraintEnd_toStartOf="@+id/login_facebook_btn"
+                app:layout_constraintEnd_toStartOf="@+id/connect_facebook_btn"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -229,7 +228,7 @@
             </Button>
 
             <Button
-                android:id="@+id/login_facebook_btn"
+                android:id="@+id/connect_facebook_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -240,13 +239,12 @@
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp"
-                android:text="@string/connected"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/login_google_btn"
+                app:layout_constraintStart_toEndOf="@+id/connect_google_btn"
                 app:layout_constraintTop_toTopOf="parent">
 
             </Button>
