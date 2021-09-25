@@ -3,6 +3,7 @@ package com.cookietech.namibia.adme.ui.common.profile
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -121,7 +122,35 @@ class ContactInfoFragment : Fragment() {
         setphoneNumber()
         setConnectedAuthProvider()
         initializeCallbacks()
+        addTextChangedListener()
 
+    }
+
+    private fun addTextChangedListener() {
+        binding.edtUserName.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                enableUpdateButtonForUserNameChanged(p0)
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+        })
+    }
+
+    private fun enableUpdateButtonForUserNameChanged(p0: CharSequence?) {
+        p0?.let {
+            if(it.toString().trim() == FirebaseManager.currentUser?.user_name || it.length<=0){
+                binding.updateInfoBtn.visibility = View.GONE
+            } else{
+                binding.updateInfoBtn.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun initializeCallbacks() {
@@ -199,7 +228,7 @@ class ContactInfoFragment : Fragment() {
 
     }
     private fun setUserName() {
-        binding.edtUserName.setText((FirebaseManager.currentUser?.user_name ?: "Adme User"))
+        binding.edtUserName.setText((FirebaseManager.currentUser?.user_name))
     }
 
     fun showNetworkErrorMessage(){
