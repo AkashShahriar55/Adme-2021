@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable require-jsdoc */
 const functions = require("firebase-functions");
 
@@ -703,5 +704,4 @@ function isNearByService(userLattitude,
   console.log(distance);
   return distance < 5 ? true : false;
 }
-
 
