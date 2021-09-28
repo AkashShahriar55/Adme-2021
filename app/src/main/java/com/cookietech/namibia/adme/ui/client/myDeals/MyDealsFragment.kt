@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookietech.namibia.adme.R
@@ -51,17 +52,35 @@ class MyDealsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        appointment_shimmer_holder.startShimmerAnimation()
         initializeRecyclerView()
         initializeObserver()
     }
 
+    val appointmentObserver = Observer<ArrayList<AppointmentPOJO>>{appointments->
+        appointment_shimmer_holder.stopShimmerAnimation()
+        appointment_shimmer_holder.visibility = View.GONE
+        adapter.appointments = appointments
+    }
+
     private fun initializeObserver() {
-        viewModel.observableAppointments.observe(viewLifecycleOwner,{
-            it?.let { appointments->
-                adapter.appointments = appointments
-            }
-        })
+        viewModel.observableAppointments.observe(viewLifecycleOwner,appointmentObserver)
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        initializeObserver()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        removeObserver()
+    }
+
+    private fun removeObserver() {
+        viewModel.observableAppointments.removeObserver(appointmentObserver)
+
     }
 
     private fun initializeRecyclerView() {

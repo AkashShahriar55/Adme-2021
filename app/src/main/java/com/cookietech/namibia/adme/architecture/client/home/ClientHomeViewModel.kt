@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.managers.FirebaseManager
@@ -16,34 +17,63 @@ import com.google.firebase.firestore.ListenerRegistration
 
 class ClientHomeViewModel: ViewModel() {
 
-    val categories: SingleLiveEvent<ArrayList<ServiceCategory>> = SingleLiveEvent()
+    val categories: MutableLiveData<ArrayList<ServiceCategory>> = MutableLiveData()
     val homeRepository = HomeRepository()
-    val services = SingleLiveEvent<ArrayList<ServicesPOJO>>()
+    val services = MutableLiveData<ArrayList<ServicesPOJO>>()
     var servicesListenerRegistration:ListenerRegistration? = null
+    var categoryListenerRegistration:ListenerRegistration? = null
 
     init {
         fetchServiceCategoryData()
-        fetchServiceProviderData()
     }
 
     private fun fetchServiceCategoryData() {
 
-        homeRepository.fetchCategories().addOnSuccessListener { documents->
-            val cats = ArrayList<ServiceCategory>()
-            for (document in documents) {
-                val cat = document.toObject(ServiceCategory::class.java)
-                cat.id = document.id
-                cats.add(cat)
+        categoryListenerRegistration = homeRepository.fetchCategories().addSnapshotListener { documents,error->
+            error?.let {
+                return@addSnapshotListener
             }
-            categories.value = cats
-        }.addOnFailureListener {
+
+            documents?.let {
+                val cats = ArrayList<ServiceCategory>()
+                for (document in documents) {
+                    val cat = document.toObject(ServiceCategory::class.java)
+                    cat.id = document.id
+                    cats.add(cat)
+                }
+                categories.value = cats
+            }
 
         }
 
     }
 
 
+    public fun fetchNearbyServices(latitude:Double,longitude:Double){
+        homeRepository.fetchNearByServices(latitude, longitude,object :NearbyServiceCallback{
+            override fun onInvalidData() {
+                Log.d("map_service", "onInvalidData: ")
+            }
+
+            override fun onFetchedNearbyService(allData: java.util.ArrayList<ServicesPOJO>) {
+                Log.d("map_service", "onFetchedNearbyService: $allData")
+                if(allData.size > 0)
+                    services.value = allData
+            }
+
+            override fun onError() {
+                Log.d("map_service", "onError: ")
+            }
+
+        })
+    }
+
+
     private fun fetchServiceProviderData(){
+
+
+
+
         FirebaseManager.mServiceListReference.addSnapshotListener { value, error ->
             error?.apply {
                 Log.d("service_debug", "fetchServiceProviderData: $message")
@@ -73,6 +103,8 @@ class ClientHomeViewModel: ViewModel() {
         super.onCleared()
         servicesListenerRegistration?.remove()
         servicesListenerRegistration = null
+        categoryListenerRegistration?.remove()
+        categoryListenerRegistration = null
     }
 
 }

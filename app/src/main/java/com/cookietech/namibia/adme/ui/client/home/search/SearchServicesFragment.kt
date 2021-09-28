@@ -16,6 +16,7 @@ import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.client.home.SearchServiceAdapter
 import com.cookietech.namibia.adme.architecture.client.home.SearchServiceRepository
 import com.cookietech.namibia.adme.architecture.client.home.SearchServiceViewModel
+import com.cookietech.namibia.adme.extensions.showKeyboard
 import com.cookietech.namibia.adme.models.ServicesPOJO
 import com.cookietech.namibia.adme.ui.client.home.ServiceProviderDetailsActivity
 import kotlinx.android.synthetic.main.fragment_search_services.*
@@ -49,6 +50,7 @@ class SearchServicesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initializeField()
         initializeRV()
+        searchView.showKeyboard()
     }
 
     private fun initializeField() {
@@ -56,14 +58,19 @@ class SearchServicesFragment : Fragment() {
             searchView,
             object : SearchServiceRepository.SearchCallback {
                 override fun onInvalidData() {
+                    adapter!!.resetSearchData(ArrayList())
                     adapter!!.clearData()
                     cl_no_data_found.visibility = View.VISIBLE
                     cl_empty_search_holder.visibility = View.GONE
                     searchLoading.visibility = View.GONE
+                    searchLoading.stopShimmerAnimation()
                 }
 
                 override fun onError() {
+                    adapter!!.resetSearchData(ArrayList())
                     searchLoading.visibility = View.GONE
+                    searchLoading.stopShimmerAnimation()
+                    cl_no_data_found.visibility = View.VISIBLE
                     Toast.makeText(requireContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show()
 
                 }
@@ -74,11 +81,16 @@ class SearchServicesFragment : Fragment() {
                     cl_no_data_found.visibility = View.GONE
                     adapter!!.resetSearchData(allData)
                     searchLoading.visibility = View.GONE
+                    searchLoading.stopShimmerAnimation()
 
                 }
 
                 override fun onFetchStarted() {
+                    adapter!!.resetSearchData(ArrayList())
                     searchLoading.visibility = View.VISIBLE
+                    searchLoading.startShimmerAnimation()
+                    cl_empty_search_holder.visibility = View.GONE
+                    cl_no_data_found.visibility = View.GONE
 
                 }
 

@@ -2,6 +2,7 @@ package com.cookietech.namibia.adme.ui.client.home
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +15,11 @@ import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.models.ServiceCategory
 import kotlinx.android.synthetic.main.available_service_item.view.*
 
-class AvailableServiceAdapter(val context: Context?,val fromDetails:Boolean):
+class AvailableServiceAdapter(val context: Context?,val fromDetails:Boolean,val listener:ItemClickListener):
     RecyclerView.Adapter<AvailableServiceAdapter.AvailableServiceViewHolder>() {
+
+    private lateinit var recyclerView: RecyclerView
+    var selectedCategory:ServiceCategory? = null
 
     var categories = ArrayList<ServiceCategory>()
     set(value) {
@@ -43,6 +47,12 @@ class AvailableServiceAdapter(val context: Context?,val fromDetails:Boolean):
     override fun onBindViewHolder(holder: AvailableServiceViewHolder, position: Int) {
         val category = categories[position]
 
+        if(selectedCategory == category){
+            holder.itemView.setBackgroundResource(R.drawable.rounded_corner_blue_white)
+        }else{
+            holder.itemView.setBackgroundResource(R.drawable.rounded_corner_gray_white)
+        }
+
         context?.let {
             Glide.with(it)
                 .load(category.icon)
@@ -50,9 +60,52 @@ class AvailableServiceAdapter(val context: Context?,val fromDetails:Boolean):
         }
 
         holder.tv_service_category.text = category.category
+
+
+        holder.itemView.setOnClickListener {
+            if(selectedCategory == category){
+                selectedCategory = null
+                notifyItemChanged(position)
+            }else{
+                val lastSelectedItem = categories.indexOf(selectedCategory)
+                selectedCategory = category
+                notifyItemChanged(lastSelectedItem)
+                notifyItemChanged(position)
+            }
+
+            listener.onCategorySelected(selectedCategory)
+
+            if(!fromDetails){
+                setSelectedItemToMiddle(holder.itemView)
+            }
+
+        }
+
+    }
+
+    private fun setSelectedItemToMiddle(view: View) {
+        val location = IntArray(2)
+        view.getLocationOnScreen(location)
+        val deviceWidth: Int? = context?.resources?.displayMetrics?.widthPixels
+        var center: Int? = deviceWidth?.div(2)
+        center = center?.minus((view.width / 2))
+        val scroll: Int? = center?.minus(location[0])
+        recyclerView.postOnAnimation {
+            Log.d("akash_debug_test_1", "run: scroll")
+            recyclerView.smoothScrollBy(-scroll!!, 0)
+        }
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView= recyclerView
     }
 
     override fun getItemCount(): Int {
         return categories.size
+    }
+
+    interface ItemClickListener{
+        fun onCategorySelected(category: ServiceCategory?)
     }
 }
