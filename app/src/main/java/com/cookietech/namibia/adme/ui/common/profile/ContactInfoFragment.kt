@@ -1,15 +1,22 @@
 package com.cookietech.namibia.adme.ui.common.profile
 
+import android.Manifest
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts.GetContent
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -19,11 +26,19 @@ import com.cookietech.namibia.adme.architecture.common.CommonViewModel
 import com.cookietech.namibia.adme.architecture.common.profile.ContactInfoViewModel
 import com.cookietech.namibia.adme.databinding.FragmentContactInfoBinding
 import com.cookietech.namibia.adme.interfaces.AuthConnectionCallback
+import com.cookietech.namibia.adme.interfaces.ImageUploadCallback
 import com.cookietech.namibia.adme.managers.ConnectionManager
 import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.views.CustomToast
 import com.cookietech.namibia.adme.views.LoadingDialog
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.fragment_user_info.*
 
 
 class ContactInfoFragment : Fragment() {
@@ -38,6 +53,9 @@ class ContactInfoFragment : Fragment() {
     private var isConnectedWithFacebook = false
     private lateinit var dialog: LoadingDialog
 
+    /** For Image Picker**/
+    private var imageLauncher : ActivityResultLauncher<String>? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +64,7 @@ class ContactInfoFragment : Fragment() {
         }
     }
 
+    /**Lifecycle Method**/
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,6 +85,10 @@ class ContactInfoFragment : Fragment() {
         /**back button click**/
         binding.backButton.setOnClickListener{
             findNavController().navigateUp()
+        }
+
+        binding.profileImageContact.setOnClickListener {
+            openPicker()
         }
 
         /**connect with google**/
@@ -96,6 +119,38 @@ class ContactInfoFragment : Fragment() {
                 connectwithFacebook()
             }
         }
+
+        /**updae info**/
+        binding.updateInfoBtn.setOnClickListener {
+            updateInfo()
+        }
+    }
+
+    private fun updateInfo() {
+        commonViewModel.imageUri?.apply {
+            commonViewModel.uploadImage(this,object : ImageUploadCallback {
+                override fun onImageUploaded(url: String) {
+                    Log.d("update_debug", "onImageUploaded ")
+                    commonViewModel.downloadImageUrl = url
+                    updateUserData()
+                }
+
+                override fun onImageUploadFailed() {
+                    Log.d("update_debug", "onImageUploadFailed ")
+                    Toast.makeText(requireContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                }
+
+            })
+        } ?: kotlin.run {
+            Log.d("update_debug", "imageUri null: ")
+            updateUserData()
+        }
+    }
+
+    private fun updateUserData() {
+        commonViewModel.updateUserData(commonViewModel.userNme,commonViewModel.downloadImageUrl)
+
     }
 
     private fun connectwithFacebook() {
@@ -113,6 +168,7 @@ class ContactInfoFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        imageLauncher = null
     }
 
     private fun initializeFields() {
@@ -123,7 +179,24 @@ class ContactInfoFragment : Fragment() {
         setConnectedAuthProvider()
         initializeCallbacks()
         addTextChangedListener()
+        registerActivityLauncher()
 
+    }
+
+    private fun registerActivityLauncher() {
+        imageLauncher = registerForActivityResult(GetContent()) { uri: Uri? ->
+            // Handle the returned Uri
+            commonViewModel.imageUri = uri
+            commonViewModel.imageUri?.let {
+                Glide.with(this)
+                    .load(it)
+                    .fitCenter()
+                    .into(binding.profileImageContact)
+                binding.updateInfoBtn.visibility = View.VISIBLE
+            }
+
+
+        }
     }
 
     private fun addTextChangedListener() {
@@ -147,8 +220,10 @@ class ContactInfoFragment : Fragment() {
         p0?.let {
             if(it.toString().trim() == FirebaseManager.currentUser?.user_name || it.length<=0){
                 binding.updateInfoBtn.visibility = View.GONE
+                commonViewModel.userNme = null
             } else{
                 binding.updateInfoBtn.visibility = View.VISIBLE
+                commonViewModel.userNme = it.toString().trim()
             }
         }
     }
@@ -213,7 +288,7 @@ class ContactInfoFragment : Fragment() {
 
     private fun setProfilePhoto() {
         Log.d("pro_pic_debug", "setProfilePhoto: " + FirebaseManager.mFirebaseUser!!.photoUrl)
-        FirebaseManager.currentUser!!.profile_image_url?.let {
+        FirebaseManager.currentUser?.profile_image_url?.let {
             Glide.with(requireContext())
                 .load(it)
                 .placeholder(R.mipmap.default_user_photo)
@@ -237,6 +312,47 @@ class ContactInfoFragment : Fragment() {
     fun showDuplicatedCredentialError(){
 
         CustomToast.makeErrorToast(requireContext(),"This credential is already associated with a different user account",Toast.LENGTH_LONG).show()
+    }
+
+    private fun openPicker() {
+        Log.d("permission_debug", "openPicker: ")
+        Dexter.withContext(context)
+            .withPermission(
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ).withListener(object : PermissionListener {
+                override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
+                    imageLauncher?.launch("image/*")
+                }
+
+                override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
+                    Log.d("permission_debug", "onPermissionDenied: ")
+                    /*TODO("Not yet implemented")*/
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    p0: PermissionRequest?,
+                    token: PermissionToken?
+                ) {
+                    /* TODO("Not yet implemented")*/
+                    Log.d("permission_debug", "onPermissionRationaleShouldBeShown: ")
+                    AlertDialog.Builder(context).setTitle("We need this permission!")
+                        .setMessage("External storage permission is must to read your image gallery")
+                        .setNegativeButton(
+                            android.R.string.cancel
+                        ) { dialog, which ->
+                            dialog.dismiss()
+                            token?.cancelPermissionRequest()
+                        }
+                        .setPositiveButton(android.R.string.ok
+                        ) { dialog, which ->
+                            dialog.dismiss()
+                            token?.continuePermissionRequest()
+                        }
+                        .setOnDismissListener(DialogInterface.OnDismissListener { token?.cancelPermissionRequest() })
+                        .show()
+                }
+
+            }).check()
     }
 
     companion object {
