@@ -27,6 +27,7 @@ import com.cookietech.namibia.adme.architecture.common.profile.ContactInfoViewMo
 import com.cookietech.namibia.adme.databinding.FragmentContactInfoBinding
 import com.cookietech.namibia.adme.interfaces.AuthConnectionCallback
 import com.cookietech.namibia.adme.interfaces.ImageUploadCallback
+import com.cookietech.namibia.adme.interfaces.UpdateCallback
 import com.cookietech.namibia.adme.managers.ConnectionManager
 import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.views.CustomToast
@@ -127,6 +128,8 @@ class ContactInfoFragment : Fragment() {
     }
 
     private fun updateInfo() {
+        dialog.show()
+        dialog.updateTitle("Updating data...")
         commonViewModel.imageUri?.apply {
             commonViewModel.uploadImage(this,object : ImageUploadCallback {
                 override fun onImageUploaded(url: String) {
@@ -149,7 +152,29 @@ class ContactInfoFragment : Fragment() {
     }
 
     private fun updateUserData() {
-        commonViewModel.updateUserData(commonViewModel.userNme,commonViewModel.downloadImageUrl)
+        commonViewModel.updateUserData(commonViewModel.userNme,commonViewModel.downloadImageUrl,
+        object : UpdateCallback{
+            override fun onUpdateSuccessFul() {
+                Toast.makeText(requireContext(),"Updated Successfully",Toast.LENGTH_SHORT).show()
+                binding.updateInfoBtn.visibility = View.GONE
+                dialog.dismiss()
+
+                commonViewModel.userNme?.let {
+                    FirebaseManager.currentUser?.user_name = it.trim()
+                }
+                commonViewModel.downloadImageUrl?.let {
+                    FirebaseManager.currentUser?.profile_image_url = it.trim()
+                }
+
+
+            }
+
+            override fun onUpdateFailed() {
+                dialog.dismiss()
+                Toast.makeText(requireContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show()
+            }
+
+        })
 
     }
 

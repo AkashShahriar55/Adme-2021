@@ -2,9 +2,11 @@ package com.cookietech.namibia.adme.architecture.common
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.cookietech.namibia.adme.architecture.loginRegistration.LoginRegistrationMainViewModel
 import com.cookietech.namibia.adme.interfaces.ImageUploadCallback
+import com.cookietech.namibia.adme.interfaces.UpdateCallback
 import com.cookietech.namibia.adme.managers.FirebaseStorageManager
 
 class CommonViewModel : ViewModel() {
@@ -42,8 +44,17 @@ class CommonViewModel : ViewModel() {
         }
     }
 
-    fun updateUserData(userNme: String?, downloadImageUrl: String?) {
+    fun updateUserData(userNme: String?, downloadImageUrl: String?, updateCallback: UpdateCallback) {
         commonRepository.updateUserData(userNme,downloadImageUrl)
+            ?.addOnSuccessListener {
+                Log.d("info_update", "updateUserData: success")
+                updateCallback.onUpdateSuccessFul()
+
+            }
+            ?.addOnFailureListener {
+                Log.d("info_update", "updateUserData: failed: ${it.message}")
+                updateCallback.onUpdateFailed()
+            }
 
     }
 
