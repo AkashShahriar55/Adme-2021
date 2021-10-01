@@ -2,6 +2,8 @@ package com.cookietech.namibia.adme.ui.loginRegistration
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.database.Observable
 import android.location.Address
@@ -257,7 +259,7 @@ class UserInfoFragment : Fragment(), OnMapReadyCallback{
     }
 
     private fun openPicker() {
-        Log.d("akash_debug", "openPicker: ")
+        Log.d("permission_debug", "openPicker: ")
         Dexter.withContext(context)
             .withPermission(
                 Manifest.permission.READ_EXTERNAL_STORAGE
@@ -265,21 +267,38 @@ class UserInfoFragment : Fragment(), OnMapReadyCallback{
                 override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
                     val intent = Intent(Intent.ACTION_PICK)
                     intent.type = "image/*"
-                    startActivityForResult(
+                     startActivityForResult(
                         intent,
                         IMAGE_PICK_CODE
                     )
                 }
 
                 override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
-                    TODO("Not yet implemented")
+                    Log.d("permission_debug", "onPermissionDenied: ")
+                    /*TODO("Not yet implemented")*/
                 }
 
                 override fun onPermissionRationaleShouldBeShown(
                     p0: PermissionRequest?,
-                    p1: PermissionToken?
+                    token: PermissionToken?
                 ) {
-                    TODO("Not yet implemented")
+                   /* TODO("Not yet implemented")*/
+                    Log.d("permission_debug", "onPermissionRationaleShouldBeShown: ")
+                    AlertDialog.Builder(context).setTitle("We need this permission!")
+                        .setMessage("External storage permission is must to read your image gallery")
+                        .setNegativeButton(
+                            android.R.string.cancel
+                        ) { dialog, which ->
+                            dialog.dismiss()
+                            token?.cancelPermissionRequest()
+                        }
+                        .setPositiveButton(android.R.string.ok
+                        ) { dialog, which ->
+                            dialog.dismiss()
+                            token?.continuePermissionRequest()
+                        }
+                        .setOnDismissListener(DialogInterface.OnDismissListener { token?.cancelPermissionRequest() })
+                        .show()
                 }
 
             }).check()
@@ -371,7 +390,10 @@ class UserInfoFragment : Fragment(), OnMapReadyCallback{
                 isPhoneVerifyed = true
             }
             imageDownloadUrl = FirebaseManager.mFirebaseUser?.photoUrl.toString()
-            Glide.with(this).load(imageDownloadUrl).into(profile_photo)
+            Glide.with(this)
+                .load(imageDownloadUrl)
+                .placeholder(R.drawable.default_user_photo)
+                .into(profile_photo)
             edt_profile_username.editText?.setText(FirebaseManager.mFirebaseUser?.displayName)
         }
 

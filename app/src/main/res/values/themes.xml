@@ -26,4 +26,12 @@
         <item name="android:fontFamily">@font/nunito_sans</item>
         <item name="fontFamily">@font/nunito_sans</item>
     </style>
+
+    <style name="client_theme" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+    </style>
+
+    <style name="service_provider_theme" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+    </style>
 </resources>

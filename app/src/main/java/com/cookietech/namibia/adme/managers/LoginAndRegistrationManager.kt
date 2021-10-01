@@ -10,6 +10,7 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.*
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.SetOptions
 import org.json.JSONObject
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
@@ -80,9 +81,12 @@ class LoginAndRegistrationManager() {
         FirebaseManager.mUserRef.document(user_id).get().addOnCompleteListener { task->
             if (task.isSuccessful) {
                 Log.d("user_creation", "createUser: successful")
-                val document: DocumentSnapshot = task.getResult()
+
+                val document: DocumentSnapshot = task.result
+
                 if (document.exists()) {
                     FirebaseManager.currentUser = document.toObject(UserPOJO::class.java)
+                    Log.d("already_log_in", "createOrFetchUser: ${FirebaseManager.currentUser?.profile_image_url}")
                     if(FirebaseManager.currentUser?.user_info_updated == true){
                         callback.onUserFetchSuccessful()
                     }else{
@@ -114,7 +118,7 @@ class LoginAndRegistrationManager() {
 
     fun updateUserInfo(user:UserPOJO
     ): Task<Void> {
-        return FirebaseManager.mUserRef.document(user.user_id).set(user)
+        return FirebaseManager.mUserRef.document(user.user_id).set(user, SetOptions.merge())
     }
 
     fun updateFCMToken(token: String?, uid: String) {
@@ -130,7 +134,7 @@ class LoginAndRegistrationManager() {
                 //val jsonObject = JSONObject(jsonString)
                 //Log.d("FCM_debug", "updateFCMToken: messgae: $jsonObject}")
 
-                Log.d("z z", "updateFCMToken: task successful: " + task.exception)
+                Log.d("FCM_debug", "updateFCMToken: task successful: " + task.exception)
 
 
             }else{

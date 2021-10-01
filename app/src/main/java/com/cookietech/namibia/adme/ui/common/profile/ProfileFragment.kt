@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.cookietech.namibia.adme.Application.AppComponent
 import com.cookietech.namibia.adme.R
@@ -100,6 +101,10 @@ class ProfileFragment : Fragment() {
         cardLogout.setOnClickListener{
             logout()
         }
+
+        cardContacts.setOnClickListener {
+            findNavController().navigate(R.id.action_service_provider_profileFragment_to_contactInfoFragment)
+        }
     }
 
     private fun logout() {
@@ -132,6 +137,15 @@ class ProfileFragment : Fragment() {
         setProfilePhoto()
         setUserName()
         setMemberSince()
+        setSwitchMode()
+    }
+
+    private fun setSwitchMode() {
+        if (SharedPreferenceManager.user_mode.equals(AppComponent.MODE_CLIENT)){
+            tv_swith_mode.text = "Switch to Business Mode"
+        } else{
+            tv_swith_mode.text = "Switch to Client Mode"
+        }
     }
 
     private fun setMemberSince() {

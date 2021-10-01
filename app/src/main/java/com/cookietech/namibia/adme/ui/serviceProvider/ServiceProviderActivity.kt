@@ -17,6 +17,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.cookietech.namibia.adme.R
+import com.cookietech.namibia.adme.architecture.common.CommonViewModel
 import com.cookietech.namibia.adme.architecture.serviceProvider.ServiceProviderViewModel
 import com.cookietech.namibia.adme.interfaces.ServiceProviderDataCallback
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +28,7 @@ import java.lang.Exception
 class ServiceProviderActivity : AppCompatActivity() {
 
     val serviceProviderViewModel: ServiceProviderViewModel by viewModels()
+    private val commonViewModel : CommonViewModel by viewModels()
     private lateinit var navController: NavController
 
 
@@ -71,5 +73,12 @@ class ServiceProviderActivity : AppCompatActivity() {
         val value = super.onSupportNavigateUp()
         Log.d("navigation_debug", "onSupportNavigateUp: $value" )
         return value
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        commonViewModel.processActivityResult(requestCode,resultCode,data)
+
+
     }
 }

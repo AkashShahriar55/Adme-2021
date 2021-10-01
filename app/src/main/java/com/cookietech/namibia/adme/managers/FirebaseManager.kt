@@ -6,14 +6,14 @@ import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.interfaces.FCMTokenCallback
 import com.cookietech.namibia.adme.models.UserPOJO
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.*
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+
 
 object FirebaseManager {
     private const val USER_COLLECTION_ID = "Adme_User"
@@ -67,6 +67,28 @@ object FirebaseManager {
 
         })
 
+    }
+
+    fun getConnectedAuthProvider(): HashMap<String, Boolean> {
+        val connectedUthProvider = hashMapOf(
+            "google" to false,
+            "facebook" to false
+        )
+        /*if(mFirebaseUser != null){
+
+        }*/
+        mFirebaseUser?.let {
+            for (userInfo in it.getProviderData()) {
+                if (userInfo.providerId == GoogleAuthProvider.PROVIDER_ID) {
+                    //Log.d(TAG, "User is signed in with Google")
+                    connectedUthProvider["google"] = true
+                } else if (userInfo.providerId == FacebookAuthProvider.PROVIDER_ID) {
+                //Log.d(TAG, "User is signed in with Facebook")
+                connectedUthProvider["facebook"] = true
+            }
+        }
+        }
+        return connectedUthProvider
     }
 
 }

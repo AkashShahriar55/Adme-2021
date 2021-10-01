@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable require-jsdoc */
 const functions = require("firebase-functions");
 
@@ -35,6 +36,53 @@ exports.createService = functions.firestore
       const reviews = service.reviews;
       const tags = service.tags;
       const userName = service.user_name;
+
+      const p = db.collection("Adme_Service_list").doc(serviceId).set({
+        category: category,
+        categoryId: categoryId,
+        description: description,
+        latitude: latitude,
+        longitude: longitude,
+        pic_url: picUrl,
+        rating: rating,
+        reviews: reviews,
+        tags: tags,
+        user_name: userName,
+        min_charge: 0,
+        max_charge: 0,
+        user_ref: UserId,
+      });
+
+      return p;
+    });
+
+/** Update entry in  Adme_Service List when service updated*/
+/** User name and profile image */
+exports.updateService = functions.firestore
+    .document("Adme_User/{userId}/data/service_provider/services/{serviceId}")
+    .onUpdate((snap, context) => {
+      // Get an object representing the document
+      // e.g. {'name': 'Marie', 'age': 66}
+      // const service = snap.data();
+      const newValue = snap.after.data();
+
+      // ...or the previous value before this update
+      // const previousValue = snap.before.data();
+
+      // access a particular field as you would any JS property
+
+      const category = newValue.category;
+      const categoryId = newValue.categoryId;
+      const description = newValue.description;
+      const latitude = newValue.latitude;
+      const longitude = newValue.longitude;
+      const serviceId = context.params.serviceId;
+      const UserId = context.params.userId;
+      const picUrl = newValue.pic_url;
+      const rating = newValue.rating;
+      const reviews = newValue.reviews;
+      const tags = newValue.tags;
+      const userName = newValue.user_name;
 
       const p = db.collection("Adme_Service_list").doc(serviceId).set({
         category: category,
@@ -161,6 +209,90 @@ exports.welcomeNotification = functions.firestore
 
           }, {merge: true});
       promises.push(p3);
+
+      return Promise.all(promises);
+    });
+
+/** Update on user data updated */
+exports.updateOwnService = functions.firestore
+    .document("Adme_User/{userId}")
+    .onUpdate((snap, context) => {
+      // Get an object representing the document
+      // e.g. {'name': 'Marie', 'age': 66}
+      // const user = snap.data();
+      const newValue = snap.after.data();
+      // ...or the previous value before this update
+      const previousValue = snap.before.data();
+      const oldserName = previousValue.user_name;
+      const newUserName = newValue.user_name;
+      const oldUserPic = previousValue.profile_image_url;
+      const newUserPic = newValue.profile_image_url;
+      const promises = [];
+
+      // access a particular field as you would any JS property
+      const UserId = context.params.userId;
+      if (oldserName !== newUserName) {
+        // update username inside own service
+
+        db.collection("Adme_User/"+UserId+"/data" +
+        "/service_provider/services")
+            .get().then((snapshot) => {
+              snapshot.forEach((doc) => {
+                const p = doc.ref
+                    .set({
+                      user_name: newUserName,
+                      // pic_url,
+
+                    }, {merge: true});
+                promises.push(p);
+              });
+            })
+            .catch((err) => {
+              console.log("Error getting documents updateOwnService"+
+              " username", err);
+            });
+        /** end */
+        /** update chat user user_name */
+        const p1 = db.collection("users")
+            .doc(UserId)
+            .set({
+              username: newUserName,
+              // pic_url,
+
+            }, {merge: true});
+        promises.push(p1);
+      }
+      if (oldUserPic !== newUserPic) {
+        // update profile pic inside own Service
+        db.collection("Adme_User/"+UserId+"/data" +
+        "/service_provider/services")
+            .get().then((snapshot) => {
+              snapshot.forEach((doc) => {
+                const p = doc.ref
+                    .set({
+                      pic_url: newUserPic,
+                      // pic_url,
+
+                    }, {merge: true});
+                promises.push(p);
+              });
+            })
+            .catch((err) => {
+              console.log("Error getting documents updateOwnService"+
+              " username", err);
+            });
+        /** end */
+        /** update chat user user_name */
+        const p1 = db.collection("users")
+            .doc(UserId)
+            .set({
+              photoUrl: newUserPic,
+              // pic_url,
+
+            }, {merge: true});
+        promises.push(p1);
+      }
+
 
       return Promise.all(promises);
     });
@@ -635,6 +767,7 @@ exports.triggerPush = functions.firestore
       }
     });
 
+/** Get Nearby services */
 exports.getNearbyServices = functions.https.onCall((data, context) => {
   const serviceRef = db.collection("Adme_Service_list");
   const docs = [];
@@ -703,5 +836,4 @@ function isNearByService(userLattitude,
   console.log(distance);
   return distance < 5 ? true : false;
 }
-
 
