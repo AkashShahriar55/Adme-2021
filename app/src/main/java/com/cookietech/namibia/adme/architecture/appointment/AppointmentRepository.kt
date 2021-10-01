@@ -83,6 +83,10 @@ class AppointmentRepository {
         return FirebaseManager.mUserRef.document(providerRef).collection("data").document("service_provider").collection("services").document(serviceRef).collection("reviews").document(reviewRef).get()
     }
 
+    fun deleteAppointment(appointment: AppointmentPOJO): Task<Void> {
+        return FirebaseManager.mAppointmentReference.document(appointment.id!!).delete()
+    }
+
     interface UploadInvoiceCallback{
         fun onProgressUpdate(mb:String)
         fun onUploadFailed(exception: Exception?)

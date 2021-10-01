@@ -1,5 +1,7 @@
 package com.cookietech.namibia.adme.ui.serviceProvider.today.appointment
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -661,7 +663,36 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
         }
 
         provider_cancel_button.setOnClickListener {
+            cancelAppointment()
+        }
+    }
 
+    private fun cancelAppointment() {
+        AlertDialog.Builder(requireContext()).setTitle("Are you sure?")
+            .setMessage("Do you want to cancel this appointment?. This can't be undone !")
+            .setPositiveButton("No",object : DialogInterface.OnClickListener{
+                override fun onClick(p0: DialogInterface?, p1: Int) {
+                    p0?.dismiss()
+                }
+
+            })
+            .setNegativeButton("Yes",object : DialogInterface.OnClickListener{
+                override fun onClick(p0: DialogInterface?, p1: Int) {
+                    handleCancelAppointment()
+                }
+
+            })
+    }
+
+    private fun handleCancelAppointment() {
+        appointment?.apply {
+            state = Status.status_client_request_cancel
+            viewmodel.cancelAppointmentFromClient(this).addOnSuccessListener {
+                stateUiPaymentActive()
+                setUpUiForClientCompletionApprovedClient()
+            }.addOnFailureListener {
+
+            }
         }
     }
 

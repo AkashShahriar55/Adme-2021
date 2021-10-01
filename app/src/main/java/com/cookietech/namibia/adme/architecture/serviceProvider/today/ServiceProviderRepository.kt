@@ -2,6 +2,7 @@ package com.cookietech.namibia.adme.architecture.serviceProvider.today
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.cookietech.namibia.adme.Application.Status
 import com.cookietech.namibia.adme.interfaces.ServiceProviderDataCallback
 import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.models.AppointmentPOJO
@@ -9,7 +10,6 @@ import com.cookietech.namibia.adme.models.ServiceProviderPOJO
 import com.cookietech.namibia.adme.models.ServicesPOJO
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.QuerySnapshot
 import java.lang.Exception
 
 class ServiceProviderRepository {
@@ -107,7 +107,7 @@ class ServiceProviderRepository {
         uid: String,
         observableAppointments: MutableLiveData<ArrayList<AppointmentPOJO>>
     ){
-        val listener = FirebaseManager.mAppointmentReference.whereEqualTo(SERVICE_PROVIDER_REF,uid).addSnapshotListener { documents, error ->
+        val listener = FirebaseManager.mAppointmentReference.whereNotIn("state", listOf(Status.status_client_request_cancel,Status.status_payment_completed,Status.status_provider_request_cancel)).whereEqualTo(SERVICE_PROVIDER_REF,uid).addSnapshotListener { documents, error ->
             error?.let {
 
             }

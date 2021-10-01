@@ -2,6 +2,7 @@ package com.cookietech.namibia.adme.Application
 
 object Status {
     const val status_client_request_sent = "client_request_sent"
+    const val status_client_request_cancel = "client_request_canceled"
     const val status_provider_response_sent = "provider_response_sent"
     const val status_provider_response_approve = "provider_response_approve"
     const val status_provider_response_decline = "provider_response_decline"

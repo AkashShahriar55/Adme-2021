@@ -72,6 +72,10 @@ class AppointmentViewModel:ViewModel() {
         return repository.updateAppointment(appointmentPOJO)
     }
 
+    fun cancelAppointmentFromClient(appointment: AppointmentPOJO): Task<Void>{
+        return repository.deleteAppointment(appointment)
+    }
+
     fun sendInvoiceAndFinish(appointment: AppointmentPOJO): Task<Void> {
         return repository.updateAppointment(appointment)
     }
