@@ -322,6 +322,7 @@ class RegistrationFragment : Fragment(),RegistrationViewModel.RegistrationCallba
                     AppComponent.MODE_CLIENT -> findNavController().navigate(R.id.registration_to_client_activity)
                     AppComponent.MODE_SERVICE_PROVIDER -> findNavController().navigate(R.id.registration_to_service_activity)
                 }
+                requireActivity().finish()
             }
 
             override fun onUserCreationFailed(exception: Exception) {

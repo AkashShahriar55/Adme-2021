@@ -131,6 +131,8 @@ class ProfileFragment : Fragment() {
             startActivity(intent)
             SharedPreferenceManager.user_mode = AppComponent.MODE_CLIENT
         }
+
+        requireActivity().finish()
     }
 
     private fun initialFields() {

@@ -3,11 +3,9 @@ package com.cookietech.namibia.adme.architecture.serviceProvider.today
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.models.ServiceCategory
 import com.cookietech.namibia.adme.models.ServicesPOJO
 import com.cookietech.namibia.adme.models.SubServicesPOJO
-import com.cookietech.namibia.adme.models.UserPOJO
 import com.cookietech.namibia.adme.utils.SingleLiveEvent
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
@@ -64,19 +62,20 @@ class AddServiceViewModel : ViewModel() {
         }
     }
 
-     fun uploadImagesToServer(uri:Uri,callback: AddServiceRepository.UploadImageCallback) {
-         addServiceRepository.uploadImagesToServer(uri, callback)
+     fun uploadImagesToServer(imageName:String,uri:Uri,callback: AddServiceRepository.UploadImageCallback) {
+         addServiceRepository.uploadImagesToServer(uri, callback,imageName)
      }
 
-    fun updateDatabase(): Task<DocumentReference>? {
+    fun updateDatabase(): Task<Void>? {
         var tags = ""
         tags += service.user_name
-        tags +=", ${service.category}"
-        tags += ", ${service.description}"
+        tags +=", ${service.category?:""}"
+        tags += ", ${service.description?:""}"
         subServicesLiveData.value?.let {
             for (service in it){
                 Log.d("database_debug", "updateDatabase: $tags")
-                tags += ", ${service.service_name}"
+                tags += ", ${service.service_name?:""}"
+                tags += ",  ${service.service_description?:""}"
             }
         }
         service.tags = tags

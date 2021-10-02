@@ -43,7 +43,7 @@ open class StartFragment : Fragment() {
         binding.recyclerView.adapter = ChatListAdapter(getOnRoomClickListener())
         firebaseVm.setMsgList(mutableListOf())
 
-
+        Log.d("chat_debug", "onCreateView: ")
 
         return binding.root
     }
