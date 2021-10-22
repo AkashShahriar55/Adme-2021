@@ -1,14 +1,16 @@
 package com.cookietech.namibia.adme.ui.client.myDeals
 
+import android.app.Activity
 import android.os.Bundle
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cookietech.namibia.adme.Application.Status
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.client.myDeals.MyDealsViewModel
 import com.cookietech.namibia.adme.models.AppointmentPOJO
@@ -26,6 +28,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class MyDealsFragment : Fragment() {
+    private var allAppointments: ArrayList<AppointmentPOJO>? = null
     private lateinit var adapter: AppointmentAdapter
 
     // TODO: Rename and change types of parameters
@@ -40,6 +43,8 @@ class MyDealsFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        setHasOptionsMenu(true)
+
     }
 
     override fun onCreateView(
@@ -55,17 +60,54 @@ class MyDealsFragment : Fragment() {
         appointment_shimmer_holder.startShimmerAnimation()
         initializeRecyclerView()
         initializeObserver()
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
     }
 
     val appointmentObserver = Observer<ArrayList<AppointmentPOJO>>{appointments->
         appointment_shimmer_holder.stopShimmerAnimation()
         appointment_shimmer_holder.visibility = View.GONE
+        allAppointments = appointments
         adapter.appointments = appointments
     }
 
     private fun initializeObserver() {
         viewModel.observableAppointments.observe(viewLifecycleOwner,appointmentObserver)
     }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        toolbar.overflowIcon = ContextCompat.getDrawable(requireContext(),R.drawable.ic_filter)
+        inflater.inflate(R.menu.filter_menu,menu)
+        super.onCreateOptionsMenu(menu, inflater)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        allAppointments?.let {deals->
+            when(item.itemId){
+                R.id.all_deals->{
+                    toolbar.title = "All Deals"
+                    adapter.appointments = deals
+                }
+                R.id.active_deals->{
+                    toolbar.title = "Active Deals"
+                    adapter.appointments = deals.filter { it.state !in arrayOf(Status.status_client_request_cancel,Status.status_provider_request_cancel,Status.status_payment_completed) } as ArrayList<AppointmentPOJO>
+                }
+                R.id.completed_deals->{
+                    toolbar.title = "Completed Deals"
+                    adapter.appointments = deals.filter { it.state in arrayOf(Status.status_payment_completed) } as ArrayList<AppointmentPOJO>
+                }
+                R.id.canceled_deals->{
+                    toolbar.title = "Canceled Deals"
+                    adapter.appointments = deals.filter { it.state in arrayOf(Status.status_client_request_cancel,Status.status_provider_request_cancel) } as ArrayList<AppointmentPOJO>
+                }
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+
+    }
+
 
 
     override fun onStart() {

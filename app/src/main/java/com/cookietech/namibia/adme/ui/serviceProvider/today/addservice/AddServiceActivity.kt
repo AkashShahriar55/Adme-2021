@@ -297,7 +297,12 @@ class AddServiceActivity : AppCompatActivity() {
 
                 override fun onUploadSuccessful(url: String) {
                     if(!imageHasInServer){
-                        addServiceViewModel.service.feature_images.plus(url)
+                        addServiceViewModel.service.feature_images.add(url)
+                    }else{
+                        val lastUrl =
+                            addServiceViewModel.service.feature_images.find { it.contains(imageName) }
+                        val index = addServiceViewModel.service.feature_images.indexOf(lastUrl);
+                        addServiceViewModel.service.feature_images[index] = url
                     }
 
                     if(imageNo != 2){

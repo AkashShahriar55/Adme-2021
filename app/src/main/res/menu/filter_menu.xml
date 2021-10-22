@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/all_deals"
+        android:title="@string/all_deals"
+        app:showAsAction="never" />
+    <item android:id="@+id/active_deals"
+        android:title="@string/active_deals"
+        app:showAsAction="never" />
+    <item android:id="@+id/completed_deals"
+        android:title="@string/completed_deals"
+        app:showAsAction="never" />
+    <item android:id="@+id/canceled_deals"
+        android:title="@string/canceled_deals"
+        app:showAsAction="never" />
+</menu>

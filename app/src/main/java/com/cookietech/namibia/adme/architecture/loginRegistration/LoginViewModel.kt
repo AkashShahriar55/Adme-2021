@@ -24,6 +24,7 @@ class LoginViewModel : ViewModel() {
     private val WEB_CLIENT_ID = "559137624340-5sdlvt9o0tbcl4lknp4ldbb9bheqs5pu.apps.googleusercontent.com"
     private val RC_SIGN_IN = 1
     var loginAndRegistrationManager: LoginAndRegistrationManager
+
     var loginCallback:LoginCallback? = null
     init {
         loginAndRegistrationManager = LoginAndRegistrationManager()
@@ -35,6 +36,7 @@ class LoginViewModel : ViewModel() {
             if (task.isSuccessful) {
                 // Sign in success, update UI with the signed-in user's information
                 Log.d("google_login_debug", "signInWithCredential:")
+
                 task.result.user?.let {
                     FirebaseManager.mFirebaseUser = it
                     loginCallback?.onLoginSuccessful()

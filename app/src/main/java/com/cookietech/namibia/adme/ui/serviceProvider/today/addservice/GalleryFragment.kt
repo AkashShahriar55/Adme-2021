@@ -93,6 +93,7 @@ class GalleryFragment : Fragment() {
     private fun updateGalleryImage() {
         if (viewmodel.isServiceUpdate){
             for ((index, img_url) in viewmodel.service.feature_images.withIndex()){
+                Log.d("gallery_debug", "updateGalleryImage: $img_url")
                 if(index == 0){
                     Glide.with(requireContext())
                         .load(img_url)

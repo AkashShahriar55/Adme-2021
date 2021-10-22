@@ -21,6 +21,8 @@ object ConnectionManager {
     }
 }
 
+
+
 class NetworkReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val conn = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

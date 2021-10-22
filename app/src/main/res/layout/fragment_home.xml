@@ -10,6 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_search"
             android:layout_width="0dp"
@@ -60,6 +63,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_optimizationLevel="standard" />
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/map_loader"
             android:layout_width="wrap_content"
@@ -95,6 +99,16 @@
                 app:layout_constraintStart_toStartOf="@+id/progressBar"
                 app:layout_constraintTop_toBottomOf="@+id/progressBar" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <include
+            android:id="@+id/network_error_holder_home"
+            layout="@layout/networ_error"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toEndOf="@+id/cv_search"
+            app:layout_constraintStart_toStartOf="@+id/cv_search"
+            app:layout_constraintTop_toBottomOf="@+id/cv_search" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

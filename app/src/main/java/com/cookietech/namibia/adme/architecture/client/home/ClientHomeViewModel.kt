@@ -52,6 +52,7 @@ class ClientHomeViewModel: ViewModel() {
     public fun fetchNearbyServices(latitude:Double,longitude:Double){
         homeRepository.fetchNearByServices(latitude, longitude,object :NearbyServiceCallback{
             override fun onInvalidData() {
+                services.value = ArrayList()
                 Log.d("map_service", "onInvalidData: ")
             }
 
@@ -59,9 +60,12 @@ class ClientHomeViewModel: ViewModel() {
                 Log.d("map_service", "onFetchedNearbyService: $allData")
                 if(allData.size > 0)
                     services.value = allData
+                else
+                    services.value = ArrayList()
             }
 
             override fun onError() {
+                services.value = ArrayList()
                 Log.d("map_service", "onError: ")
             }
 

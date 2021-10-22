@@ -26,12 +26,11 @@ import com.cookietech.namibia.adme.architecture.appointment.AppointmentViewModel
 import com.cookietech.namibia.adme.managers.SharedPreferenceManager
 import com.cookietech.namibia.adme.models.AppointmentPOJO
 import com.cookietech.namibia.adme.models.ReviewPOJO
-import com.cookietech.namibia.adme.models.SubServicesPOJO
 import com.cookietech.namibia.adme.ui.invoice.RatingDialog
-import com.cookietech.namibia.adme.ui.serviceProvider.today.addservice.AddServiceBottomSheetFragment
 
 import com.cookietech.namibia.adme.utils.GoogleMapUtils
 import com.cookietech.namibia.adme.utils.UiHelper
+import com.cookietech.namibia.adme.views.LoadingDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback
@@ -57,6 +56,8 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
     private var mMap: GoogleMap? = null
     private var appointment: AppointmentPOJO? = null
     private var mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
+    private lateinit var dialog: LoadingDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -72,7 +73,11 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("notif_debug", "onViewCreated: ")
+        dialog = context?.let { LoadingDialog(it, "Processing", "Please wait...") }!!
         initializeObserver()
+        fab_back.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
     }
 
@@ -174,6 +179,16 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                 if (SharedPreferenceManager.user_mode == AppComponent.MODE_SERVICE_PROVIDER) {
                     setUpUiForClientRequestSentProvider()
                 } else {
+
+                    setUpUiForClientRequestSentClient()
+                }
+            }
+            Status.status_provider_response_decline -> {
+                stateUiConfirmedActive()
+                if (SharedPreferenceManager.user_mode == AppComponent.MODE_SERVICE_PROVIDER) {
+                    setUpUiForClientRequestSentProvider()
+                } else {
+
                     setUpUiForClientRequestSentClient()
                 }
             }
@@ -260,6 +275,7 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setUpUiForReviewDone() {
+
         appointment?.apply {
             viewmodel.fetchReviewData(service_provider_ref,service_ref,review_ref).addOnSuccessListener {
                 if(it.exists()){
@@ -269,8 +285,9 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                     rating_bar.rating = review?.rating ?: 0.0f
                     rating_details.text = review?.review
                 }
-            }.addOnFailureListener {
 
+            }.addOnFailureListener {
+                
             }
         }
 
@@ -604,14 +621,17 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
 
 
     private fun approveServiceProviderResponse() {
+        dialog.show()
+        dialog.updateTitle("Approving")
         appointment?.apply {
             approved = true
             state = Status.status_provider_response_approve
             viewmodel.approveServiceProviderResponse(this).addOnSuccessListener {
                 stateUiCompletedActive()
                 setUpUiForProviderResponseApproveClient()
+                dialog.hide()
             }.addOnFailureListener {
-
+                dialog.hide()
             }
         }
 
@@ -635,15 +655,19 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
             return
         }
 
+
         appointment?.apply {
             service_provider_price = neededMoney
             service_provider_quotation = providerResponse
             state = "provider_response_sent"
+            dialog.show()
+            dialog.updateTitle("Sending")
             viewmodel.sendServiceProviderResponse(this).addOnSuccessListener {
                 Toast.makeText(requireContext(), "Response sent", Toast.LENGTH_SHORT).show()
                 setUpUiForProviderResponseSendProvider()
+                dialog.hide()
             }.addOnFailureListener {
-
+                dialog.hide()
             }
         }
 
@@ -663,11 +687,11 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
         }
 
         provider_cancel_button.setOnClickListener {
-            cancelAppointment()
+            cancelAppointment(false)
         }
     }
 
-    private fun cancelAppointment() {
+    private fun cancelAppointment(isClient: Boolean) {
         AlertDialog.Builder(requireContext()).setTitle("Are you sure?")
             .setMessage("Do you want to cancel this appointment?. This can't be undone !")
             .setPositiveButton("No",object : DialogInterface.OnClickListener{
@@ -678,20 +702,27 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
             })
             .setNegativeButton("Yes",object : DialogInterface.OnClickListener{
                 override fun onClick(p0: DialogInterface?, p1: Int) {
-                    handleCancelAppointment()
+                    handleCancelAppointment(isClient)
                 }
 
-            })
+            }).create().show()
     }
 
-    private fun handleCancelAppointment() {
-        appointment?.apply {
-            state = Status.status_client_request_cancel
-            viewmodel.cancelAppointmentFromClient(this).addOnSuccessListener {
-                stateUiPaymentActive()
-                setUpUiForClientCompletionApprovedClient()
-            }.addOnFailureListener {
+    private fun handleCancelAppointment(isClient: Boolean) {
+        dialog.show()
+        dialog.updateTitle("Canceling")
 
+        appointment?.apply {
+            state = if(isClient)
+                Status.status_client_request_cancel
+            else
+                Status.status_provider_request_cancel
+            viewmodel.cancelAppointmentFromClient(this).addOnSuccessListener {
+                Log.d("cancel_debug", "handleCancelAppointment: ")
+                requireActivity().onBackPressed()
+                dialog.hide()
+            }.addOnFailureListener {
+                dialog.hide()
             }
         }
     }
@@ -708,6 +739,10 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
         negative_button.visibility = View.VISIBLE
 
         negative_button.text = "Cancel request"
+
+        negative_button.setOnClickListener {
+            cancelAppointment(true)
+        }
     }
 
     private fun setUpUiForProviderResponseSendProvider() {
@@ -736,6 +771,25 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
 
         positive_button.setOnClickListener {
             approveServiceProviderResponse()
+        }
+
+        negative_button.setOnClickListener {
+            declineServiceProviderResponse()
+        }
+    }
+
+    private fun declineServiceProviderResponse() {
+        dialog.show()
+        dialog.updateTitle("Declining")
+        appointment?.apply {
+            approved = false
+            state = Status.status_provider_response_decline
+            viewmodel.declineServiceProviderResponse(this).addOnSuccessListener {
+                setUpUiForClientRequestSentClient()
+                dialog.hide()
+            }.addOnFailureListener {
+                dialog.hide()
+            }
         }
     }
 

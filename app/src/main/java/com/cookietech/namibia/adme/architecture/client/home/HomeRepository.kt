@@ -81,9 +81,11 @@ class HomeRepository {
 
 
             }else{
+                callback.onError()
                 Log.d("nearby_services", "updateFCMToken: task not successful: " + task.exception)
             }
         }.addOnFailureListener {
+            callback.onError()
             Log.d("nearby_services", "updateFCMToken: Failure: " + it.message)
 
         }

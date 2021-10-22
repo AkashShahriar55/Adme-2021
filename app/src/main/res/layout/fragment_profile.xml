@@ -283,6 +283,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardPrivacySettings"
+                android:visibility="gone"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/profile_card_height"
                 android:layout_marginTop="@dimen/profile_content_margin_top"
