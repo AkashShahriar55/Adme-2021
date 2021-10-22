@@ -63,12 +63,16 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="@dimen/_40sdp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/fab_back"
             android:background="@drawable/appointment_tool_background">
 
             <ImageView
                 android:id="@+id/fab_call"
+                android:visibility="gone"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:padding="@dimen/_10sdp"
@@ -80,6 +84,8 @@
                 app:layout_constraintTop_toTopOf="parent" />
             <ImageView
                 android:id="@+id/btn_message"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:padding="@dimen/_10sdp"
@@ -92,6 +98,8 @@
                 app:tint="@color/black" />
             <ImageView
                 android:id="@+id/btn_location"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:padding="@dimen/_10sdp"

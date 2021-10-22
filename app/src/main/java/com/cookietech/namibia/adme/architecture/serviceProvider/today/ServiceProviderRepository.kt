@@ -108,7 +108,7 @@ class ServiceProviderRepository {
         uid: String,
         observableAppointments: MutableLiveData<ArrayList<AppointmentPOJO>>
     ){
-        val listener = FirebaseManager.mAppointmentReference.orderBy("state").orderBy("time_in_millis",Query.Direction.DESCENDING).whereNotIn("state", listOf(Status.status_client_request_cancel,Status.status_payment_completed,Status.status_provider_request_cancel)).whereEqualTo(SERVICE_PROVIDER_REF,uid).addSnapshotListener { documents, error ->
+        val listener = FirebaseManager.mAppointmentReference.orderBy("time_in_millis",Query.Direction.DESCENDING).whereEqualTo(SERVICE_PROVIDER_REF,uid).addSnapshotListener { documents, error ->
             error?.let {
                 Log.d("appointment_debug", "fetchAllAppointments: " + it.message)
                 observableAppointments.value = ArrayList()

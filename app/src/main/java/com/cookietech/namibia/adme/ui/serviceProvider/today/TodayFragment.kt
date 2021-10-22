@@ -24,6 +24,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
+import com.cookietech.namibia.adme.Application.Status
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.serviceProvider.ServiceProviderViewModel
 import com.cookietech.namibia.adme.extensions.openNetworkSetting
@@ -59,6 +60,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.util.*
+import javax.net.ssl.SSLEngineResult
 import kotlin.collections.ArrayList
 
 
@@ -107,7 +109,7 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
 
     val appointmentsObserver = Observer<ArrayList<AppointmentPOJO>> { appointments->
         if (!appointments.isNullOrEmpty()) {
-            appointmentAdapter.appointments = appointments
+            appointmentAdapter.appointments = appointments.filter { it.state !in arrayOf(Status.status_client_request_cancel,Status.status_provider_request_cancel,Status.status_payment_completed) } as ArrayList<AppointmentPOJO>
             appointment_container.visibility = View.VISIBLE
             empty_recyclerview_appointment.visibility = View.GONE
             updateAppointmentMarkers(appointments)
