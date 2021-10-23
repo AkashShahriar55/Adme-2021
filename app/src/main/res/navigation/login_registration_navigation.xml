@@ -47,6 +47,7 @@
         <action
             android:id="@+id/login_to_client_activity"
             app:destination="@id/clientActivity2"
+            app:launchSingleTop="true"
             app:popUpTo="@id/login_registration_navigation" />
     </fragment>
     <fragment

@@ -238,6 +238,7 @@ class UserInfoFragment : Fragment(), OnMapReadyCallback{
                             AppComponent.MODE_CLIENT -> navigateToClientActivity()
                             AppComponent.MODE_SERVICE_PROVIDER -> navigateToServiceActivity()
                         }
+                        requireActivity().finish()
                     }
 
                     override fun updateFailed() {

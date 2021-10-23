@@ -24,9 +24,12 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
+import com.cookietech.namibia.adme.Application.Status
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.serviceProvider.ServiceProviderViewModel
+import com.cookietech.namibia.adme.extensions.openNetworkSetting
 import com.cookietech.namibia.adme.interfaces.ServiceProviderDataCallback
+import com.cookietech.namibia.adme.managers.ConnectionManager
 import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.models.AppointmentPOJO
 import com.cookietech.namibia.adme.models.ServiceProviderPOJO
@@ -50,12 +53,14 @@ import kotlinx.android.synthetic.main.fragment_today.bottom_details_toolbar
 import kotlinx.android.synthetic.main.fragment_today.client_notification_btn
 import kotlinx.android.synthetic.main.fragment_today.today_notification_badge
 import kotlinx.android.synthetic.main.layout_empty_recycleview.*
+import kotlinx.android.synthetic.main.networ_error.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.util.*
+import javax.net.ssl.SSLEngineResult
 import kotlin.collections.ArrayList
 
 
@@ -104,7 +109,7 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
 
     val appointmentsObserver = Observer<ArrayList<AppointmentPOJO>> { appointments->
         if (!appointments.isNullOrEmpty()) {
-            appointmentAdapter.appointments = appointments
+            appointmentAdapter.appointments = appointments.filter { it.state !in arrayOf(Status.status_client_request_cancel,Status.status_provider_request_cancel,Status.status_payment_completed) } as ArrayList<AppointmentPOJO>
             appointment_container.visibility = View.VISIBLE
             empty_recyclerview_appointment.visibility = View.GONE
             updateAppointmentMarkers(appointments)
@@ -411,6 +416,28 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
         })
 
 
+        ConnectionManager.networkAvailability.observe(viewLifecycleOwner,{
+            if(it == false){
+                showNetworkErrorMessage()
+            }else{
+                hideNetworkErrorMessage()
+            }
+        })
+
+
+
+
+    }
+
+    private fun showNetworkErrorMessage() {
+        network_error_holder.visibility = View.VISIBLE
+        network_error_holder.tv_network_setting.setOnClickListener {
+            requireContext().openNetworkSetting()
+        }
+    }
+
+    private fun hideNetworkErrorMessage() {
+        network_error_holder.visibility = View.GONE
     }
 
     companion object {

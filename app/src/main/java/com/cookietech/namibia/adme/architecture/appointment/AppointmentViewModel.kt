@@ -73,7 +73,7 @@ class AppointmentViewModel:ViewModel() {
     }
 
     fun cancelAppointmentFromClient(appointment: AppointmentPOJO): Task<Void>{
-        return repository.deleteAppointment(appointment)
+        return repository.updateAppointment(appointment)
     }
 
     fun sendInvoiceAndFinish(appointment: AppointmentPOJO): Task<Void> {
@@ -98,5 +98,9 @@ class AppointmentViewModel:ViewModel() {
 
     fun fetchReviewData(providerRef:String,serviceRef:String,reviewRef:String): Task<DocumentSnapshot> {
         return repository.fetchReviewData(providerRef, serviceRef, reviewRef)
+    }
+
+    fun declineServiceProviderResponse(appointmentPOJO: AppointmentPOJO): Task<Void> {
+        return repository.updateAppointment(appointmentPOJO)
     }
 }

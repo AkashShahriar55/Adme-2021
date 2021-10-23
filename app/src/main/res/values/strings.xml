@@ -161,6 +161,12 @@
     <string name="record_failed">You can\'t record a voice message while you\'re recording in another app</string>
     <string name="connect">Connect</string>
     <string name="connected">Connected</string>
+    <string name="internet_connection"><u>Internet Connection.</u></string>
+    <string name="please_check_your">Please check your  </string>
+    <string name="all_deals">All Deals</string>
+    <string name="active_deals">Active Deals</string>
+    <string name="completed_deals">Completed Deals</string>
+    <string name="canceled_deals">Canceled Deals</string>
 
 
 </resources>

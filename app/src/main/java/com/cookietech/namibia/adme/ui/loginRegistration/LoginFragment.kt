@@ -113,6 +113,7 @@ class LoginFragment : Fragment() {
                             AppComponent.MODE_CLIENT -> findNavController().navigate(R.id.login_to_client_activity)
                             AppComponent.MODE_SERVICE_PROVIDER -> findNavController().navigate(R.id.login_to_service_activity)
                         }
+                        requireActivity().finish()
                     }
 
                     override fun onUserCreationFailed(exception: Exception) {

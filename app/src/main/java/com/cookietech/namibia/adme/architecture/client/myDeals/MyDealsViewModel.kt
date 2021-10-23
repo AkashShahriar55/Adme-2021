@@ -1,5 +1,6 @@
 package com.cookietech.namibia.adme.architecture.client.myDeals
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.cookietech.namibia.adme.architecture.serviceProvider.today.ServiceProviderRepository
@@ -23,8 +24,9 @@ class MyDealsViewModel:ViewModel() {
     private fun fetchAllAppointments() {
         FirebaseManager.mFirebaseUser?.apply {
             repository.fetchAllAppointments(uid).addSnapshotListener {documents, error ->
+                Log.d("deals_debug", "fetchAllAppointments: " + documents?.isEmpty+" " + error)
                 error?.let {
-
+                    observableAppointments.value = arrayListOf()
                 }
 
                 documents?.let {
@@ -35,6 +37,8 @@ class MyDealsViewModel:ViewModel() {
                         appointments.add(appointment)
                     }
                     observableAppointments.value = appointments
+                }?:run {
+                    observableAppointments.value = arrayListOf()
                 }
             }
         }

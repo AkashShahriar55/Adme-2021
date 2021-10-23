@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.*
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.OnProgressListener
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
@@ -26,8 +27,8 @@ class AddServiceRepository {
         return FirebaseManager.mCategoryReference.get()
     }
 
-     fun uploadImagesToServer(uri:Uri,callback: UploadImageCallback) {
-        val image: StorageReference = FirebaseManager.mPortfolioImageReference.child(uri.lastPathSegment!!)
+     fun uploadImagesToServer(uri:Uri,callback: UploadImageCallback,imageName:String) {
+        val image: StorageReference = FirebaseManager.mPortfolioImageReference.child(imageName)
         val uploadTask = image.putFile(uri)
         uploadTask.continueWithTask<Uri>(
             Continuation<UploadTask.TaskSnapshot?, Task<Uri?>?> { task ->
@@ -57,12 +58,12 @@ class AddServiceRepository {
 
             })
             .addOnProgressListener(OnProgressListener<UploadTask.TaskSnapshot> { taskSnapshot -> //long percent = (taskSnapshot.getBytesTransferred()/ finalTotal_size) * 100;
-                val mb = String.format("%.2f", taskSnapshot.bytesTransferred / 125000.0)
+                val mb = String.format("%.2f", taskSnapshot.bytesTransferred / 1048576f)
                 callback.onProgressUpdate(mb)
             })
     }
 
-    fun updateDatabase(service: ServicesPOJO): Task<DocumentReference>? {
+    fun updateDatabase(service: ServicesPOJO): Task<Void>? {
         FirebaseManager.currentUser?.apply {
 
             service.user_name = user_name
@@ -71,7 +72,8 @@ class AddServiceRepository {
             service.latitude = lattitude
             service.longitude = longitude
             service.status = status_is_online
-            return FirebaseManager.mUserRef.document(this.user_id).collection("data").document("service_provider").collection("services").add(service)
+            return FirebaseManager.mUserRef.document(this.user_id).collection("data").document("service_provider").collection("services").document(service.mServiceId!!).set(service,
+                SetOptions.merge())
         }
         return null
     }
@@ -81,9 +83,17 @@ class AddServiceRepository {
             val reference = FirebaseManager.mUserRef.document(user_id).collection("data").document("service_provider").collection("services").document(id).collection("sub_services")
             return FirebaseManager.mDataBase.runBatch {
                 for (service in value){
-                    val document = reference.document()
-                    service.id = document.id
-                    document.set(service)
+                    service.id?.let {
+                        val document = reference.document(it)
+                        document.set(service,
+                            SetOptions.merge())
+                    }?: kotlin.run {
+                        val document = reference.document()
+                        service.id = document.id
+                        document.set(service,
+                            SetOptions.merge())
+                    }
+
                 }
             }
         }

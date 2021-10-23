@@ -3,15 +3,51 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/drawable-ldpi/rounded_corner_white.xml" value="0.262037037037037" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/drawable-v24/rounded_corner_blue_white.xml" value="0.25833333333333336" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/drawable-v24/skip_now_btn.xml" value="0.2703125" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/drawable-xxhdpi/rounded_corner.xml" value="0.262037037037037" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/drawable/appointment_tool_background.xml" value="0.20833333333333334" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/drawable/ic_filter.xml" value="0.21296296296296297" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/drawable/rounded_corner_gray_white.xml" value="0.25833333333333336" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/drawable/service_provider_bottom_nav_color.xml" value="0.2703125" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/drawable/shimmer_background.xml" value="0.2703125" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout-v26/appointment_item.xml" value="0.264" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/activity_service_provider.xml" value="0.2" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/activity_service_provider_details.xml" value="0.12360688956433637" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/appointment_details_bottom_sheet.xml" value="0.1322463768115942" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/appointment_holder_item.xml" value="0.264" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/appointment_map_info.xml" value="0.264" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/available_service_item.xml" value="0.15307971014492755" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/client_appointment_bottom_sheet.xml" value="0.12360688956433637" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/custom_progress_dialog.xml" value="0.12360688956433637" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/fragment_appointment_details.xml" value="0.2" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/fragment_gallery.xml" value="0.12360688956433637" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/fragment_home.xml" value="0.176" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/fragment_income.xml" value="0.15806159420289856" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/fragment_my_deals.xml" value="0.2" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/fragment_notification.xml" value="0.264" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/fragment_profile.xml" value="0.12360688956433637" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/fragment_search_services.xml" value="0.2" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/fragment_services.xml" value="0.264" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/fragment_start.xml" value="0.16304347826086957" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/fragment_today.xml" value="0.2" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/item_chat.xml" value="0.16304347826086957" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/layout_empty_recycleview.xml" value="0.1721014492753623" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/layout_marker_click_details.xml" value="0.264" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/networ_error.xml" value="0.264" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/search_service_item.xml" value="0.15806159420289856" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/search_service_item_shimmer.xml" value="0.264" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/services_holder_layout.xml" value="0.2" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/layout/services_item_layout.xml" value="0.1721014492753623" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/menu/client_bottom_nav_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/menu/filter_menu.xml" value="0.1824074074074074" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/menu/main_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Adme/Adme-2021/Adme-project/app/src/main/res/menu/service_provider_bottom_nav_menu.xml" value="0.25025641025641027" />
         <entry key="..\:/Android_Project/Adme-2021/app/src/main/res/layout/fragment_chat.xml" value="0.18854166666666666" />
-        <entry key="..\:/Android_Project/Adme-2021/app/src/main/res/layout/fragment_home.xml" value="0.40555555555555556" />
-        <entry key="..\:/Android_Project/Adme-2021/app/src/main/res/layout/fragment_notification.xml" value="0.20102564102564102" />
-        <entry key="..\:/Android_Project/Adme-2021/app/src/main/res/layout/fragment_search_services.xml" value="0.25" />
+        <entry key="..\:/Android_Project/Adme-2021/app/src/main/res/layout/fragment_home.xml" value="0.20416666666666666" />
+        <entry key="..\:/Android_Project/Adme-2021/app/src/main/res/layout/fragment_search_services.xml" value="0.12777777777777777" />
         <entry key="..\:/Android_Project/Adme-2021/app/src/main/res/layout/fragment_service_history.xml" value="0.18854166666666666" />
-        <entry key="..\:/Android_Project/Adme-2021/app/src/main/res/layout/fragment_splash.xml" value="0.10833333333333334" />
-        <entry key="..\:/Android_Project/Adme-2021/app/src/main/res/layout/fragment_today.xml" value="0.1211372064276885" />
-        <entry key="..\:/Android_Project/Adme-2021/app/src/main/res/layout/notification_item.xml" value="0.20102564102564102" />
-        <entry key="..\:/Android_Project/Adme-2021/app/src/main/res/layout/search_service_item.xml" value="0.20416666666666666" />
         <entry key="..\:/Android_Project/Adme-2021/app/src/main/res/menu/client_bottom_nav_menu.xml" value="0.18854166666666666" />
         <entry key="..\:/Android_Project/Adme-2021/app/src/main/res/menu/service_provider_bottom_nav_menu.xml" value="0.18854166666666666" />
       </map>

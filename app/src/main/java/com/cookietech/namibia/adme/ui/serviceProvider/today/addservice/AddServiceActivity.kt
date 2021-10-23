@@ -11,11 +11,10 @@ import androidx.navigation.fragment.findNavController
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.serviceProvider.today.AddServiceRepository
 import com.cookietech.namibia.adme.architecture.serviceProvider.today.AddServiceViewModel
+import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.views.LoadingDialog
 import kotlinx.android.synthetic.main.activity_add_service.*
-import kotlinx.android.synthetic.main.fragment_overview.*
 import java.lang.Exception
-import java.util.*
 
 
 class AddServiceActivity : AppCompatActivity() {
@@ -154,7 +153,7 @@ class AddServiceActivity : AppCompatActivity() {
 
 
         val hasOnePic = addServiceViewModel.imageUris.count { it!=null }
-        if(currentTab == 2 && hasOnePic > 0){
+        if(currentTab == 2 && hasOnePic > 0 || addServiceViewModel.service.feature_images.isNotEmpty()){
             addServiceViewModel.completedFlags[2] = true
         }else if(currentTab == 2){
             Toast.makeText(this, "Please add at least 1 images and save", Toast.LENGTH_SHORT).show()
@@ -192,79 +191,148 @@ class AddServiceActivity : AppCompatActivity() {
         val imagecount = addServiceViewModel.imageUris.count { it!=null }
         showDialog("Uploading image 1/$imagecount","please wait...")
 
-        addServiceViewModel.imageUris.filterNotNull().let {
-            if(it.isNotEmpty()){
+        val service_ref = addServiceViewModel.service.mServiceId?:FirebaseManager.mServiceListReference.document().id
+        addServiceViewModel.service.mServiceId = service_ref
 
-                addServiceViewModel.uploadImagesToServer(it[0],object : AddServiceRepository.UploadImageCallback{
-                    override fun onProgressUpdate(mb: String) {
-                        updateProgressUi(mb)
-                    }
-
-                    override fun onUploadFailed(exception: Exception?) {
-                        hideDialog()
-                    }
-
-                    override fun onUploadSuccessful(url: String) {
-                        imageUrls.add(url)
-                        hideDialog()
-                        if(it.size>1){
-                            showDialog("Uploading image 2/$imagecount","please wait...")
-                            addServiceViewModel.uploadImagesToServer(it[1],object : AddServiceRepository.UploadImageCallback{
-                                override fun onProgressUpdate(mb: String) {
-                                    updateProgressUi(mb)
-                                }
-
-                                override fun onUploadFailed(exception: Exception?) {
-                                    hideDialog()
-                                }
-
-                                override fun onUploadSuccessful(url: String) {
-                                    imageUrls.add(url)
-                                    hideDialog()
-                                    if(it.size>2){
-                                        showDialog("Uploading image 2/$imagecount","please wait...")
-                                        addServiceViewModel.uploadImagesToServer(it[2],object : AddServiceRepository.UploadImageCallback{
-                                            override fun onProgressUpdate(mb: String) {
-                                                updateProgressUi(mb)
-                                            }
-
-                                            override fun onUploadFailed(exception: Exception?) {
-                                                hideDialog()
-                                            }
-
-                                            override fun onUploadSuccessful(url: String) {
-                                                imageUrls.add(url)
-                                                hideDialog()
-                                                updateToDatabase(imageUrls)
-                                            }
-
-                                        })
-                                    }else{
-                                        updateToDatabase(imageUrls)
-                                    }
-                                }
-
-                            })
-                        }else{
-                            updateToDatabase(imageUrls)
-                        }
-                    }
-
-                })
-            }else{
-                hideDialog()
-            }
-
+        if(addServiceViewModel.imageUris.filterNotNull().isNotEmpty()){
+            uploadImagesToServer(0)
+        }else{
+            hideDialog()
+            updateToDatabase()
         }
+
+
+//        addServiceViewModel.imageUris.filterNotNull().let {
+//            if(it.isNotEmpty()){
+//                Log.d("gallary_debug", "uploadData: started uploading image")
+//
+//                addServiceViewModel.uploadImagesToServer(service_ref+"_image1",it[0],object : AddServiceRepository.UploadImageCallback{
+//                    override fun onProgressUpdate(mb: String) {
+//                        updateProgressUi(mb)
+//                    }
+//
+//                    override fun onUploadFailed(exception: Exception?) {
+//                        Log.d("gallary_debug", "uploadData: uploading image 0 "+ exception?.message)
+//                        hideDialog()
+//                    }
+//
+//                    override fun onUploadSuccessful(url: String) {
+//                        imageUrls.add(url)
+//                        hideDialog()
+//                        if(it.size>1){
+//                            showDialog("Uploading image 2/$imagecount","please wait...")
+//                            addServiceViewModel.uploadImagesToServer(service_ref+"_image2",it[1],object : AddServiceRepository.UploadImageCallback{
+//                                override fun onProgressUpdate(mb: String) {
+//                                    updateProgressUi(mb)
+//                                }
+//
+//                                override fun onUploadFailed(exception: Exception?) {
+//                                    hideDialog()
+//                                    Log.d("gallary_debug", "uploadData: uploading image 1 "+ exception?.message)
+//                                }
+//
+//                                override fun onUploadSuccessful(url: String) {
+//                                    imageUrls.add(url)
+//                                    hideDialog()
+//                                    if(it.size>2){
+//                                        showDialog("Uploading image 2/$imagecount","please wait...")
+//                                        addServiceViewModel.uploadImagesToServer(service_ref+"_image3",it[2],object : AddServiceRepository.UploadImageCallback{
+//                                            override fun onProgressUpdate(mb: String) {
+//                                                updateProgressUi(mb)
+//                                            }
+//
+//                                            override fun onUploadFailed(exception: Exception?) {
+//                                                hideDialog()
+//                                                Log.d("gallary_debug", "uploadData: uploading image 3 "+ exception?.message)
+//                                            }
+//
+//                                            override fun onUploadSuccessful(url: String) {
+//                                                imageUrls.add(url)
+//                                                hideDialog()
+//                                                updateToDatabase(imageUrls)
+//                                            }
+//
+//                                        })
+//                                    }else{
+//                                        updateToDatabase(imageUrls)
+//                                    }
+//                                }
+//
+//                            })
+//                        }else{
+//                            updateToDatabase(imageUrls)
+//                        }
+//                    }
+//
+//                })
+//            }else{
+//
+//                hideDialog()
+//            }
+
+//        }
     }
 
-    private fun updateToDatabase(imageUrls: List<String>) {
+    private fun uploadImagesToServer(imageNo: Int) {
+
+
+
+        val imageName = addServiceViewModel.service.mServiceId!! + "_image"+(imageNo+1);
+        val imageHasInServer =
+            addServiceViewModel.service.feature_images.any { it.contains(imageName, true) }
+        val imageUri = addServiceViewModel.imageUris[imageNo]
+
+
+        if(imageUri != null ){
+            addServiceViewModel.uploadImagesToServer(imageName,imageUri,object : AddServiceRepository.UploadImageCallback{
+                override fun onProgressUpdate(mb: String) {
+                    updateProgressUi(mb)
+                }
+
+                override fun onUploadFailed(exception: Exception?) {
+                    hideDialog()
+                    Log.d("gallary_debug", "uploadData: uploading image 3 "+ exception?.message)
+                    Toast.makeText(this@AddServiceActivity,"Something went wrong",Toast.LENGTH_LONG).show()
+                }
+
+                override fun onUploadSuccessful(url: String) {
+                    if(!imageHasInServer){
+                        addServiceViewModel.service.feature_images.add(url)
+                    }else{
+                        val lastUrl =
+                            addServiceViewModel.service.feature_images.find { it.contains(imageName) }
+                        val index = addServiceViewModel.service.feature_images.indexOf(lastUrl);
+                        addServiceViewModel.service.feature_images[index] = url
+                    }
+
+                    if(imageNo != 2){
+                        uploadImagesToServer(imageNo+1)
+                    }else{
+                        hideDialog()
+                        updateToDatabase()
+                    }
+
+                }
+
+            })
+        }else if(imageNo !=2){
+            uploadImagesToServer(imageNo+1)
+        }else{
+            hideDialog()
+            updateToDatabase()
+        }
+
+
+
+
+    }
+
+    private fun updateToDatabase() {
         showDialog("Creating service","Please wait...")
-        addServiceViewModel.service.feature_images = imageUrls
         addServiceViewModel.updateDatabase()?.addOnCompleteListener {task->
             if(task.isSuccessful){
 
-                addServiceViewModel.updateSubServices(task.result.id)?.addOnSuccessListener {
+                addServiceViewModel.updateSubServices(addServiceViewModel.service.mServiceId!!)?.addOnSuccessListener {
                     hideDialog()
                     finish()
                 }?.addOnFailureListener {

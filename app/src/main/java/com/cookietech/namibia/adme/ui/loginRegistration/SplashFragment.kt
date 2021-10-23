@@ -59,6 +59,7 @@ class SplashFragment : Fragment() {
                     MODE_CLIENT-> navigateToClientActivity()
                     MODE_SERVICE_PROVIDER -> navigateToServiceActivity()
                 }
+                requireActivity().finish()
             }
 
             override fun onUserCreationFailed(exception: Exception) {

@@ -15,6 +15,8 @@ import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.serviceProvider.today.AddServiceViewModel
 import com.cookietech.namibia.adme.models.SubServicesPOJO
 import kotlinx.android.synthetic.main.fragment_services.*
+import kotlinx.android.synthetic.main.fragment_services.empty_recyclerview_layout
+import kotlinx.android.synthetic.main.layout_empty_recycleview.*
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -73,20 +75,22 @@ class ServicesFragment : Fragment(),
         viewmodel.subServicesLiveData.value?.let {
             if (it.size <= 0) {
                 ad_service_recyclerView.visibility = View.GONE
-                empty_recyclerview_layout.visibility = View.VISIBLE
+                empty_recyclerview.visibility = View.VISIBLE
             }else{
                 addServiceAdapter.setServiceList(it)
             }
         } ?: kotlin.run {
             ad_service_recyclerView.visibility = View.GONE
-            empty_recyclerview_layout.visibility = View.VISIBLE
+            empty_recyclerview.visibility = View.VISIBLE
         }
 
         viewmodel.subServicesLiveData.observe(viewLifecycleOwner, { services->
             services?.let { it1 ->
-                ad_service_recyclerView.visibility = View.VISIBLE
-                empty_recyclerview_layout.visibility = View.GONE
-                addServiceAdapter.setServiceList(it1)
+                if(it1.size > 0){
+                    ad_service_recyclerView.visibility = View.VISIBLE
+                    empty_recyclerview.visibility = View.GONE
+                    addServiceAdapter.setServiceList(it1)
+                }
             }
         })
 

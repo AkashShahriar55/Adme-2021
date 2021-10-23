@@ -21,6 +21,7 @@ import com.cookietech.namibia.adme.architecture.common.CommonViewModel
 import com.cookietech.namibia.adme.architecture.serviceProvider.ServiceProviderViewModel
 import com.cookietech.namibia.adme.interfaces.ServiceProviderDataCallback
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_client.*
 import kotlinx.android.synthetic.main.activity_service_provider.*
 import java.lang.Exception
 
@@ -55,6 +56,29 @@ class ServiceProviderActivity : AppCompatActivity() {
         navController = navHostFragment.findNavController()
         service_provider_bottom_nav.setupWithNavController(navController)
 
+        service_provider_bottom_nav.setOnItemReselectedListener{
+            Log.d("nav_debug", "onCreate: ${it.itemId} ${R.id.today_navigation} ${R.id.chat_navigation} ${R.id.income_navigation} ${R.id.profile_navigation}")
+            when(it.itemId){
+
+                R.id.today_navigation-> {
+
+                    navController.popBackStack(R.id.todayFragment,false)
+
+                }
+                R.id.chat_navigation-> {
+
+                    navController.popBackStack(R.id.leaderBoardFragment,false)
+                }
+                R.id.income_navigation-> {
+
+                    navController.popBackStack(R.id.incomeFragment,false)
+                }
+                R.id.profile_navigation-> {
+                    navController.popBackStack(R.id.service_provider_profileFragment,false)
+                }
+            }
+        }
+
     }
 
     override fun onNavigateUp(): Boolean {
@@ -65,8 +89,17 @@ class ServiceProviderActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         Log.d("navigation_debug", "onBackPressed: " )
+        val currentFragment = navController.currentDestination?.id
+        Log.d("nav_debug", "onBackPressed: $currentFragment ${R.id.todayFragment}")
+        if(service_provider_bottom_nav.selectedItemId == R.id.today_navigation && currentFragment == R.id.todayFragment ){
+            AlertDialog.Builder(this@ServiceProviderActivity).setMessage("Do you want to exit?")
+                .setPositiveButton("Yes"
+                ) { p0, p1 -> finishAffinity() }.setNegativeButton("No"
+                ) { p0, p1 -> p0?.dismiss() }.create().show()
+        }else{
+            super.onBackPressed()
+        }
 
-        super.onBackPressed()
     }
 
     override fun onSupportNavigateUp(): Boolean {

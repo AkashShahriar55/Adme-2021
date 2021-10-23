@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.cookietech.namibia.adme.BuildConfig
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.serviceProvider.today.AddServiceViewModel
@@ -92,9 +93,11 @@ class GalleryFragment : Fragment() {
     private fun updateGalleryImage() {
         if (viewmodel.isServiceUpdate){
             for ((index, img_url) in viewmodel.service.feature_images.withIndex()){
+                Log.d("gallery_debug", "updateGalleryImage: $img_url")
                 if(index == 0){
                     Glide.with(requireContext())
                         .load(img_url)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .fitCenter()
                         .into(service_image_1)
                 }
@@ -102,12 +105,14 @@ class GalleryFragment : Fragment() {
                     Glide.with(requireContext())
                         .load(img_url)
                         .fitCenter()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(service_image_2)
                 }
                 else if (index == 2){
                     Glide.with(requireContext())
                         .load(img_url)
                         .fitCenter()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(service_image_3)
                 }
             }

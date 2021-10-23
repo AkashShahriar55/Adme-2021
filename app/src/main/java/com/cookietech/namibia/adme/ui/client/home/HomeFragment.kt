@@ -13,7 +13,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -26,6 +25,8 @@ import com.bumptech.glide.request.transition.Transition
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.client.home.ClientHomeViewModel
 import com.cookietech.namibia.adme.architecture.client.home.NearbyServiceCallback
+import com.cookietech.namibia.adme.extensions.openNetworkSetting
+import com.cookietech.namibia.adme.managers.ConnectionManager
 import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.models.ServiceCategory
 import com.cookietech.namibia.adme.models.ServicesPOJO
@@ -45,6 +46,7 @@ import kotlinx.android.synthetic.main.fragment_home.client_notification_btn
 import kotlinx.android.synthetic.main.fragment_home.map
 import kotlinx.android.synthetic.main.fragment_home.today_notification_badge
 import kotlinx.android.synthetic.main.fragment_today.*
+import kotlinx.android.synthetic.main.networ_error.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -80,12 +82,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
     val nearbyServicesObserver = Observer<ArrayList<ServicesPOJO>> { services ->
-        services?.apply {
+
+        if(!services.isNullOrEmpty()){
             Log.d("map_service", "initializeObservers: service asche " + services.size)
 
-            userRefToServicesMap  = this.groupBy { it.user_ref }
+            userRefToServicesMap  = services.groupBy { it.user_ref }
 
-            categoryIds = this.map { it.categoryId }.distinctBy { it }
+            categoryIds = services.map { it.categoryId }.distinctBy { it }
             Log.d("category_debug", "nearbyServicesObserver: $categoryIds")
 
 
@@ -101,7 +104,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             isBottomSheetVisible= true
+        }else{
 
+            map_loader.visibility = View.GONE
         }
     }
 
@@ -121,6 +126,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 viewModel.fetchNearbyServices(latitude,longitude)
             } }
         }
+
+
     }
 
     override fun onCreateView(
@@ -142,6 +149,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         }
         initializeServicesRecyclerView()
         initializeClicksAndViews()
+        ConnectionManager.networkAvailability.observe(viewLifecycleOwner,{
+            if(it == false){
+                showNetworkErrorMessage()
+            }else{
+                hideNetworkErrorMessage()
+            }
+        })
     }
 
     private fun initializeClicksAndViews() {
@@ -194,6 +208,17 @@ class HomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             }
 
         })
+    }
+
+    private fun showNetworkErrorMessage() {
+        network_error_holder_home.visibility = View.VISIBLE
+        network_error_holder_home.tv_network_setting.setOnClickListener {
+            requireContext().openNetworkSetting()
+        }
+    }
+
+    private fun hideNetworkErrorMessage() {
+        network_error_holder_home.visibility = View.GONE
     }
 
     private fun initializeObservers() {

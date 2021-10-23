@@ -22,7 +22,7 @@ class ServicesPOJO():Parcelable {
      var description: String? = null
      var latitude:String? = null
      var longitude:String? = null
-     var feature_images: List<String> = ArrayList()
+     var feature_images: MutableList<String> = ArrayList()
      var tags: String? = null
      var status: Boolean = true
      @Exclude

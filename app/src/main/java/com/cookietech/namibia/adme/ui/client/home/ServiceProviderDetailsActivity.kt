@@ -374,6 +374,7 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         tv_service_added.setText(selected_service_text)
+        tv_service_money.setText("$sum")
         tv_item_count.text = selected_service_count
         tv_total_price.text = "$ $sum"
     }
@@ -391,6 +392,8 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun setUpServiceProviderInfo() {
         tv_username.text = service?.user_name
         tv_catagory.text = service?.category
+
+
 
 
         Glide.with(this)
