@@ -1,5 +1,9 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable require-jsdoc */
+/** quotation */
+/** welcome */
+/** profile */
+/** none */
 const functions = require("firebase-functions");
 
 const admin = require("firebase-admin");
@@ -665,6 +669,124 @@ exports.updateQuotationNotification = functions.firestore
         promises.push(p4);
 
         return Promise.all(promises);
+      } else if (status === "client_request_canceled") {
+        // delete appointment
+        const promises = [];
+        const notifTextSp ="Your Quotation has been canceled by " +
+                              newValue.client_name;
+        const notifTextClient = "Your Quotation has been canceled. " +
+                          "Please Visit Service Provider profile "+
+                          " to send Quotation again";
+        const notifTime = admin.firestore.FieldValue.serverTimestamp();
+        const p1 = db
+            .collection("Adme_Appointment_list")
+            .doc(appointmentId)
+            .delete();
+        promises.push(p1);
+
+        const p2 = db.collection("Adme_User/"+spId+"/notification_list").add({
+          text: notifTextSp,
+          time: notifTime,
+          mode: "service_provider",
+          type: "quotation",
+          reference: appointmentId,
+          img_url: clientPic,
+          isSeen: false,
+          pushable: true,
+
+        });
+
+        promises.push(p2);
+
+        const p3 = db.collection("Adme_User/"+clinetId+"/notification_list")
+            .add({
+              text: notifTextClient,
+              time: notifTime,
+              mode: "client",
+              type: "profile",
+              reference: spId,
+              img_url: spPic,
+              isSeen: false,
+              pushable: false,
+
+            });
+
+        promises.push(p3);
+
+        const p4 = db.collection("Adme_User").doc(spId)
+            .set({
+              hasUnreadNotifSP: true,
+
+            }, {merge: true});
+        promises.push(p4);
+
+        const p5 = db.collection("Adme_User").doc(clinetId)
+            .set({
+              hasUnreadNotifClient: true,
+
+            }, {merge: true});
+        promises.push(p5);
+
+        return Promise.all(promises);
+      } else if (status === "provider_request_cancel") {
+        // delete appointment
+        const promises = [];
+        const notifTextSp ="Your Quotation with" +
+                          newValue.client_name +" has been canceled";
+        const notifTextClient = "Your Quotation has been canceled. " +
+                          "Please Visit Service Provider profile "+
+                          " to send Quotation again";
+        const notifTime = admin.firestore.FieldValue.serverTimestamp();
+        const p1 = db
+            .collection("Adme_Appointment_list")
+            .doc(appointmentId)
+            .delete();
+        promises.push(p1);
+
+        const p2 = db.collection("Adme_User/"+spId+"/notification_list").add({
+          text: notifTextSp,
+          time: notifTime,
+          mode: "service_provider",
+          type: "quotation",
+          reference: appointmentId,
+          img_url: clientPic,
+          isSeen: false,
+          pushable: true,
+
+        });
+
+        promises.push(p2);
+
+        const p3 = db.collection("Adme_User/"+clinetId+"/notification_list")
+            .add({
+              text: notifTextClient,
+              time: notifTime,
+              mode: "client",
+              type: "profile",
+              reference: spId,
+              img_url: spPic,
+              isSeen: false,
+              pushable: false,
+
+            });
+
+        promises.push(p3);
+
+        const p4 = db.collection("Adme_User").doc(spId)
+            .set({
+              hasUnreadNotifSP: true,
+
+            }, {merge: true});
+        promises.push(p4);
+
+        const p5 = db.collection("Adme_User").doc(clinetId)
+            .set({
+              hasUnreadNotifClient: true,
+
+            }, {merge: true});
+        promises.push(p5);
+
+        return Promise.all(promises);
       } else {
         return null;
       }
@@ -836,4 +958,95 @@ function isNearByService(userLattitude,
   console.log(distance);
   return distance < 5 ? true : false;
 }
+
+/** Update Rating Review */
+exports.updateRatingReview = functions.firestore
+    .document("Adme_User/{userId}/data/service_provider"+
+    "/services/{serviceId}/reviews/{reviewId}")
+    .onCreate((snap, context) => {
+      // Get an object representing the document
+      // e.g. {'name': 'Marie', 'age': 66}
+
+      const promises = [];
+      const review = snap.data();
+      const serviceId = context.params.serviceId;
+      const UserId = context.params.userId;
+      // const reviewId = context.params.reviewId;
+
+      const p1 = db.collection("Adme_User/"+
+          UserId+"/data/service_provider/services")
+          .doc(serviceId)
+          .get()
+          .then((document) => {
+            if (document.exists) {
+              let updatedRrated = 1;
+              let updatedRating = review.rating;
+              if (document.get("rated") !== undefined &&
+                  document.get("rating") !== undefined) {
+                // average rating
+                const prevRated = document.data().rated;
+                const prevRating = document.data().rating;
+
+                updatedRating = ((prevRated*prevRating) +
+                updatedRating)/(prevRated + 1);
+
+                updatedRrated = prevRated + 1;
+              }
+
+              // update rating
+              return db.collection("Adme_User/"+
+                  UserId+"/data/service_provider/services")
+                  .doc(serviceId)
+                  .set({
+                    rated: updatedRrated,
+                    rating: updatedRating,
+
+                  }, {merge: true});
+            } else {
+              console.log("No matching documents.");
+              throw new functions.https.HttpsError("Error", "Found Empty Data");
+            }
+          });
+
+
+      promises.push(p1);
+
+      const p2 = db.collection("Adme_User/"+
+          UserId+"/data")
+          .doc("service_provider")
+          .get()
+          .then((document) => {
+            if (document.exists) {
+              let updatedRrated = 1;
+              let updatedRating = review.rating;
+              if (document.get("rated") !== undefined &&
+                  document.get("rating") !== undefined) {
+                // average rating
+                const prevRated = document.data().rated;
+                const prevRating = document.data().rating;
+
+                updatedRating = ((prevRated*prevRating) +
+                updatedRating)/(prevRated + 1);
+
+                updatedRrated = prevRated + 1;
+              }
+
+              // update rating
+              return db.collection("Adme_User/"+
+                  UserId+"/data")
+                  .doc("service_provider")
+                  .set({
+                    rated: updatedRrated,
+                    rating: updatedRating,
+
+                  }, {merge: true});
+            } else {
+              console.log("No matching documents.");
+              throw new functions.https.HttpsError("Error", "Found Empty Data");
+            }
+          });
+      promises.push(p2);
+
+      return Promise.all(promises);
+    });
 
