@@ -95,7 +95,7 @@ class MarkerClickDetailsDialog(): BottomSheetDialogFragment() {
                 if(messageClicked){
                     firebaseVm.setReceiver(user)
                     val request = NavDeepLinkRequest.Builder
-                        .fromUri("android-app://example.google.app/chat_fragment".toUri())
+                        .fromUri("android-app://example.google.app/chatFragment2".toUri())
                         .build()
                     findNavController().navigate(request)
 

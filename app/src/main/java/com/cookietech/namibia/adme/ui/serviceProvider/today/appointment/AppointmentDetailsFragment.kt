@@ -224,6 +224,14 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                     setUpUiForClientCompletionApprovedClient()
                 }
             }
+            Status.status_client_completion_declined->{
+                stateUiCompletedActive()
+                if (SharedPreferenceManager.user_mode == AppComponent.MODE_SERVICE_PROVIDER) {
+                    setUpUiForProviderResponseApproveProvider()
+                } else {
+                    setUpUiForProviderResponseApproveClient()
+                }
+            }
             Status.status_provider_receipt_sent->{
                 stateUiPaymentActive()
                 if (SharedPreferenceManager.user_mode == AppComponent.MODE_SERVICE_PROVIDER) {
@@ -240,7 +248,45 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                     setUpUiForPaymentCompletedClient()
                 }
             }
+            Status.status_client_request_cancel->{
+                stateUiAllInactive()
+                setUpUiForAppointmentCanceled(true)
+            }
+            Status.status_provider_request_cancel->{
+                stateUiAllInactive()
+                setUpUiForAppointmentCanceled(false)
+            }
         }
+    }
+
+    private fun setUpUiForAppointmentCanceled(isClient: Boolean) {
+        service_provider_response_holder.visibility = View.GONE
+        if(!appointment?.service_provider_quotation.isNullOrEmpty()&& !appointment?.service_provider_price.isNullOrEmpty()){
+            service_provider_response.visibility = View.VISIBLE
+            tv_provider_text.text = appointment?.service_provider_quotation
+            tv_provider_price.text = "Needed Money: $${appointment?.service_provider_price}"
+        }else{
+            service_provider_response.visibility = View.GONE
+        }
+        fab_call.visibility = View.GONE
+
+        message_holder.visibility = View.VISIBLE
+        accept_decline_holder.visibility = View.INVISIBLE
+        if(appointment?.approved == true){
+            tv_clint_money.text = "$ ${appointment?.service_provider_price}"
+        }else{
+            tv_clint_money.text = "$ ${appointment?.client_price}"
+        }
+
+
+        if(isClient)
+            tv_status_message.text = "This appointment was canceled by ${appointment?.client_name}"
+        else
+            tv_status_message.text = "This appointment was canceled by ${appointment?.service_provider_name}"
+        tv_status_message.setTextColor(ContextCompat.getColor(
+            requireContext(),
+            R.color.red
+        ))
     }
 
     private fun setUpUiForPaymentCompletedClient() {
@@ -405,6 +451,55 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
 
             }
         }
+    }
+
+    private fun stateUiAllInactive() {
+        iv_state_pending.setImageDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_state_inactive,
+                null
+            )
+        )
+        pending_confirme_line.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.border_ash
+            )
+        )
+        iv_state_confirmed.setImageDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_state_inactive,
+                null
+            )
+        )
+        confirm_complete_line.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.border_ash
+            )
+        )
+        iv_state_completed.setImageDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_state_inactive,
+                null
+            )
+        )
+        complete_payment_line.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.border_ash
+            )
+        )
+        iv_state_payment.setImageDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_state_inactive,
+                null
+            )
+        )
     }
 
 
@@ -607,12 +702,15 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
 
 
     private fun sendWorkCompleted() {
+        dialog.show()
+        dialog.updateTitle("Processing")
         appointment?.apply {
             state = Status.status_provider_work_completed
             viewmodel.sendWorkCompleted(this).addOnSuccessListener {
                 setUpUiForProviderWorkCompletedProvider()
+                dialog.hide()
             }.addOnFailureListener {
-
+                dialog.hide()
             }
         }
     }
@@ -822,6 +920,10 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                 startActivity(intent)
             }
         }
+
+        negative_button.setOnClickListener {
+            cancelAppointment(true)
+        }
     }
 
     private fun setUpUiForProviderResponseApproveProvider() {
@@ -857,6 +959,10 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
         positive_button.setOnClickListener {
             sendWorkCompleted()
         }
+
+        negative_button.setOnClickListener {
+            cancelAppointment(false)
+        }
     }
 
     private fun setUpUiForProviderWorkCompletedProvider() {
@@ -888,6 +994,25 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
 
         positive_button.setOnClickListener {
             approveProviderWorkCompletion()
+        }
+
+        negative_button.setOnClickListener {
+            declineProviderWorkCompletion()
+        }
+    }
+
+    private fun declineProviderWorkCompletion() {
+        dialog.show()
+        dialog.updateTitle("Declining")
+        appointment?.apply {
+            approved = false
+            state = Status.status_client_completion_declined
+            viewmodel.declineServiceProviderWorkCompletion(this).addOnSuccessListener {
+                setUpUiForProviderResponseApproveClient()
+                dialog.hide()
+            }.addOnFailureListener {
+                dialog.hide()
+            }
         }
     }
 
@@ -925,13 +1050,16 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun approveProviderWorkCompletion() {
+        dialog.show()
+        dialog.updateTitle("Approving")
         appointment?.apply {
             state = Status.status_client_completion_approve
             viewmodel.approveProviderWorkCompletion(this).addOnSuccessListener {
                 stateUiPaymentActive()
                 setUpUiForClientCompletionApprovedClient()
+                dialog.hide()
             }.addOnFailureListener {
-
+                dialog.hide()
             }
         }
     }

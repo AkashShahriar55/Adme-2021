@@ -103,4 +103,8 @@ class AppointmentViewModel:ViewModel() {
     fun declineServiceProviderResponse(appointmentPOJO: AppointmentPOJO): Task<Void> {
         return repository.updateAppointment(appointmentPOJO)
     }
+
+    fun declineServiceProviderWorkCompletion(appointmentPOJO: AppointmentPOJO):  Task<Void> {
+        return repository.updateAppointment(appointmentPOJO)
+    }
 }

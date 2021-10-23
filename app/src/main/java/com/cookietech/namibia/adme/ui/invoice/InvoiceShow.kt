@@ -144,7 +144,7 @@ class InvoiceShow : Fragment() {
             document.close()
             file.setReadable(true, false)
             SharePdf(file)
-            btn_send_invoice.visibility = View.VISIBLE
+//            btn_send_invoice.visibility = View.VISIBLE
         } catch (e: IOException) {
             e.printStackTrace()
         }

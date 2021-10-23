@@ -27,9 +27,18 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MyDealsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+const val ALL_DEALS ="all_deals"
+const val ACTIVE_DEALS = "active_deals"
+const val COMPLETED_DEALS = "completed_deals"
+const val CANCELLED_DEALS = "cancelled_deals"
 class MyDealsFragment : Fragment() {
     private var allAppointments: ArrayList<AppointmentPOJO>? = null
     private lateinit var adapter: AppointmentAdapter
+
+    private var filterIndex = ALL_DEALS
+
+
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -67,7 +76,21 @@ class MyDealsFragment : Fragment() {
         appointment_shimmer_holder.stopShimmerAnimation()
         appointment_shimmer_holder.visibility = View.GONE
         allAppointments = appointments
-        adapter.appointments = appointments
+        when(filterIndex){
+            ALL_DEALS->{
+                adapter.appointments = appointments
+            }
+            ACTIVE_DEALS->{
+                adapter.appointments = appointments.filter { it.state !in arrayOf(Status.status_client_request_cancel,Status.status_provider_request_cancel,Status.status_payment_completed) } as ArrayList<AppointmentPOJO>
+            }
+            COMPLETED_DEALS->{
+                adapter.appointments = appointments.filter { it.state in arrayOf(Status.status_payment_completed) } as ArrayList<AppointmentPOJO>
+            }
+            CANCELLED_DEALS->{
+                adapter.appointments = appointments.filter { it.state in arrayOf(Status.status_client_request_cancel,Status.status_provider_request_cancel) } as ArrayList<AppointmentPOJO>
+            }
+        }
+
     }
 
     private fun initializeObserver() {
@@ -86,18 +109,22 @@ class MyDealsFragment : Fragment() {
         allAppointments?.let {deals->
             when(item.itemId){
                 R.id.all_deals->{
+                    filterIndex = ALL_DEALS
                     toolbar.title = "All Deals"
                     adapter.appointments = deals
                 }
                 R.id.active_deals->{
+                    filterIndex = ACTIVE_DEALS
                     toolbar.title = "Active Deals"
                     adapter.appointments = deals.filter { it.state !in arrayOf(Status.status_client_request_cancel,Status.status_provider_request_cancel,Status.status_payment_completed) } as ArrayList<AppointmentPOJO>
                 }
                 R.id.completed_deals->{
+                    filterIndex = COMPLETED_DEALS
                     toolbar.title = "Completed Deals"
                     adapter.appointments = deals.filter { it.state in arrayOf(Status.status_payment_completed) } as ArrayList<AppointmentPOJO>
                 }
                 R.id.canceled_deals->{
+                    filterIndex = CANCELLED_DEALS
                     toolbar.title = "Canceled Deals"
                     adapter.appointments = deals.filter { it.state in arrayOf(Status.status_client_request_cancel,Status.status_provider_request_cancel) } as ArrayList<AppointmentPOJO>
                 }

@@ -23,6 +23,7 @@ class AppointmentDiffUtilsCallback(private val oldList: ArrayList<AppointmentPOJ
         return oldList[oldItemPosition].id == newList[newItemPosition].id &&
                 oldList[oldItemPosition].client_ref == newList[newItemPosition].client_ref &&
                 oldList[oldItemPosition].service_ref == newList[newItemPosition].service_ref &&
+                oldList[oldItemPosition].state == newList[newItemPosition].state &&
                 oldList[oldItemPosition].service_provider_ref == newList[newItemPosition].service_provider_ref
     }
 }

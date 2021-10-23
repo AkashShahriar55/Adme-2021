@@ -18,6 +18,6 @@
         android:name="com.cookietech.namibia.adme.chatmodule.view.chatRoom.ChatFragment"
         android:label="ChatFragment" >
         <deepLink
-            app:uri="android-app://example.google.app/chat_fragment" />
+            app:uri="android-app://example.google.app/chatFragment2" />
     </fragment>
 </navigation>
