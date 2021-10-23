@@ -84,7 +84,12 @@ class ServiceProviderRepository {
 
     fun fetchAllServices(callback:AllServiceFetch) {
         FirebaseManager.currentUser?.apply {
-             FirebaseManager.mUserRef.document(user_id).collection("data").document("service_provider").collection("services").addSnapshotListener { value, error ->
+             FirebaseManager.mUserRef
+                 .document(user_id)
+                 .collection("data")
+                 .document("service_provider")
+                 .collection("services")
+                 .addSnapshotListener { value, error ->
                  Log.d("database_debug", "fetchAllServices: ")
                  error?.let {
                      callback.onFetchFailed(it)

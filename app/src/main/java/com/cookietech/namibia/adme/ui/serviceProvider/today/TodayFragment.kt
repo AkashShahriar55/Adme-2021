@@ -28,6 +28,7 @@ import com.cookietech.namibia.adme.Application.Status
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.serviceProvider.ServiceProviderViewModel
 import com.cookietech.namibia.adme.extensions.openNetworkSetting
+import com.cookietech.namibia.adme.helper.IncomeHelper
 import com.cookietech.namibia.adme.interfaces.ServiceProviderDataCallback
 import com.cookietech.namibia.adme.managers.ConnectionManager
 import com.cookietech.namibia.adme.managers.FirebaseManager
@@ -544,7 +545,7 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
             isbottomSheetVisible = true
 
             serviceProviderPOJO?.apply {
-                tv_total_income.text = total_income.toString()
+                tv_total_income.text = IncomeHelper.getTotalIncome(total_income)
                 tv_income_today.text = monthly_income.toString()
                 tv_due.text = monthly_due.toString()
                 tv_pressed_today.text = pressed.toString()

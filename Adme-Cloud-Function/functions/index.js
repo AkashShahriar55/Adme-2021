@@ -416,19 +416,19 @@ exports.deleteAppointment= functions.firestore
             console.log("Error getting documents", err);
           });
 
-      const p4 = db.collection("Adme_User").doc(spId)
-          .set({
-            hasUnreadNotifSP: false,
+      // const p4 = db.collection("Adme_User").doc(spId)
+      //     .set({
+      //       hasUnreadNotifSP: false,
 
-          }, {merge: true});
-      promises.push(p4);
+      //     }, {merge: true});
+      // promises.push(p4);
 
-      const p5 = db.collection("Adme_User").doc(clientId)
-          .set({
-            hasUnreadNotifClient: false,
+      // const p5 = db.collection("Adme_User").doc(clientId)
+      //     .set({
+      //       hasUnreadNotifClient: false,
 
-          }, {merge: true});
-      promises.push(p5);
+      //     }, {merge: true});
+      // promises.push(p5);
       return Promise.all(promises);
     });
 
@@ -620,7 +620,7 @@ exports.updateQuotationNotification = functions.firestore
         const today = new Date();
         const year = today.getFullYear();
         const month = monthNames[today.getMonth()];
-        const incomeRef = year + "-" + month;
+        // const incomeRef = year + "-" + month;
         const promises = [];
         const due = totalIncome * duePercentage;
 
@@ -639,9 +639,9 @@ exports.updateQuotationNotification = functions.firestore
         promises.push(p1);
 
 
-        const ref = "/data/service_provider/income_history";
-        const p2 = db.collection("Adme_User/"+spId+ref)
-            .doc(incomeRef)
+        const ref = "/data/service_provider/income_history/monthly_income/";
+        const p2 = db.collection("Adme_User/"+spId+ref+year)
+            .doc(month)
             .set({
               monthly_income: admin.firestore.FieldValue.increment(totalIncome),
               monthly_due: admin.firestore.FieldValue.increment(due),
@@ -678,11 +678,35 @@ exports.updateQuotationNotification = functions.firestore
                           "Please Visit Service Provider profile "+
                           " to send Quotation again";
         const notifTime = admin.firestore.FieldValue.serverTimestamp();
-        const p1 = db
-            .collection("Adme_Appointment_list")
-            .doc(appointmentId)
-            .delete();
-        promises.push(p1);
+        // const p1 = db
+        //     .collection("Adme_Appointment_list")
+        //     .doc(appointmentId)
+        //     .delete();
+        // promises.push(p1);
+
+        db.collection("Adme_User/"+spId+"/notification_list")
+            .where("reference", "==", appointmentId)
+            .get().then((snapshot) => {
+              snapshot.forEach((doc) => {
+                const p = doc.ref.delete();
+                promises.push(p);
+              });
+            })
+            .catch((err) => {
+              console.log("Error getting documents", err);
+            });
+
+        db.collection("Adme_User/"+clinetId+"/notification_list")
+            .where("reference", "==", appointmentId)
+            .get().then((snapshot) => {
+              snapshot.forEach((doc) => {
+                const p = doc.ref.delete();
+                promises.push(p);
+              });
+            })
+            .catch((err) => {
+              console.log("Error getting documents", err);
+            });
 
         const p2 = db.collection("Adme_User/"+spId+"/notification_list").add({
           text: notifTextSp,
@@ -737,11 +761,35 @@ exports.updateQuotationNotification = functions.firestore
                           "Please Visit Service Provider profile "+
                           " to send Quotation again";
         const notifTime = admin.firestore.FieldValue.serverTimestamp();
-        const p1 = db
-            .collection("Adme_Appointment_list")
-            .doc(appointmentId)
-            .delete();
-        promises.push(p1);
+        // const p1 = db
+        //     .collection("Adme_Appointment_list")
+        //     .doc(appointmentId)
+        //     .delete();
+        // promises.push(p1);
+
+        db.collection("Adme_User/"+spId+"/notification_list")
+            .where("reference", "==", appointmentId)
+            .get().then((snapshot) => {
+              snapshot.forEach((doc) => {
+                const p = doc.ref.delete();
+                promises.push(p);
+              });
+            })
+            .catch((err) => {
+              console.log("Error getting documents", err);
+            });
+
+        db.collection("Adme_User/"+clinetId+"/notification_list")
+            .where("reference", "==", appointmentId)
+            .get().then((snapshot) => {
+              snapshot.forEach((doc) => {
+                const p = doc.ref.delete();
+                promises.push(p);
+              });
+            })
+            .catch((err) => {
+              console.log("Error getting documents", err);
+            });
 
         const p2 = db.collection("Adme_User/"+spId+"/notification_list").add({
           text: notifTextSp,
@@ -785,6 +833,54 @@ exports.updateQuotationNotification = functions.firestore
 
             }, {merge: true});
         promises.push(p5);
+
+        return Promise.all(promises);
+      } else if (status === "provider_response_decline") {
+        // client declines. send notification to service provider
+        const promises = [];
+        const notifTextSp =newValue.client_name +
+                            "Declined your Quotation response";
+        // const notifTextClient = "Your Quotation has been canceled. " +
+        //                   "Please Visit Service Provider profile "+
+        //                   " to send Quotation again";
+        const notifTime = admin.firestore.FieldValue.serverTimestamp();
+        const p2 = db.collection("Adme_User/"+spId+"/notification_list").add({
+          text: notifTextSp,
+          time: notifTime,
+          mode: "service_provider",
+          type: "quotation",
+          reference: appointmentId,
+          img_url: clientPic,
+          isSeen: false,
+          pushable: true,
+
+        });
+
+        promises.push(p2);
+
+        return Promise.all(promises);
+      } else if (status === "client_completion_denied") {
+        // client declines. send notification to service provider
+        const promises = [];
+        const notifTextSp =newValue.client_name +
+                            "Declined your service completion";
+        // const notifTextClient = "Your Quotation has been canceled. " +
+        //                   "Please Visit Service Provider profile "+
+        //                   " to send Quotation again";
+        const notifTime = admin.firestore.FieldValue.serverTimestamp();
+        const p2 = db.collection("Adme_User/"+spId+"/notification_list").add({
+          text: notifTextSp,
+          time: notifTime,
+          mode: "service_provider",
+          type: "quotation",
+          reference: appointmentId,
+          img_url: clientPic,
+          isSeen: false,
+          pushable: true,
+
+        });
+
+        promises.push(p2);
 
         return Promise.all(promises);
       } else {
