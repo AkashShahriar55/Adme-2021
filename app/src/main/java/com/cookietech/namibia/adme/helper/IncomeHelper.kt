@@ -6,8 +6,8 @@ import java.util.*
 
 object IncomeHelper {
 
-    val monthNames = arrayListOf("January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December")
+    private val monthNames = arrayListOf("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
     fun getTotalIncome(totalIncome: Double) : String{
         //Log.d("income_debug", "getTotalIncome: ${totalIncome/100000}")
@@ -26,6 +26,10 @@ object IncomeHelper {
         /*Log.d("income_debug", "year: $year")
         Log.d("income_debug", "month: ${monthNames[month]}")*/
         return "$year-$month"
+    }
+
+    fun getMonthIndex(month: String): Int {
+        return monthNames.indexOf(month)
     }
     fun getCurrentYear(): String{
         val c: Calendar = Calendar.getInstance()

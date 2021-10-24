@@ -8,42 +8,46 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
+import com.hadiidbouk.charts.BarData
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class IncomeRepository {
 
     private val listeners:ArrayList<ListenerRegistration>  = ArrayList()
 
-    fun getCurrentMonthIncome(callback: CurrentMonthIncomeCallback){
 
+
+    fun getIncomeHistory(callback: IncomeHistoryCallback){
         FirebaseManager.currentUser?.apply {
-           val listener = FirebaseManager.mUserRef
+            FirebaseManager.mUserRef
                 .document(user_id)
                 .collection("data")
                 .document("service_provider")
                 .collection("income_history")
                 .document("monthly_income")
-               .collection(IncomeHelper.getCurrentYear())
-               .document(IncomeHelper.getCurrentMonth())
-                .addSnapshotListener{ snapshot, error ->
-                    if (error != null) {
-                        Log.d("monthly_income_debug", "Listen failed.", error)
-                        callback.onCurrentMonthIncomeError()
-                        return@addSnapshotListener
+                .collection(IncomeHelper.getCurrentYear())
+                .get()
+                .addOnSuccessListener { result ->
+                    val history = TreeMap<Int, BarData>()
+                    for (doc in result) {
+                        Log.d("income_history_debug", "${doc.id} => ${doc.data}")
+                        doc.getLong("monthly_income")?.let {
+                            //cities.add(it)
+                            history.put(IncomeHelper.getMonthIndex(doc.id),
+                                BarData(doc.id,it.toFloat(),it.toString())
+                            )
+                        }
                     }
 
-                    if (snapshot != null && snapshot.exists()) {
-                        Log.d("monthly_income_debug", "Current data: ${snapshot.data}")
+                    callback.onIncomeHistoryFetchSuccess(history)
 
-                        callback.onCurrentMonthIncomeFetchSuccess(
-                            snapshot.data?.get("monthly_due") as Long,
-                            snapshot.data?.get("monthly_income") as Long
-                        )
-                    } else {
-                        callback.onCurrentMonthIncomeError()
-                        Log.d("monthly_income_debug", "Current data: null")
-                    }
                 }
-            listeners.add(listener)
+                .addOnFailureListener { exception ->
+                    Log.d("income_history_debug", "Error getting documents: ", exception)
+
+                }
         }
 
     }
@@ -54,8 +58,9 @@ class IncomeRepository {
         }
     }
 
-    interface CurrentMonthIncomeCallback{
-        fun onCurrentMonthIncomeFetchSuccess(monthlyDue: Long, monthlyIncome: Long)
-        fun onCurrentMonthIncomeError()
+
+    interface IncomeHistoryCallback{
+        fun onIncomeHistoryFetchSuccess(history: TreeMap<Int, BarData>)
+        fun onIncomeHistoryFetchError()
     }
 }

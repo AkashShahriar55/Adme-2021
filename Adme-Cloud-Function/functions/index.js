@@ -12,8 +12,8 @@ const db = admin.firestore();
 const GeoPoint = require("geopoint");
 
 const Fuse = require("fuse.js");
-const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 ];
 
 const duePercentage = 0.1;

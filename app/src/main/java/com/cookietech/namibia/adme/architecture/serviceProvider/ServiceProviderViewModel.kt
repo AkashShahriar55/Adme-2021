@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.cookietech.namibia.adme.architecture.serviceProvider.income.IncomeRepository
 import com.cookietech.namibia.adme.architecture.serviceProvider.today.ServiceProviderRepository
 import com.cookietech.namibia.adme.interfaces.ServiceProviderDataCallback
 import com.cookietech.namibia.adme.managers.FirebaseManager
@@ -12,6 +13,7 @@ import com.cookietech.namibia.adme.models.AppointmentPOJO
 import com.cookietech.namibia.adme.models.ServiceProviderPOJO
 import com.cookietech.namibia.adme.models.ServicesPOJO
 import com.cookietech.namibia.adme.utils.GoogleMapUtils
+import com.cookietech.namibia.adme.utils.SingleLiveEvent
 import java.lang.Exception
 
 class ServiceProviderViewModel: ViewModel() {
@@ -20,12 +22,17 @@ class ServiceProviderViewModel: ViewModel() {
     val repository = ServiceProviderRepository()
     val services = MutableLiveData<ArrayList<ServicesPOJO>>()
     val observableAppointments = MutableLiveData<ArrayList<AppointmentPOJO>>()
+    val monthlyDueListener =  MutableLiveData<Long>()
+    val monthlyIncomeListener =  MutableLiveData<Long>()
 
     init {
         Log.d(TAG, " view model initiated : ")
         services.value = ArrayList()
+        monthlyDueListener.value = 0.toLong()
+        monthlyIncomeListener.value = 0.toLong()
         fetchAllServices()
         fetchAllAppointments()
+        getCurrentMonthIncome()
     }
 
     private fun fetchAllAppointments() {
@@ -58,6 +65,27 @@ class ServiceProviderViewModel: ViewModel() {
 
     fun generateMarkerBitmap(requireContext: Context, decodeResource: Bitmap): Bitmap? {
         return GoogleMapUtils.generateMarkerBitmap(requireContext,decodeResource)
+    }
+
+    private fun getCurrentMonthIncome(){
+        repository.getCurrentMonthIncome(object : ServiceProviderRepository.CurrentMonthIncomeCallback{
+            override fun onCurrentMonthIncomeFetchSuccess(
+                monthlyDue: Long,
+                monthlyIncome: Long
+            ) {
+
+                monthlyDueListener.value = monthlyDue
+                monthlyIncomeListener.value = monthlyIncome
+
+            }
+
+            override fun onCurrentMonthFetchIncomeError() {
+                monthlyDueListener.value = 0.toLong()
+                monthlyIncomeListener.value = 0.toLong()
+
+            }
+
+        })
     }
 
 

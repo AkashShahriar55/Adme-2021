@@ -65,12 +65,20 @@ class IncomeFragment : Fragment() {
 
     private fun initializeObserver() {
 
-        incomeViewModel.monthlyDueListener.observe(viewLifecycleOwner, {
+        serviceProviderViewModel.monthlyDueListener.observe(viewLifecycleOwner, {
+            Log.d("vulvul2_debug", "initializeObserver: ${it.toString().trim()}")
             binding.tvTotDueVal.text = it.toString().trim()
         })
 
-        incomeViewModel.monthlyIncomeListener.observe(viewLifecycleOwner, {
+        serviceProviderViewModel.monthlyIncomeListener.observe(viewLifecycleOwner, {
+            Log.d("vulvul2_debug", "initializeObserver: ${it.toString().trim()}")
             binding.tvTotIncomeVal.text = it.toString().trim()
+        })
+
+        incomeViewModel.incomeHistoryListener.observe(viewLifecycleOwner, { dataList->
+            dataList.maxByOrNull { it.barValue }?.let { chart_progress_bar.setMaxValue(it.barValue) }
+            chart_progress_bar.setDataList(dataList)
+            chart_progress_bar.build()
         })
     }
 
@@ -122,7 +130,6 @@ class IncomeFragment : Fragment() {
     }
 
     private fun initializeFields() {
-        createChart()
         setTotalIncome()
         setRequested()
         setCompleted()
@@ -175,35 +182,6 @@ class IncomeFragment : Fragment() {
 //        Toast.makeText(getApplicationContext(), "date : "+sdf.format(myCalendar.getTime()), Toast.LENGTH_SHORT).show();
     }
 
-    private fun createChart() {
-
-        val dataList = ArrayList<BarData>()
-
-        var data = BarData("Sep", 30.4f, "300.4$")
-        dataList.add(data)
-
-        data = BarData("Oct", 42f, "420$")
-        dataList.add(data)
-
-        data = BarData("Nov", 10.8f, "100.8$")
-        dataList.add(data)
-
-        data = BarData("Dec", 87.3f, "870.3$")
-        dataList.add(data)
-
-        data = BarData("Jan", 36.2f, "360.2$")
-        dataList.add(data)
-
-        data = BarData("Feb", 99.3f, "990.3$")
-        dataList.add(data)
-
-        data = BarData("Nov", 71.8f, "710.8$")
-        dataList.add(data)
-
-        chart_progress_bar.setDataList(dataList)
-        chart_progress_bar.build()
-
-    }
 
     companion object {
         @JvmStatic

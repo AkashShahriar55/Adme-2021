@@ -152,6 +152,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/total_income_tv"
                     app:layout_constraintTop_toTopOf="@+id/total_income_tv" />
 
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl10"
                     android:layout_width="0dp"
@@ -164,12 +165,14 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_titel_week_income">
 
+
                     <com.hadiidbouk.charts.ChartProgressBar
                         android:id="@+id/chart_progress_bar"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:gravity="center"
+                        android:isScrollContainer="true"
                         app:hdBarCanBeClick="true"
                         app:hdBarHeight="120dp"
                         app:hdBarRadius="10dp"
@@ -179,7 +182,6 @@
                         app:hdBarTitleTxtSize="12sp"
                         app:hdBarWidth="40dp"
                         app:hdEmptyColor="@color/barChartUnfill"
-                        app:hdMaxValue="100"
                         app:hdPinBackgroundColor="@color/pin_background"
                         app:hdPinDrawable="@drawable/ic_pin"
                         app:hdPinMarginBottom="22dp"

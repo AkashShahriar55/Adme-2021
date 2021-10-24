@@ -167,6 +167,7 @@
     <string name="active_deals">Active Deals</string>
     <string name="completed_deals">Completed Deals</string>
     <string name="canceled_deals">Canceled Deals</string>
+    <string name="monthly_income">Monthly Income</string>
 
 
 </resources>

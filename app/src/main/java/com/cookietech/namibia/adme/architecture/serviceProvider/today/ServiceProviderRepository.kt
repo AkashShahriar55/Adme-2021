@@ -3,6 +3,8 @@ package com.cookietech.namibia.adme.architecture.serviceProvider.today
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.cookietech.namibia.adme.Application.Status
+import com.cookietech.namibia.adme.architecture.serviceProvider.income.IncomeRepository
+import com.cookietech.namibia.adme.helper.IncomeHelper
 import com.cookietech.namibia.adme.interfaces.ServiceProviderDataCallback
 import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.models.AppointmentPOJO
@@ -150,6 +152,46 @@ class ServiceProviderRepository {
         for(listener in listeners){
             listener.remove()
         }
+    }
+
+    fun getCurrentMonthIncome(callback: CurrentMonthIncomeCallback){
+
+        FirebaseManager.currentUser?.apply {
+            val listener = FirebaseManager.mUserRef
+                .document(user_id)
+                .collection("data")
+                .document("service_provider")
+                .collection("income_history")
+                .document("monthly_income")
+                .collection(IncomeHelper.getCurrentYear())
+                .document(IncomeHelper.getCurrentMonth())
+                .addSnapshotListener{ snapshot, error ->
+                    if (error != null) {
+                        Log.d("monthly_income_debug", "Listen failed.", error)
+                        callback.onCurrentMonthFetchIncomeError()
+                        return@addSnapshotListener
+                    }
+
+                    if (snapshot != null && snapshot.exists()) {
+                        Log.d("monthly_income_debug", "Current data: ${snapshot.data}")
+
+                        callback.onCurrentMonthIncomeFetchSuccess(
+                            snapshot.data?.get("monthly_due") as Long,
+                            snapshot.data?.get("monthly_income") as Long
+                        )
+                    } else {
+                        callback.onCurrentMonthFetchIncomeError()
+                        Log.d("monthly_income_debug", "Current data: null")
+                    }
+                }
+            listeners.add(listener)
+        }
+
+    }
+
+    interface CurrentMonthIncomeCallback{
+        fun onCurrentMonthIncomeFetchSuccess(monthlyDue: Long, monthlyIncome: Long)
+        fun onCurrentMonthFetchIncomeError()
     }
 
 }
