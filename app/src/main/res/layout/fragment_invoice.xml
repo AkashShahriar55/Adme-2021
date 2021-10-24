@@ -133,7 +133,7 @@
                         android:textSize="14sp"
                         app:layout_constraintBottom_toTopOf="@+id/textView7"
                         app:layout_constraintStart_toStartOf="@+id/guideline3"
-                        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_sp_services" />
 
                     <EditText
                         android:id="@+id/customer_name"
@@ -149,7 +149,7 @@
                         app:layout_constraintTop_toTopOf="@+id/name" />
 
                     <TextView
-                        android:id="@+id/textView5"
+                        android:id="@+id/tv_sp_services"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/customer_profile"

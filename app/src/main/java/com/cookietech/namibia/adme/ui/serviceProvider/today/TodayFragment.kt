@@ -28,6 +28,7 @@ import com.cookietech.namibia.adme.Application.Status
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.serviceProvider.ServiceProviderViewModel
 import com.cookietech.namibia.adme.extensions.openNetworkSetting
+import com.cookietech.namibia.adme.helper.IncomeHelper
 import com.cookietech.namibia.adme.interfaces.ServiceProviderDataCallback
 import com.cookietech.namibia.adme.managers.ConnectionManager
 import com.cookietech.namibia.adme.managers.FirebaseManager
@@ -232,6 +233,16 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
     private fun initializeObservers() {
         serviceProviderViewModel.service_provider_data.observe(viewLifecycleOwner,
             serviceDataObserver)
+
+        serviceProviderViewModel.monthlyDueListener.observe(viewLifecycleOwner, {
+            Log.d("vulvuldebug", "initializeObservers: ${it.toString().trim()}")
+            tv_income_today.text = it.toString().trim()
+        })
+
+        serviceProviderViewModel.monthlyIncomeListener.observe(viewLifecycleOwner, {
+            Log.d("vulvuldebug", "initializeObservers: ${it.toString().trim()}")
+            tv_due.text = it.toString().trim()
+        })
 
     }
 
@@ -544,9 +555,9 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
             isbottomSheetVisible = true
 
             serviceProviderPOJO?.apply {
-                tv_total_income.text = total_income.toString()
-                tv_income_today.text = monthly_income.toString()
-                tv_due.text = monthly_due.toString()
+                tv_total_income.text = IncomeHelper.getTotalIncome(total_income)
+                //tv_income_today.text = monthly_income.toString()
+                //tv_due.text = monthly_due.toString()
                 tv_pressed_today.text = pressed.toString()
                 tv_requested_today.text = requested.toString()
                 tv_completed_today.text = completed.toString()

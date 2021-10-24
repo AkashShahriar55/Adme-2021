@@ -59,7 +59,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/tv_week_income"
+                    android:id="@+id/total_income_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
@@ -136,9 +136,9 @@
                     android:textColor="@color/txt_light"
                     android:textSize="@dimen/title_text_size"
                     android:textStyle="normal"
-                    app:layout_constraintEnd_toEndOf="@+id/tv_week_income"
-                    app:layout_constraintStart_toStartOf="@+id/tv_week_income"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_week_income" />
+                    app:layout_constraintEnd_toEndOf="@+id/total_income_tv"
+                    app:layout_constraintStart_toStartOf="@+id/total_income_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/total_income_tv" />
 
                 <TextView
                     android:id="@+id/doller_sign1"
@@ -148,8 +148,10 @@
                     android:text="$"
                     android:textColor="@color/sv_primary"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_week_income"
-                    app:layout_constraintTop_toTopOf="@+id/tv_week_income" />
+                    app:layout_constraintBottom_toBottomOf="@+id/total_income_tv"
+                    app:layout_constraintEnd_toStartOf="@+id/total_income_tv"
+                    app:layout_constraintTop_toTopOf="@+id/total_income_tv" />
+
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl10"
@@ -163,12 +165,14 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_titel_week_income">
 
+
                     <com.hadiidbouk.charts.ChartProgressBar
                         android:id="@+id/chart_progress_bar"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:gravity="center"
+                        android:isScrollContainer="true"
                         app:hdBarCanBeClick="true"
                         app:hdBarHeight="120dp"
                         app:hdBarRadius="10dp"
@@ -178,7 +182,6 @@
                         app:hdBarTitleTxtSize="12sp"
                         app:hdBarWidth="40dp"
                         app:hdEmptyColor="@color/barChartUnfill"
-                        app:hdMaxValue="100"
                         app:hdPinBackgroundColor="@color/pin_background"
                         app:hdPinDrawable="@drawable/ic_pin"
                         app:hdPinMarginBottom="22dp"
@@ -376,8 +379,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:text="$"
-                    android:textStyle="bold"
                     android:textColor="@color/sv_primary"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/gl4"
                     app:layout_constraintEnd_toStartOf="@+id/tv_tot_income_val"
                     app:layout_constraintTop_toTopOf="@+id/tv_tot_income_val" />
 
@@ -399,7 +403,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:text="Total income"
+                    android:text="Total Income "
                     android:textAlignment="center"
                     android:textColor="@color/sv_primary"
                     android:textSize="@dimen/title_text_size"
@@ -437,8 +441,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:text="$"
-                    android:textStyle="bold"
                     android:textColor="@color/red"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_tot_due_val"
                     app:layout_constraintEnd_toStartOf="@+id/tv_tot_due_val"
                     app:layout_constraintTop_toTopOf="@+id/tv_tot_due_val" />
 

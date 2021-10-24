@@ -3,20 +3,21 @@ package com.cookietech.namibia.adme.ui.serviceProvider.income
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.cookietech.namibia.adme.R
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import com.cookietech.namibia.adme.architecture.serviceProvider.ServiceProviderViewModel
+import com.cookietech.namibia.adme.architecture.serviceProvider.income.IncomeViewModel
+import com.cookietech.namibia.adme.databinding.FragmentIncomeBinding
+import com.cookietech.namibia.adme.helper.IncomeHelper
 import com.hadiidbouk.charts.BarData
 import kotlinx.android.synthetic.main.fragment_income.*
 import java.text.SimpleDateFormat
 import java.util.*
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 
 private var myCalendar: Calendar =  Calendar.getInstance()
@@ -25,24 +26,29 @@ private var date2: OnDateSetListener? = null
 private var date1: OnDateSetListener? = null
 
 class IncomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    val serviceProviderViewModel: ServiceProviderViewModel by activityViewModels()
+    val incomeViewModel : IncomeViewModel by viewModels()
+
+    private var _binding: FragmentIncomeBinding? = null
+    // This property is only valid between onCreateView and
+// onDestroyView.
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_income, container, false)
+        _binding = FragmentIncomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
 
@@ -52,8 +58,33 @@ class IncomeFragment : Fragment() {
         initializeFields()
         initializeClicks()
         initializeListener()
+        initializeObserver()
 
 
+    }
+
+    private fun initializeObserver() {
+
+        serviceProviderViewModel.monthlyDueListener.observe(viewLifecycleOwner, {
+            Log.d("vulvul2_debug", "initializeObserver: ${it.toString().trim()}")
+            binding.tvTotDueVal.text = it.toString().trim()
+        })
+
+        serviceProviderViewModel.monthlyIncomeListener.observe(viewLifecycleOwner, {
+            Log.d("vulvul2_debug", "initializeObserver: ${it.toString().trim()}")
+            binding.tvTotIncomeVal.text = it.toString().trim()
+        })
+
+        incomeViewModel.incomeHistoryListener.observe(viewLifecycleOwner, { dataList->
+            dataList.maxByOrNull { it.barValue }?.let { chart_progress_bar.setMaxValue(it.barValue) }
+            chart_progress_bar.setDataList(dataList)
+            chart_progress_bar.build()
+        })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun initializeListener() {
@@ -99,11 +130,42 @@ class IncomeFragment : Fragment() {
     }
 
     private fun initializeFields() {
+        setTotalIncome()
+        setRequested()
+        setCompleted()
+        setPressed()
+        setIncomeMonth()
 
-        createChart()
+    }
 
+    private fun setIncomeMonth() {
+        val dueText = "Due(-10%) in ${IncomeHelper.getCurrentMonth()}"
+        binding.tvTotDueTitle.text = dueText
+        val incomeText = "Income in ${IncomeHelper.getCurrentMonth()}"
+        binding.tvTotIncomeTitle.text = incomeText
+    }
 
+    private fun setPressed() {
 
+        binding.tvTapVal.text = serviceProviderViewModel.service_provider_data.value?.pressed?.toString()
+    }
+
+    private fun setCompleted() {
+
+        binding.tvComplVal.text = serviceProviderViewModel.service_provider_data.value?.completed?.toString()
+    }
+
+    private fun setRequested() {
+
+        binding.tvReqVal.text = serviceProviderViewModel.service_provider_data.value?.requested?.toString()
+    }
+
+    private fun setTotalIncome() {
+        binding.totalIncomeTv.text = serviceProviderViewModel.service_provider_data.value?.total_income?.let {
+            IncomeHelper.getTotalIncome(
+                it
+            )
+        }
     }
 
     private fun updateDate1() {
@@ -120,52 +182,13 @@ class IncomeFragment : Fragment() {
 //        Toast.makeText(getApplicationContext(), "date : "+sdf.format(myCalendar.getTime()), Toast.LENGTH_SHORT).show();
     }
 
-    private fun createChart() {
-
-        val dataList = ArrayList<BarData>()
-
-        var data = BarData("Sep", 30.4f, "300.4$")
-        dataList.add(data)
-
-        data = BarData("Oct", 42f, "420$")
-        dataList.add(data)
-
-        data = BarData("Nov", 10.8f, "100.8$")
-        dataList.add(data)
-
-        data = BarData("Dec", 87.3f, "870.3$")
-        dataList.add(data)
-
-        data = BarData("Jan", 36.2f, "360.2$")
-        dataList.add(data)
-
-        data = BarData("Feb", 99.3f, "990.3$")
-        dataList.add(data)
-
-        data = BarData("Nov", 71.8f, "710.8$")
-        dataList.add(data)
-
-        chart_progress_bar.setDataList(dataList)
-        chart_progress_bar.build()
-
-    }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment IncomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance() =
             IncomeFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+
                 }
             }
     }

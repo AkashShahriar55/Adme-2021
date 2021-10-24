@@ -11,6 +11,8 @@ class ServiceProviderPOJO() :Parcelable {
     var pressed:Int = 0
     var requested:Int = 0
     var completed:Int = 0
+    var rating:Double = 0.0
+    var rated: Int = 0
     var services = mutableListOf<String?>()
 
 
@@ -21,6 +23,8 @@ class ServiceProviderPOJO() :Parcelable {
         pressed = parcel.readInt()
         requested = parcel.readInt()
         completed = parcel.readInt()
+        rating = parcel.readDouble()
+        rated = parcel.readInt()
         val size = parcel.readInt()
         val services_temp = mutableListOf<String?>()
         for(i in 0..size){
@@ -41,6 +45,8 @@ class ServiceProviderPOJO() :Parcelable {
         dest?.writeInt(pressed)
         dest?.writeInt(requested)
         dest?.writeInt(completed)
+        dest?.writeDouble(rating)
+        dest?.writeInt(rated)
         val size = services.size
         dest?.writeInt(size)
         for(i in 0..size){
