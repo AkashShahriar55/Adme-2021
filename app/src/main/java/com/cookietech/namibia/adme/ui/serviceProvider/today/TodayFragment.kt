@@ -236,12 +236,13 @@ class TodayFragment : Fragment(), OnMapReadyCallback {
 
         serviceProviderViewModel.monthlyDueListener.observe(viewLifecycleOwner, {
             Log.d("vulvuldebug", "initializeObservers: ${it.toString().trim()}")
-            tv_income_today.text = it.toString().trim()
+            tv_due.text = it.toString().trim()
         })
 
         serviceProviderViewModel.monthlyIncomeListener.observe(viewLifecycleOwner, {
             Log.d("vulvuldebug", "initializeObservers: ${it.toString().trim()}")
-            tv_due.text = it.toString().trim()
+
+            tv_income_today.text = it.toString().trim()
         })
 
     }

@@ -175,10 +175,10 @@ class ServiceProviderRepository {
                     if (snapshot != null && snapshot.exists()) {
                         Log.d("monthly_income_debug", "Current data: ${snapshot.data}")
 
-//                        callback.onCurrentMonthIncomeFetchSuccess(
-//                            snapshot.data?.get("monthly_due") as Long,
-//                            snapshot.data?.get("monthly_income") as Long
-//                        )
+                        callback.onCurrentMonthIncomeFetchSuccess(
+                            snapshot.data?.get("monthly_due") as Long,
+                            snapshot.data?.get("monthly_income") as Long
+                        )
                     } else {
                         callback.onCurrentMonthFetchIncomeError()
                         Log.d("monthly_income_debug", "Current data: null")
