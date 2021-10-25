@@ -12,5 +12,6 @@ object Status {
     const val status_client_completion_denied = "client_completion_denied"
     const val status_provider_receipt_sent = "provider_receipt_sent" //done
     const val status_payment_completed = "payment_completed" //done
+    const val status_service_reviewed = "service_reviewed" //done
 
 }

@@ -6,7 +6,7 @@ import java.util.*
 
 object IncomeHelper {
 
-    private val monthNames = arrayListOf("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    val monthNames = arrayListOf("Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
     fun getTotalIncome(totalIncome: Double) : String{

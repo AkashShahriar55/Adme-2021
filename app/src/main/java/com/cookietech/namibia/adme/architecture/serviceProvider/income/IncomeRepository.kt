@@ -2,8 +2,10 @@ package com.cookietech.namibia.adme.architecture.serviceProvider.income
 
 import android.util.Log
 import com.cookietech.namibia.adme.helper.IncomeHelper
+import com.cookietech.namibia.adme.helper.IncomeHelper.monthNames
 import com.cookietech.namibia.adme.managers.FirebaseManager
 import com.cookietech.namibia.adme.models.UserPOJO
+import com.github.mikephil.charting.data.BarEntry
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ListenerRegistration
@@ -16,6 +18,13 @@ import kotlin.collections.HashMap
 class IncomeRepository {
 
     private val listeners:ArrayList<ListenerRegistration>  = ArrayList()
+    val history = TreeMap<Int, BarEntry>()
+
+    init {
+        for (i in 0..11){
+            history[i] = BarEntry(i.toFloat(),0f)
+        }
+    }
 
 
 
@@ -30,14 +39,14 @@ class IncomeRepository {
                 .collection(IncomeHelper.getCurrentYear())
                 .get()
                 .addOnSuccessListener { result ->
-                    val history = TreeMap<Int, BarData>()
+
+
+
                     for (doc in result) {
                         Log.d("income_history_debug", "${doc.id} => ${doc.data}")
                         doc.getLong("monthly_income")?.let {
                             //cities.add(it)
-                            history.put(IncomeHelper.getMonthIndex(doc.id),
-                                BarData(doc.id,it.toFloat(),it.toString())
-                            )
+                            history[IncomeHelper.getMonthIndex(doc.id)] = BarEntry(IncomeHelper.getMonthIndex(doc.id).toFloat(),it.toFloat())
                         }
                     }
 
@@ -45,6 +54,7 @@ class IncomeRepository {
 
                 }
                 .addOnFailureListener { exception ->
+                    callback.onIncomeHistoryFetchSuccess(history)
                     Log.d("income_history_debug", "Error getting documents: ", exception)
 
                 }
@@ -60,7 +70,7 @@ class IncomeRepository {
 
 
     interface IncomeHistoryCallback{
-        fun onIncomeHistoryFetchSuccess(history: TreeMap<Int, BarData>)
+        fun onIncomeHistoryFetchSuccess(history: TreeMap<Int, BarEntry>)
         fun onIncomeHistoryFetchError()
     }
 }

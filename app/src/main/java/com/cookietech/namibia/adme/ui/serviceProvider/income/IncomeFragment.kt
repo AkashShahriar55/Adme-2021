@@ -12,11 +12,22 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.cookietech.namibia.adme.architecture.serviceProvider.ServiceProviderViewModel
 import com.cookietech.namibia.adme.architecture.serviceProvider.income.IncomeViewModel
+import com.cookietech.namibia.adme.chatmodule.utils.YearXAxisFormatter
 import com.cookietech.namibia.adme.databinding.FragmentIncomeBinding
 import com.cookietech.namibia.adme.helper.IncomeHelper
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.XAxis.XAxisPosition
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.hadiidbouk.charts.BarData
 import kotlinx.android.synthetic.main.fragment_income.*
+import kotlinx.android.synthetic.main.fragment_user_info.*
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
 import java.util.*
 
 
@@ -60,6 +71,26 @@ class IncomeFragment : Fragment() {
         initializeListener()
         initializeObserver()
 
+        bar_chart.description.isEnabled = false
+
+        // add a nice and smooth animation
+        bar_chart.animateY(1500)
+        bar_chart.getAxisLeft().setDrawGridLines(false)
+
+        val xAxis: XAxis = bar_chart.getXAxis()
+        xAxis.position = XAxisPosition.BOTTOM
+        xAxis.setDrawGridLines(false)
+
+        bar_chart.axisRight.isEnabled = false
+
+        bar_chart.getLegend().setEnabled(false)
+
+        // chart.setDrawYLabels(false);
+        val xAxisFormatter: ValueFormatter = YearXAxisFormatter()
+
+        xAxis.valueFormatter = xAxisFormatter
+        xAxis.granularity = 1f
+
 
     }
 
@@ -76,9 +107,30 @@ class IncomeFragment : Fragment() {
         })
 
         incomeViewModel.incomeHistoryListener.observe(viewLifecycleOwner, { dataList->
-            dataList.maxByOrNull { it.barValue }?.let { chart_progress_bar.setMaxValue(it.barValue) }
-            chart_progress_bar.setDataList(dataList)
-            chart_progress_bar.build()
+            val set1: BarDataSet
+            if (bar_chart.getData() != null &&
+                bar_chart.getData().getDataSetCount() > 0
+            ) {
+                set1 = bar_chart.getData().getDataSetByIndex(0) as BarDataSet
+                set1.setValues(dataList)
+                bar_chart.getData().notifyDataChanged()
+                bar_chart.notifyDataSetChanged()
+            } else {
+                set1 = BarDataSet(dataList, "Data Set")
+                set1.setColors(*ColorTemplate.VORDIPLOM_COLORS)
+                set1.setDrawValues(false)
+                val dataSets = ArrayList<IBarDataSet>()
+                dataSets.add(set1)
+                val data = com.github.mikephil.charting.data.BarData(dataSets)
+                bar_chart.setData(data)
+                bar_chart.setFitBars(true)
+            }
+
+            bar_chart.invalidate()
+
+//            dataList.maxByOrNull { it.barValue }?.let { chart_progress_bar.setMaxValue(it.barValue) }
+
+
         })
     }
 

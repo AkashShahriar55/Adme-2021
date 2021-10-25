@@ -164,38 +164,40 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_titel_week_income">
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/bar_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
 
-
-                    <com.hadiidbouk.charts.ChartProgressBar
-                        android:id="@+id/chart_progress_bar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:gravity="center"
-                        android:isScrollContainer="true"
-                        app:hdBarCanBeClick="true"
-                        app:hdBarHeight="120dp"
-                        app:hdBarRadius="10dp"
-                        app:hdBarTitleColor="@color/bar_title_color"
-                        app:hdBarTitleMarginTop="15dp"
-                        app:hdBarTitleSelectedColor="@color/black"
-                        app:hdBarTitleTxtSize="12sp"
-                        app:hdBarWidth="40dp"
-                        app:hdEmptyColor="@color/barChartUnfill"
-                        app:hdPinBackgroundColor="@color/pin_background"
-                        app:hdPinDrawable="@drawable/ic_pin"
-                        app:hdPinMarginBottom="22dp"
-                        app:hdPinMarginEnd="11dp"
-                        app:hdPinMarginTop="0dp"
-                        app:hdPinPaddingBottom="5dp"
-                        app:hdPinTextColor="@color/white"
-                        app:hdPinTxtSize="11sp"
-                        app:hdProgressClickColor="@color/progress"
-                        app:hdProgressColor="@color/progress"
-                        app:hdProgressDisableColor="@color/progress_disable"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+<!--                    <com.hadiidbouk.charts.ChartProgressBar-->
+<!--                        android:id="@+id/chart_progress_bar"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_centerInParent="true"-->
+<!--                        android:gravity="center"-->
+<!--                        app:hdBarCanBeClick="true"-->
+<!--                        app:hdBarHeight="120dp"-->
+<!--                        app:hdBarRadius="10dp"-->
+<!--                        app:hdBarTitleColor="@color/bar_title_color"-->
+<!--                        app:hdBarTitleMarginTop="15dp"-->
+<!--                        app:hdBarTitleSelectedColor="@color/black"-->
+<!--                        app:hdBarTitleTxtSize="12sp"-->
+<!--                        app:hdBarWidth="20dp"-->
+<!--                        app:hdEmptyColor="@color/barChartUnfill"-->
+<!--                        app:hdPinBackgroundColor="@color/pin_background"-->
+<!--                        app:hdPinDrawable="@drawable/ic_pin"-->
+<!--                        app:hdPinMarginBottom="22dp"-->
+<!--                        app:hdPinMarginEnd="11dp"-->
+<!--                        app:hdPinMarginTop="0dp"-->
+<!--                        app:hdPinPaddingBottom="5dp"-->
+<!--                        app:hdPinTextColor="@color/white"-->
+<!--                        app:hdPinTxtSize="11sp"-->
+<!--                        app:hdProgressClickColor="@color/progress"-->
+<!--                        app:hdProgressColor="@color/progress"-->
+<!--                        app:hdProgressDisableColor="@color/progress_disable"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent" />-->
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

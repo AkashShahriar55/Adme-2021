@@ -224,7 +224,7 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                     setUpUiForClientCompletionApprovedClient()
                 }
             }
-            Status.status_client_completion_declined->{
+            Status.status_client_completion_denied->{
                 stateUiCompletedActive()
                 if (SharedPreferenceManager.user_mode == AppComponent.MODE_SERVICE_PROVIDER) {
                     setUpUiForProviderResponseApproveProvider()
@@ -347,6 +347,7 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
                     viewmodel.reviewService(review).addOnSuccessListener {
                         review_ref = it.id
                         reviewed = true
+                        state = Status.status_service_reviewed
                         viewmodel.setReviewLinkInAppointment(this).addOnFailureListener {
 
                         }.addOnSuccessListener {
@@ -1006,7 +1007,7 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
         dialog.updateTitle("Declining")
         appointment?.apply {
             approved = false
-            state = Status.status_client_completion_declined
+            state = Status.status_client_completion_denied
             viewmodel.declineServiceProviderWorkCompletion(this).addOnSuccessListener {
                 setUpUiForProviderResponseApproveClient()
                 dialog.hide()
