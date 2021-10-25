@@ -88,7 +88,7 @@ class LoginFragment : Fragment() {
 
         mainViewModel.addActivityCallback(object : LoginRegistrationMainViewModel.ActivityCallbacks{
             override fun processActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-                dialog.dismiss()
+                //dialog.dismiss()
                 loginViewModel.processActivityResult(requestCode,resultCode,data)
             }
 
