@@ -443,7 +443,9 @@
                         android:id="@+id/review_recyclerView"
                         android:clipToPadding="false"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:background="@color/default_background"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/empty_recyclerview"

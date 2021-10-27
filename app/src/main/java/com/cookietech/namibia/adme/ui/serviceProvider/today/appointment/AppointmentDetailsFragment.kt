@@ -343,7 +343,7 @@ class AppointmentDetailsFragment : Fragment(), OnMapReadyCallback {
         val ratingDialog = RatingDialog.newInstance(object :RatingDialog.ReviewCallback{
             override fun onReviewed(rating: Float, review: String) {
                 appointment?.apply {
-                    val review = ReviewPOJO(client_name,client_ref,service_provider_name,service_provider_ref,rating,review,invoice_link,service_provider_price.toString(),System.currentTimeMillis().toString(),id.toString(),service_ref)
+                    val review = ReviewPOJO(client_name,client_ref,service_provider_name,service_provider_ref,rating,review,invoice_link,service_provider_price.toString(),System.currentTimeMillis().toString(),id.toString(),service_ref,client_profile_pic)
                     viewmodel.reviewService(review).addOnSuccessListener {
                         review_ref = it.id
                         reviewed = true

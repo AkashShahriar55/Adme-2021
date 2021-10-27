@@ -1,12 +1,12 @@
 package com.cookietech.namibia.adme.architecture.client.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.cookietech.namibia.adme.helper.IncomeHelper
 import com.cookietech.namibia.adme.managers.FirebaseManager
-import com.cookietech.namibia.adme.models.AppointmentPOJO
-import com.cookietech.namibia.adme.models.ServicesPOJO
-import com.cookietech.namibia.adme.models.SubServicesPOJO
-import com.cookietech.namibia.adme.models.UserPOJO
+import com.cookietech.namibia.adme.models.*
 import com.cookietech.namibia.adme.utils.SingleLiveEvent
+import com.github.mikephil.charting.data.BarEntry
 import java.lang.Exception
 
 class ServiceProviderDetailsViewModel: ViewModel() {
@@ -14,6 +14,7 @@ class ServiceProviderDetailsViewModel: ViewModel() {
     val observableSubServices = SingleLiveEvent<ArrayList<SubServicesPOJO>>()
     val observableServiceFullDetails = SingleLiveEvent<ServicesPOJO>()
     val observableServiceProviderUserInfo = SingleLiveEvent<UserPOJO>()
+    val observableReviewData = SingleLiveEvent<ArrayList<ReviewPOJO>>()
 
     fun fetchSubServices(user_id:String,service_id:String){
         repository.fetchServiceProviderSubServices(user_id,service_id).addOnCompleteListener {
@@ -69,6 +70,33 @@ class ServiceProviderDetailsViewModel: ViewModel() {
         }.addOnFailureListener {
             callback.onRequestSendFailed(it)
         }
+    }
+
+    fun fetchReviewData(providerRef:String,serviceRef:String){
+        repository.fetchReviewData(providerRef,serviceRef)
+            .addOnSuccessListener { result ->
+                val reviewList = ArrayList<ReviewPOJO>()
+                for (doc in result) {
+                    Log.d("income_history_debug", "${doc.id} => ${doc.data}")
+                    /*doc.getLong("monthly_income")?.let {
+                        //cities.add(it)
+                        history[IncomeHelper.getMonthIndex(doc.id)] = BarEntry(IncomeHelper.getMonthIndex(doc.id).toFloat(),it.toFloat())
+                    }*/
+                    val review = doc.toObject(ReviewPOJO::class.java)
+                    reviewList.add(review)
+                }
+
+                /*callback.onIncomeHistoryFetchSuccess(history)*/
+                if (reviewList.isNotEmpty()){
+                    observableReviewData.value = reviewList
+                }
+
+            }
+            .addOnFailureListener { exception ->
+                /*callback.onIncomeHistoryFetchSuccess(history)*/
+                Log.d("income_history_debug", "Error getting documents: ", exception)
+
+            }
     }
 
 

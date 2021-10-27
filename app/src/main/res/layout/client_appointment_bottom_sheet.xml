@@ -193,7 +193,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/til_service_name">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tv_service_time"
+                        android:id="@+id/tv_review_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clickable="true"

@@ -8,10 +8,13 @@ import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cookietech.namibia.adme.R
 import com.cookietech.namibia.adme.architecture.client.home.ServiceProviderDetailsViewModel
@@ -33,6 +36,7 @@ import com.smarteist.autoimageslider.SliderAnimations
 import com.smarteist.autoimageslider.SliderView
 import kotlinx.android.synthetic.main.activity_service_provider_details.*
 import kotlinx.android.synthetic.main.client_appointment_bottom_sheet.*
+import kotlinx.android.synthetic.main.fragment_notification.*
 import kotlinx.android.synthetic.main.fragment_user_info.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,6 +58,7 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     val viewmodel:ServiceProviderDetailsViewModel by viewModels()
     var selectServiceAdapter:SelectServiceAdapter? = null
+    var revireAdapter:ReviewAdapter? = null
     val selectedServices = arrayListOf<SubServicesPOJO>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,10 +83,20 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         setUpMap()
         setUpObserver()
         setUpUserAddress()
+        setupReviewAdapter()
         dialog = LoadingDialog(this, "Updating", "Please wait...")
         send_button.setOnClickListener {
             validateDataAndSendRequest()
         }
+
+    }
+
+    private fun setupReviewAdapter() {
+        val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+        revireAdapter = ReviewAdapter(this)
+        review_recyclerView.layoutManager = mLayoutManager
+        review_recyclerView.itemAnimator = DefaultItemAnimator()
+        review_recyclerView.adapter = revireAdapter
 
     }
 
@@ -111,9 +126,9 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                 return
             }
             val client_time = myCalendar.timeInMillis.toString()
-            if(tv_service_time.text.toString().isEmpty()){
-                tv_service_time.error = "Please fill up this"
-                tv_service_time.requestFocus()
+            if(tv_review_time.text.toString().isEmpty()){
+                tv_review_time.error = "Please fill up this"
+                tv_review_time.requestFocus()
                 return
             }
             if(tv_service_date.text.toString().isEmpty()){
@@ -213,7 +228,7 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                 tv_service_date.setText(sdf.format(myCalendar.getTime()))
             }
 
-        tv_service_time.setOnClickListener {
+        tv_review_time.setOnClickListener {
             val hour: Int = myCalendar.get(Calendar.HOUR_OF_DAY)
             val minute: Int = myCalendar.get(Calendar.MINUTE)
             val mTimePicker = TimePickerDialog(
@@ -238,7 +253,7 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
                     val sdfs = SimpleDateFormat("hh:mm aa", Locale.getDefault())
-                    tv_service_time.setText(sdfs.format(myCalendar.time))
+                    tv_review_time.setText(sdfs.format(myCalendar.time))
                     //                        SimpleDateFormat sd = new SimpleDateFormat("yyyyy.MMMMM.dd GGG hh:mm aaa", Locale.getDefault());
                     //                        Log.d(TAG, myCalendar.getTimeInMillis()+" initializeFields: "+sd.format(myCalendar.getTime()));
                     //                        Log.d(TAG, myCalendar.getTimeInMillis()+" getTimeInMillis "+ CookieTechUtilityClass.getTimeDifference(String.valueOf(myCalendar.getTimeInMillis()),"1592647202542"));
@@ -309,10 +324,12 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             viewmodel.fetchSubServices(userID, serviceID)
             viewmodel.fetchFullServiceDetails(userID, serviceID)
             viewmodel.fetchPhoneNumber(userID)
+            viewmodel.fetchReviewData(userID,serviceID)
         } }
         viewmodel.observableSubServices.observe(this, { subServices ->
             subServices?.let { services ->
                 selectServiceAdapter?.let { adapter ->
+                    empty_recyclerview.visibility = View.GONE
                     adapter.SelectServiceList = services
                 }
             }
@@ -326,6 +343,10 @@ class ServiceProviderDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         viewmodel.observableServiceProviderUserInfo.observe(this,{
             phoneNumber = it?.phone
+        })
+
+        viewmodel.observableReviewData.observe(this,{
+            revireAdapter?.reviewList = it
         })
 
 

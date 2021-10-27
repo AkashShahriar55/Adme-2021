@@ -11,9 +11,10 @@ data class ReviewPOJO(var client_name:String
                         , var review:String?
                         , var invoice_link:String
                         , var income:String
-                        , var review_time:String
+                        , var review_time:String?
                         , var appointment_ref:String
-                        , var service_ref:String) : Parcelable {
+                        , var service_ref:String
+                        ,var client_profile_pic:String?) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(),
         parcel.readString().toString(),
@@ -25,12 +26,13 @@ data class ReviewPOJO(var client_name:String
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
+        parcel.readString().toString(),
         parcel.readString().toString()
 
     ) {
     }
 
-    constructor() : this("","","","",0.0f,"","","","","","")
+    constructor() : this("","","","",0.0f,"","","","","","","")
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(client_name)
@@ -44,6 +46,7 @@ data class ReviewPOJO(var client_name:String
         parcel.writeString(review_time)
         parcel.writeString(appointment_ref)
         parcel.writeString(service_ref)
+        parcel.writeString(client_profile_pic)
     }
 
     override fun describeContents(): Int {

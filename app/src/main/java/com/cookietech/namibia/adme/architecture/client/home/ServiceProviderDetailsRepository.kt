@@ -40,4 +40,9 @@ class ServiceProviderDetailsRepository {
     fun removeRequestForFailure(id: String) {
         FirebaseManager.mAppointmentReference.document(id).delete()
     }
+
+    fun fetchReviewData(providerRef:String,serviceRef:String): Task<QuerySnapshot> {
+        return FirebaseManager.mUserRef.document(providerRef).collection("data").document("service_provider").collection("services").document(serviceRef).collection("reviews").get()
+    }
+
 }

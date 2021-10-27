@@ -141,18 +141,20 @@ class ProfileFragment : Fragment() {
 
     private fun setMemberSince() {
         val simpleDate = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        FirebaseManager.currentUser?.registration_date?.let {
+            val registration_date : String = simpleDate.format(it.toDate())
 
-        val registration_date : String = simpleDate.format(FirebaseManager.currentUser!!.registration_date!!.toDate())
+            //Log.d("setMemberSince", "setMemberSince: " + registraion_date)
+            sinceTime.text = "Member Since $registration_date"
+        }
 
-        //Log.d("setMemberSince", "setMemberSince: " + registraion_date)
-        sinceTime.text = "Member Since $registration_date"
 
 
     }
 
     private fun setProfilePhoto() {
         Log.d("pro_pic_debug", "setProfilePhoto: " + FirebaseManager.mFirebaseUser!!.photoUrl)
-        FirebaseManager.currentUser!!.profile_image_url?.let {
+        FirebaseManager.currentUser?.profile_image_url?.let {
             Glide.with(requireContext())
                 .load(it)
                 .placeholder(R.mipmap.default_user_photo)
